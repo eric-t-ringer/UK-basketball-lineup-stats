@@ -53,6 +53,8 @@
   
   
   
+  
+  
   .kl { font-family: var(--font-anthropic-sans); color: var(--color-fg); display: grid; gap: var(--cds-gap-lg); }
   .kl-head h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0 0 var(--cds-gap-xs); }
   .kl-take { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); line-height: 1.5; }
@@ -117,6 +119,12 @@
   .kl-method h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); color: var(--color-fg); margin: 0 0 var(--cds-gap-xs); }
   .kl-method p { margin: 0 0 var(--cds-gap-xs); }
   .kl th.kl-left, .kl td.kl-left { text-align: left; }
+  /* On/off dumbbell chart */
+  #onoff .kl-headline { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); line-height: 1.2; margin: 0 0 var(--cds-gap-xs); }
+  #onoff .kl-dek { margin: 0 0 var(--cds-gap-md); font-size: var(--cds-font-size-body); color: var(--color-fg-muted); line-height: 1.5; max-width: 46rem; }
+  #onoff .kl-dek b { font-weight: 600; }
+  #onoff .kl-onoff-chart { position: relative; }
+  #onoff .kl-onoff-wait { margin: 0; padding: var(--cds-pad-lg); border: 1px dashed var(--color-border-line); border-radius: var(--cds-radius); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.5; }
   @media (max-width: 640px) { .kl-hide-sm { display: none; } .kl td:first-child { min-width: 8.5rem; } .kl td, .kl th { padding: 6px 5px; } }
   [data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
 </style>
@@ -221,6 +229,13 @@
     <p class="kl-note">Milestones, debuts, starting-lineup changes, big games and streaks, newest first. Covers the whole season, whatever the filters are set to. Streaks count official games only.</p>
     <ul class="kl-events" data-draw="events" data-source="notables"></ul>
     <p class="kl-upcoming"><span class="kl-up-next" hidden>Coming up: <b data-draw="up-next" data-source="notables_meta" data-field="next_milestone">—</b>.</span> <span class="kl-up-await" hidden>Awaiting season debut: <b data-draw="up-await" data-source="notables_meta" data-field="awaiting">—</b>.</span></p>
+  </section>
+
+  <section class="kl-card" id="onoff">
+    <h2 class="kl-headline" data-draw="onoff-head" data-source="player_stats">How Kentucky's scoring margin changes with each player</h2>
+    <p class="kl-dek" data-draw="onoff-dek"></p>
+    <p class="kl-onoff-wait" data-draw="onoff-wait" hidden></p>
+    <div class="kl-onoff-chart" data-draw="onoff-chart" data-source="player_stats"></div>
   </section>
 
   <section class="kl-grid">
@@ -495,6 +510,7 @@
     <p>Player stats: rebound percentages and usage use team and opponent totals from the box score of each game the player played, and assume his minutes were spread evenly across the game. Usage is (FGA + 0.44 × FTA + TOV) as a share of the team's while he was on the floor. On OER and On DER come from the lineup data, using Kentucky's possessions for both ends.</p>
     <p>Positions are approximate. Lineups are listed from point guard (1) to center (5) using each player's usual positions: Diallo 1/2; Wilkins 2/1/3; M. Williams 1/2; B. Hawthorne 3/2/4; Z. Hawthorne 2/3; Momcilovic 3/4; N'Diaye and McBride 4/5; Moreno, Kepnang and Potter 5. The 1 goes to the first of Diallo, Wilkins, M. Williams or Morton on the floor. In practice ball-handling is shared (Diallo and M. Williams both bring it up when they play together), so the order is a reading aid, not a record of who played where.</p>
     <p>Notable dates: a big game is a triple-double, 30+ points, 6+ made threes, or 80%+ shooting on at least 10 shots. Streaks are 3+ straight official games with 20+ points or a double-double, and 5+ straight official wins. A starting-lineup change compares each game's starters with the game before.</p>
+    <p>On/off chart: it appears once the chosen games include 8 official games, since over fewer games a player's on/off swings by 15+ points per 40 from chance alone. A player is charted if he has played at least a quarter of the team's minutes and sat at least 40 minutes, because the bench side of his line comes from those minutes. The headline names a player only when his gap is more than 15 points per 40 and he has sat at least 80 minutes. The minimum-minutes setting doesn't apply to this chart.</p>
     <p>Combinations: pair and trio numbers pool every stint those players shared, so they gather minutes faster than full lineups. They also credit or blame the players for whoever else was on the floor.</p>
     <p>Unofficial fan project, not affiliated with the University of Kentucky. Lineup data comes from the official box scores posted at ukathletics.com and is added the morning after each game.</p>
   </section>
@@ -768,7 +784,7 @@
         const t = tot[a.scope], offSec = t.sec - a.sec, onN = a.pm / a.sec * 2400, offN = offSec > 0 ? (t.pm - a.pm) / offSec * 2400 : null;
         const offPoss = t.poss - a.poss;
         const onDer = a.poss ? a.opp / a.poss * 100 : null, offDer = offPoss > 0.5 ? (t.opp - a.opp) / offPoss * 100 : null;
-        return {scope: a.scope, player: a.player, minutes: Math.round(a.sec / 6) / 10, plus_minus: a.pm,
+        return {scope: a.scope, player: a.player, minutes: Math.round(a.sec / 6) / 10, off_minutes: Math.round(offSec / 6) / 10, plus_minus: a.pm,
           on_net40: r1(onN), off_net40: r1(offN), on_off: offN === null ? null : r1(onN - offN),
           // Points scored and allowed per 100 possessions with the player on (and off) the floor.
           on_oer: a.poss ? r1(a.uk / a.poss * 100) : null, on_der: r1(onDer), off_der: r1(offDer),
@@ -1109,6 +1125,98 @@
       td(tr, r.player); td(tr, r.minutes.toFixed(1)); td(tr, kl.signed(r.plus_minus), kl.cls(r.plus_minus));
       td(tr, kl.signed(r.on_net40, 1), kl.cls(r.on_net40)); td(tr, kl.signed(r.off_net40, 1), kl.cls(r.off_net40), 'kl-hide-sm'); td(tr, kl.signed(r.on_off, 1), kl.cls(r.on_off));
     });
+  });
+
+
+  // On/off dumbbell chart: shown once the chosen games include 8 official games.
+  const ONOFF = {games: 8, onShare: 0.25, offMin: 40, headGap: 15, headOff: 80};
+  const onoffState = () => {
+    const t = inScope('scope_totals')[0], rows = inScope('player_stats');
+    const games = t ? t.games : 0;
+    const charted = rows.filter((r) => r.on_off !== null && r.minutes >= ONOFF.onShare * (r.minutes + r.off_minutes) && r.off_minutes >= ONOFF.offMin)
+      .sort((a, b) => b.on_off - a.on_off);
+    return {games, ready: games >= ONOFF.games, charted, team: t ? t.net40 : null};
+  };
+  const listNames = (n) => n.length === 1 ? n[0] : n.slice(0, -1).join(', ') + (n.length > 2 ? ',' : '') + ' and ' + n[n.length - 1];
+  dash.draw('onoff-head', (el) => {
+    const st = onoffState();
+    // Name only the players at the top of the chart, in order, while each clears the headline bar; if the top row doesn't, the headline stays neutral.
+    const lead = [];
+    if (st.ready) for (const r of st.charted.slice(0, 2)) { if (r.on_off > ONOFF.headGap && r.off_minutes >= ONOFF.headOff) lead.push(r.player); else break; }
+    el.textContent = lead.length ? `Kentucky has been far better with ${listNames(lead)} on the floor` : "How Kentucky's scoring margin changes with each player";
+  });
+  dash.draw('onoff-dek', (el) => {
+    el.replaceChildren();
+    const st = onoffState(); el.hidden = !(st.ready && st.charted.length); if (el.hidden) return;
+    const on = document.createElement('b'); on.style.color = dash.colors[0]; on.textContent = 'with a player on the floor';
+    const off = document.createElement('b'); off.style.color = 'var(--color-fg-muted)'; off.textContent = 'with him on the bench';
+    const worse = document.createElement('b'); worse.style.color = 'var(--cds-chart-status-critical)'; worse.textContent = 'Red';
+    el.append("Each line connects Kentucky's scoring margin per 40 minutes ", on, ' and ', off, '. Long blue lines mark the players the team has leaned on. ', worse, ' lines mean the team has done better with him sitting.');
+  });
+  dash.draw('onoff-wait', (el) => {
+    const st = onoffState();
+    el.hidden = st.ready && st.charted.length > 0;
+    if (el.hidden) return;
+    el.textContent = !st.ready
+      ? `This chart appears once the chosen games include ${ONOFF.games} official games (${st.games} so far). Over fewer games, on/off swings too much from chance to read much into it. The table below has the numbers so far.`
+      : 'No player in the chosen games has both a quarter of the minutes and 40 minutes on the bench yet.';
+  });
+  dash.draw('onoff-chart', (el) => {
+    el.replaceChildren();
+    const st = onoffState();
+    if (!st.ready || !st.charted.length) return;
+    const rows = st.charted, W = el.clientWidth || 700, narrow = W < 520;
+    const rowH = narrow ? 30 : 34, T0 = 50, H = T0 + rows.length * rowH + 44;
+    const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img')
+      .attr('aria-label', 'Scoring margin per 40 minutes with each player on the floor and on the bench');
+    // Name column width from the longest name.
+    const probe = svg.append('text').style('font-size', 'var(--cds-font-size-body)').style('font-weight', 600);
+    let nameW = 0; rows.forEach((r) => { probe.text(r.player); nameW = Math.max(nameW, probe.node().getComputedTextLength()); }); probe.remove();
+    const left = nameW + 16, right = narrow ? 52 : 70;
+    const vals = rows.flatMap((r) => [r.on_net40, r.off_net40]).concat([0, st.team ?? 0]);
+    const x = d3.scaleLinear([d3.min(vals) - 2, d3.max(vals) + 2], [left, W - right]).nice();
+    const ticks = x.ticks(narrow ? 3 : 6), y0 = T0 - 8, y1 = T0 + rows.length * rowH;
+    const g0 = svg.append('g');
+    g0.selectAll('line').data(ticks).join('line').attr('x1', (v) => x(v)).attr('x2', (v) => x(v)).attr('y1', y0).attr('y2', y1)
+      .attr('stroke', (v) => v === 0 ? 'var(--cds-chart-reference)' : 'var(--cds-chart-grid)');
+    g0.selectAll('text').data(ticks).join('text').attr('x', (v) => x(v)).attr('y', y1 + 16).attr('text-anchor', 'middle')
+      .attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)').text((v) => kl.signed(v));
+    svg.append('text').attr('x', (left + W - right) / 2).attr('y', y1 + 36).attr('text-anchor', 'middle').attr('fill', 'var(--color-fg-muted)')
+      .style('font-size', 'var(--cds-font-size-caption)').text('Kentucky scoring margin per 40 minutes');
+    if (st.team !== null) {
+      svg.append('line').attr('x1', x(st.team)).attr('x2', x(st.team)).attr('y1', T0 - 30).attr('y2', y1).attr('stroke', 'var(--color-fg)').attr('stroke-dasharray', '2 3');
+      svg.append('text').attr('x', x(st.team)).attr('y', T0 - 36).attr('text-anchor', 'middle').attr('fill', 'var(--color-fg)').style('font-size', 'var(--cds-font-size-caption)')
+        .style('font-weight', 600).text('Team average ' + kl.signed(st.team, 1));
+    }
+    svg.append('text').attr('x', W - 2).attr('y', T0 - 14).attr('text-anchor', 'end').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)').text(narrow ? 'Diff.' : 'Difference');
+    const ON = dash.colors[0], BAD = 'var(--cds-chart-status-critical)', col = (r) => r.on_off >= 0 ? ON : BAD;
+    const g = svg.append('g').selectAll('g').data(rows).join('g').attr('transform', (r, i) => `translate(0,${T0 + i * rowH + rowH / 2})`).style('cursor', 'default');
+    g.append('rect').attr('x', 0).attr('y', -rowH / 2).attr('width', W).attr('height', rowH).attr('fill', 'transparent');
+    g.append('text').attr('x', left - 12).attr('dy', '0.35em').attr('text-anchor', 'end').attr('fill', 'var(--color-fg)')
+      .style('font-size', 'var(--cds-font-size-body)').style('font-weight', 600).text((r) => r.player);
+    g.append('line').attr('x1', (r) => x(r.off_net40)).attr('x2', (r) => x(r.on_net40)).attr('stroke', col).attr('stroke-width', 3).attr('stroke-linecap', 'round').attr('opacity', 0.9);
+    g.append('circle').attr('cx', (r) => x(r.off_net40)).attr('r', 5.5).attr('fill', 'var(--color-panel)').attr('stroke', 'var(--cds-chart-muted)').attr('stroke-width', 2);
+    g.append('circle').attr('cx', (r) => x(r.on_net40)).attr('r', 6).attr('fill', col);
+    g.append('text').attr('x', W - 2).attr('dy', '0.35em').attr('text-anchor', 'end').attr('fill', col).style('font-size', 'var(--cds-font-size-body)').style('font-weight', 600)
+      .style('font-variant-numeric', 'tabular-nums').text((r) => kl.signed(r.on_off, 1));
+    // Direct labels on the top row instead of a legend.
+    const r0 = rows[0], cy = T0 + rowH / 2 - 14, apart = Math.abs(x(r0.on_net40) - x(r0.off_net40)) > 70;
+    if (apart) {
+      svg.append('text').attr('x', x(r0.on_net40)).attr('y', cy).attr('text-anchor', 'middle').attr('fill', ON).style('font-size', 'var(--cds-font-size-caption)').style('font-weight', 600).text('On floor');
+      svg.append('text').attr('x', x(r0.off_net40)).attr('y', cy).attr('text-anchor', 'middle').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)').style('font-weight', 600).text('On bench');
+    }
+    const tip = d3.select(el).append('div').attr('class', 'kl-tip').style('display', 'none');
+    g.on('mousemove', (ev, r) => {
+      const [px, py] = d3.pointer(ev, el);
+      tip.style('display', null).html('');
+      tip.append('div').attr('class', 'kl-tip-h').text(r.player);
+      tip.append('div').text(`On the floor: ${kl.signed(r.on_net40, 1)} per 40 in ${r.minutes.toFixed(0)} min`);
+      tip.append('div').text(`On the bench: ${kl.signed(r.off_net40, 1)} per 40 in ${r.off_minutes.toFixed(0)} min`);
+      tip.append('div').text(`Difference: ${kl.signed(r.on_off, 1)}`);
+      const tw = tip.node().offsetWidth;
+      tip.style('left', Math.min(Math.max(0, px + 12), el.clientWidth - tw) + 'px').style('top', Math.max(0, py - 70) + 'px');
+      g.attr('opacity', (o) => o === r ? 1 : 0.35);
+    }).on('mouseleave', () => { tip.style('display', 'none'); g.attr('opacity', 1); });
   });
 
   dash.onData(() => {
