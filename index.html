@@ -46,6 +46,8 @@
   
   
   
+  
+  
   .kl { font-family: var(--font-anthropic-sans); color: var(--color-fg); display: grid; gap: var(--cds-gap-lg); }
   .kl-head h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0 0 var(--cds-gap-xs); }
   .kl-take { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); line-height: 1.5; }
@@ -84,6 +86,11 @@
   .kl .kl-pos { color: var(--color-ok); }
   .kl .kl-neg { color: var(--color-bad); }
   .kl-small { color: var(--color-fg-muted); }
+  /* Rows below the minimum-minutes setting: dimmed, uncolored, struck through, and grouped under a divider */
+  .kl tr.kl-below td { opacity: .4; }
+  .kl tr.kl-below td:first-child { text-decoration: line-through; text-decoration-color: var(--color-fg-muted); }
+  .kl tr.kl-below .kl-pos, .kl tr.kl-below .kl-neg { color: inherit; }
+  .kl table tbody tr.kl-divider td { text-align: left; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); font-weight: var(--cds-font-weight-medium); padding: 14px 8px 6px; border-bottom: 2px dashed var(--color-border-line); background: transparent; }
   .kl-method { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.5; }
   .kl-method h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); color: var(--color-fg); margin: 0 0 var(--cds-gap-xs); }
   .kl-method p { margin: 0 0 var(--cds-gap-xs); }
@@ -186,7 +193,7 @@
   <section class="kl-grid">
     <div class="kl-card" id="usage-vs-results">
       <h2>Usage vs. results</h2>
-      <p class="kl-note">Each dot is a five-man lineup. Further right means more minutes; higher means a better adjusted scoring margin per 40 minutes. Short stints sit near the team average until they've played enough to say otherwise.</p>
+      <p class="kl-note">Each dot is a five-man lineup. Further right means more minutes; higher means a better adjusted scoring margin per 40 minutes. Short stints sit near the team average until they've played enough to say otherwise. Lineups below the minimum-minutes setting show as hollow circles.</p>
       <div class="kl-chart" data-draw="scatter" data-source="lineup_stats"></div>
     </div>
     <div class="kl-card" id="players">
@@ -715,28 +722,39 @@
     return (typeof x === 'string' ? x.localeCompare(y) : x - y) * st.dir;
   });
   const td = (tr, text, cls, extra) => { const c = tr.insertCell(); c.textContent = text; if (cls) c.className = cls; if (extra) c.classList.add(extra); return c; };
+  // Rows at or above the minimum-minutes setting first; the rest under a divider, dimmed.
+  const splitBelow = (tb, rows, noun, row) => {
+    const mm = kl.minmin(), above = rows.filter((r) => r.minutes >= mm), below = rows.filter((r) => r.minutes < mm);
+    above.forEach((r) => row(r));
+    if (!below.length) return;
+    const cols = tb.closest('table').querySelectorAll('thead th').length;
+    const d = tb.insertRow(); d.className = 'kl-divider';
+    const c = d.insertCell(); c.colSpan = cols;
+    c.textContent = `Below ${mm} minutes · ${below.length} ${noun}${below.length === 1 ? '' : 's'} shown for reference, not ranked`;
+    below.forEach((r) => row(r).classList.add('kl-below'));
+  };
 
   dash.draw('lineups', (tb) => {
     tb.replaceChildren();
     const rows = sorted(inScope('lineup_stats'), kl.sort.lineups);
-    rows.forEach((r) => {
+    splitBelow(tb, rows, 'lineup', (r) => {
       const tr = tb.insertRow(); tr.dataset.key = kl.enc(r.scope) + ',' + kl.enc(r.lineup);
-      if (r.minutes < kl.minmin()) tr.classList.add('kl-small');
       td(tr, r.lineup); td(tr, r.minutes.toFixed(1)); td(tr, d3.format('.0%')(r.share), '', 'kl-hide-sm'); td(tr, String(r.games), '', 'kl-hide-sm');
       td(tr, r.score); td(tr, kl.signed(r.plus_minus), kl.cls(r.plus_minus)); td(tr, kl.signed(r.net40, 1), kl.cls(r.net40)); td(tr, kl.signed(r.adj_net40, 1), kl.cls(r.adj_net40));
       td(tr, r.oer === null ? '—' : r.oer.toFixed(1)); td(tr, r.der === null ? '—' : r.der.toFixed(1)); td(tr, r.tov_pct === null ? '—' : r.tov_pct.toFixed(0) + '%', '', 'kl-hide-sm');
+      return tr;
     });
   });
 
   dash.draw('combos', (tb) => {
     tb.replaceChildren();
     const rows = sorted(inScope('combos').filter((r) => r.size === kl.comboSize()), kl.sort.combos);
-    rows.forEach((r) => {
+    splitBelow(tb, rows, 'combination', (r) => {
       const tr = tb.insertRow(); tr.dataset.key = kl.enc(r.scope) + ',' + kl.enc(r.size) + ',' + kl.enc(r.combo);
-      if (r.minutes < kl.minmin()) tr.classList.add('kl-small');
       td(tr, r.combo); td(tr, r.minutes.toFixed(1)); td(tr, String(r.games), '', 'kl-hide-sm'); td(tr, r.score);
       td(tr, kl.signed(r.plus_minus), kl.cls(r.plus_minus)); td(tr, kl.signed(r.net40, 1), kl.cls(r.net40)); td(tr, kl.signed(r.adj_net40, 1), kl.cls(r.adj_net40));
       td(tr, r.oer === null ? '—' : r.oer.toFixed(1), '', 'kl-hide-sm'); td(tr, r.der === null ? '—' : r.der.toFixed(1), '', 'kl-hide-sm');
+      return tr;
     });
   });
 
@@ -807,8 +825,11 @@
     const tip = d3.select(el).append('div').attr('class', 'kl-tip').style('display', 'none');
     svg.append('g').selectAll('circle').data(rows.sort((a, b) => a.minutes - b.minutes)).join('circle')
       .attr('cx', (r) => x(r.minutes)).attr('cy', (r) => y(r.adj_net40)).attr('r', (r) => 4 + Math.sqrt(r.minutes))
-      .attr('fill', (r) => r === best ? 'var(--cds-chart-status-critical)' : r === top ? dash.colors[0] : 'var(--cds-chart-muted)')
-      .attr('fill-opacity', (r) => r.minutes >= mm ? 0.85 : 0.3).attr('stroke', 'var(--color-panel)')
+      .attr('fill', (r) => r.minutes < mm ? 'none' : r === best ? 'var(--cds-chart-status-critical)' : r === top ? dash.colors[0] : 'var(--cds-chart-muted)')
+      .attr('fill-opacity', 0.85)
+      .attr('stroke', (r) => r.minutes < mm ? 'var(--cds-chart-muted)' : 'var(--color-panel)')
+      .attr('stroke-dasharray', (r) => r.minutes < mm ? '2 2' : null).attr('stroke-opacity', (r) => r.minutes < mm ? 0.7 : 1)
+      .style('pointer-events', 'all')
       .on('mousemove', (ev, r) => {
         const [px, py] = d3.pointer(ev, el);
         tip.style('display', null).html('');
