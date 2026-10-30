@@ -4,9 +4,9 @@
 // lineup, combination, player and totals calculations see. The game log,
 // exhibition status and notable dates always use the full season.
 (function () {
-  const SOURCES = {stints: 'data/kentucky_lineup_stints.json', schedule: 'data/kentucky_schedule.json', players: 'data/kentucky_player_games.json'};
-  const DATE_FILTERED = new Set(['scopes', 'lineup_stats', 'combos', 'player_stats', 'scope_totals']);
-  const DEFAULTS = {scope: 'all', minmin: 0, combo: 2, from: null, to: null};
+  const SOURCES = {stints: 'data/kentucky_lineup_stints.json', schedule: 'data/kentucky_schedule.json', players: 'data/kentucky_player_games.json', team: 'data/kentucky_team_games.json'};
+  const DATE_FILTERED = new Set(['scopes', 'lineup_stats', 'combos', 'player_stats', 'scope_totals', 'player_box']);
+  const DEFAULTS = {scope: 'all', minmin: 0, combo: 2, rate: 'pg', from: null, to: null};
   const raw = {}, calcs = {}, draws = {}, onDatas = [];
   let cache = {}, status = 'loading', params = Object.assign({}, DEFAULTS);
   try {
@@ -14,12 +14,13 @@
     if (q.get('scope')) params.scope = q.get('scope');
     if (q.get('min')) params.minmin = Number(q.get('min'));
     if (q.get('combo')) params.combo = Number(q.get('combo'));
+    if (q.get('rate') === '40') params.rate = '40';
     if (/^\d{4}-\d\d-\d\d$/.test(q.get('from') || '')) params.from = q.get('from');
     if (/^\d{4}-\d\d-\d\d$/.test(q.get('to') || '')) params.to = q.get('to');
   } catch (e) {}
   const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
   const inRange = (r) => (!params.from || r.date >= params.from) && (!params.to || r.date <= params.to);
-  const input = (id, forCalc) => (id === 'stints' && DATE_FILTERED.has(forCalc)) ? raw.stints.filter(inRange) : dash.data(id).data;
+  const input = (id, forCalc) => (['stints', 'players', 'team'].includes(id) && DATE_FILTERED.has(forCalc)) ? raw[id].filter(inRange) : dash.data(id).data;
   const dash = {
     get colors() { return [css('--series-1') || css('--accent'), '#e07b39', '#2a9d8f', '#8e6cc9', '#d1495b', '#6a994e', '#c9a227', '#577590']; },
     data(id) {
@@ -47,6 +48,7 @@
         if (params.scope !== 'all') q.set('scope', params.scope);
         if (params.minmin !== 0) q.set('min', params.minmin);
         if (params.combo !== 2) q.set('combo', params.combo);
+        if (params.rate === '40') q.set('rate', '40');
         if (params.from) q.set('from', params.from);
         if (params.to) q.set('to', params.to);
         history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash);

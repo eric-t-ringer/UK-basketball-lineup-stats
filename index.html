@@ -50,6 +50,8 @@
   
   
   
+  
+  
   .kl { font-family: var(--font-anthropic-sans); color: var(--color-fg); display: grid; gap: var(--cds-gap-lg); }
   .kl-head h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0 0 var(--cds-gap-xs); }
   .kl-take { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); line-height: 1.5; }
@@ -91,6 +93,10 @@
   .kl .kl-diff { background: color-mix(in srgb, #f5c400 28%, transparent); font-weight: 600; border-radius: 3px; padding: 0 3px; }
   .kl .kl-sep { color: var(--color-fg-muted); }
   .kl .kl-name { white-space: nowrap; }
+  .kl-sub-h { font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); margin: var(--cds-gap-lg) 0 0; }
+  #player-stats .kl-scroll { max-height: none; }
+  #player-stats th, #player-stats td { padding-left: 4px; padding-right: 4px; }
+  @media (max-width: 1100px) { .kl-hide-md { display: none; } }
   .kl tr.kl-below .kl-diff { background: none; font-weight: inherit; padding: 0; }
   /* Rows below the minimum-minutes setting: dimmed, uncolored, struck through, and grouped under a divider */
   .kl tr.kl-below td { opacity: .4; }
@@ -221,6 +227,115 @@
     </div>
   </section>
 
+  <section class="kl-card" id="player-stats">
+    <h2>Player stats</h2>
+    <p class="kl-note">Per game is each total divided by the games the player played. Made–attempted shooting columns appear on wider screens. Per 40 scales counting stats to 40 minutes, for comparing starters with the bench; percentages are the same either way. MIN is minutes per game.</p>
+    <div class="kl-controls">
+      <label>Show
+        <select class="kl-rate" aria-label="Per game or per 40 minutes">
+          <option value="pg">Per game</option>
+          <option value="40">Per 40 minutes</option>
+        </select>
+      </label>
+    </div>
+    <h3 class="kl-sub-h" id="offense">Offense</h3>
+    <p class="kl-note">eFG% counts a three as 1.5 makes; TS% also counts free throws. OREB% is the share of available offensive rebounds he grabbed while on the floor; USG% is the share of team possessions he ended with a shot, free throws or a turnover while on the floor. On OER is team points per 100 possessions with him on the floor.</p>
+      <div class="kl-scroll kl-rate-pg">
+        <table data-source="player_box" data-row-key="scope,player">
+          <thead><tr>
+            <th data-field="player"><button data-sort="player">Player</button></th>
+            <th data-field="gp"><button data-sort="gp">GP</button></th>
+            <th data-field="gs" class="kl-hide-sm"><button data-sort="gs">GS</button></th>
+            <th data-field="mpg"><button data-sort="mpg">MIN</button></th>
+            <th data-field="pts_pg"><button data-sort="pts_pg">PTS</button></th>
+            <th data-field="fg_pg" class="kl-hide-md"><button data-sort="fg_pg">FG</button></th>
+            <th data-field="fg_pct"><button data-sort="fg_pct">FG%</button></th>
+            <th data-field="tp_pg" class="kl-hide-md"><button data-sort="tp_pg">3P</button></th>
+            <th data-field="tp_pct"><button data-sort="tp_pct">3P%</button></th>
+            <th data-field="ft_pg" class="kl-hide-md"><button data-sort="ft_pg">FT</button></th>
+            <th data-field="ft_pct"><button data-sort="ft_pct">FT%</button></th>
+            <th data-field="efg" class="kl-hide-sm"><button data-sort="efg">eFG%</button></th>
+            <th data-field="ts"><button data-sort="ts">TS%</button></th>
+            <th data-field="ast_pg"><button data-sort="ast_pg">AST</button></th>
+            <th data-field="tov_pg"><button data-sort="tov_pg">TOV</button></th>
+            <th data-field="ast_to" class="kl-hide-sm"><button data-sort="ast_to">A/TO</button></th>
+            <th data-field="oreb_pg" class="kl-hide-sm"><button data-sort="oreb_pg">OREB</button></th>
+            <th data-field="oreb_pct"><button data-sort="oreb_pct">OREB%</button></th>
+            <th data-field="usg"><button data-sort="usg">USG%</button></th>
+            <th data-field="on_oer"><button data-sort="on_oer">On OER</button></th>
+          </tr></thead>
+          <tbody data-draw="off-pg"></tbody>
+        </table>
+      </div>
+      <div class="kl-scroll kl-rate-40" hidden>
+        <table data-source="player_box" data-row-key="scope,player">
+          <thead><tr>
+            <th data-field="player"><button data-sort="player">Player</button></th>
+            <th data-field="gp"><button data-sort="gp">GP</button></th>
+            <th data-field="gs" class="kl-hide-sm"><button data-sort="gs">GS</button></th>
+            <th data-field="mpg"><button data-sort="mpg">MIN</button></th>
+            <th data-field="pts_40"><button data-sort="pts_40">PTS</button></th>
+            <th data-field="fg_40" class="kl-hide-md"><button data-sort="fg_40">FG</button></th>
+            <th data-field="fg_pct"><button data-sort="fg_pct">FG%</button></th>
+            <th data-field="tp_40" class="kl-hide-md"><button data-sort="tp_40">3P</button></th>
+            <th data-field="tp_pct"><button data-sort="tp_pct">3P%</button></th>
+            <th data-field="ft_40" class="kl-hide-md"><button data-sort="ft_40">FT</button></th>
+            <th data-field="ft_pct"><button data-sort="ft_pct">FT%</button></th>
+            <th data-field="efg" class="kl-hide-sm"><button data-sort="efg">eFG%</button></th>
+            <th data-field="ts"><button data-sort="ts">TS%</button></th>
+            <th data-field="ast_40"><button data-sort="ast_40">AST</button></th>
+            <th data-field="tov_40"><button data-sort="tov_40">TOV</button></th>
+            <th data-field="ast_to" class="kl-hide-sm"><button data-sort="ast_to">A/TO</button></th>
+            <th data-field="oreb_40" class="kl-hide-sm"><button data-sort="oreb_40">OREB</button></th>
+            <th data-field="oreb_pct"><button data-sort="oreb_pct">OREB%</button></th>
+            <th data-field="usg"><button data-sort="usg">USG%</button></th>
+            <th data-field="on_oer"><button data-sort="on_oer">On OER</button></th>
+          </tr></thead>
+          <tbody data-draw="off-40"></tbody>
+        </table>
+      </div>
+    <h3 class="kl-sub-h" id="defense">Defense</h3>
+    <p class="kl-note">Box scores barely measure individual defense, so read these together. DREB% is the share of available defensive rebounds he grabbed while on the floor. On DER is points allowed per 100 possessions with him on the floor, a team number credited to whoever was out there; On − off DER below zero means the defense allowed fewer points with him on the floor.</p>
+      <div class="kl-scroll kl-rate-pg">
+        <table data-source="player_box" data-row-key="scope,player">
+          <thead><tr>
+            <th data-field="player"><button data-sort="player">Player</button></th>
+            <th data-field="gp"><button data-sort="gp">GP</button></th>
+            <th data-field="mpg"><button data-sort="mpg">MIN</button></th>
+            <th data-field="dreb_pg"><button data-sort="dreb_pg">DREB</button></th>
+            <th data-field="dreb_pct"><button data-sort="dreb_pct">DREB%</button></th>
+            <th data-field="stl_pg"><button data-sort="stl_pg">STL</button></th>
+            <th data-field="blk_pg"><button data-sort="blk_pg">BLK</button></th>
+            <th data-field="stocks_40"><button data-sort="stocks_40">Stocks /40</button></th>
+            <th data-field="pf_pg"><button data-sort="pf_pg">PF</button></th>
+            <th data-field="on_der"><button data-sort="on_der">On DER</button></th>
+            <th data-field="off_der" class="kl-hide-sm"><button data-sort="off_der">Off DER</button></th>
+            <th data-field="on_off_der"><button data-sort="on_off_der">On − off DER</button></th>
+          </tr></thead>
+          <tbody data-draw="def-pg"></tbody>
+        </table>
+      </div>
+      <div class="kl-scroll kl-rate-40" hidden>
+        <table data-source="player_box" data-row-key="scope,player">
+          <thead><tr>
+            <th data-field="player"><button data-sort="player">Player</button></th>
+            <th data-field="gp"><button data-sort="gp">GP</button></th>
+            <th data-field="mpg"><button data-sort="mpg">MIN</button></th>
+            <th data-field="dreb_40"><button data-sort="dreb_40">DREB</button></th>
+            <th data-field="dreb_pct"><button data-sort="dreb_pct">DREB%</button></th>
+            <th data-field="stl_40"><button data-sort="stl_40">STL</button></th>
+            <th data-field="blk_40"><button data-sort="blk_40">BLK</button></th>
+            <th data-field="stocks_40"><button data-sort="stocks_40">Stocks /40</button></th>
+            <th data-field="pf_40"><button data-sort="pf_40">PF</button></th>
+            <th data-field="on_der"><button data-sort="on_der">On DER</button></th>
+            <th data-field="off_der" class="kl-hide-sm"><button data-sort="off_der">Off DER</button></th>
+            <th data-field="on_off_der"><button data-sort="on_off_der">On − off DER</button></th>
+          </tr></thead>
+          <tbody data-draw="def-40"></tbody>
+        </table>
+      </div>
+  </section>
+
   <section class="kl-card" id="lineups">
     <h2>All lineups</h2>
     <p class="kl-note">Each lineup is listed 1 → 5, point guard to center; positions are approximate (see How the numbers work). Highlighted names are players who aren't in the most-used lineup. Sorted by minutes; click a column to re-sort. Net /40 is the scoring margin per 40 minutes; Adj. /40 pulls it toward the team average until a lineup has played enough to trust (see below). OER and DER are points scored and allowed per 100 possessions (lower DER is better).</p>
@@ -300,6 +415,7 @@
     <p>How the measures relate: OER − DER is the scoring margin per 100 possessions. Net /40 is the same margin per 40 minutes, so it also reflects pace: at Kentucky’s exhibition pace of about 69 possessions per 40 minutes, a +10 margin per 100 possessions is about +7 per 40. Adj. /40 is Net /40 pulled toward the team average for small samples; OER and DER are shown unadjusted, so treat them with the same caution on short stints.</p>
     <p>Exhibitions phase out: the main view includes the three exhibition games until there are three official games. From then on, each new official game replaces the oldest exhibition (the 4th official game replaces Little Rock, the 5th Texas Tech, the 6th UCF), so after six official games the main view is official games only. The exhibitions stay viewable under the "Exhibitions" choice in the Games filter.</p>
     <p>Adjusted net (Adj. /40): a lineup that played 2 minutes can show +60 per 40 on one run, so raw margins over short stints are mostly noise. The adjusted figure blends each lineup's actual margin with the team's average margin, as if the lineup had also played 50 extra minutes at the team's average. A lineup that has played a few minutes stays close to the team average; one that has played 100+ minutes is judged mostly on its own results. The 50-minute weight is a judgment call, not a fitted value. Rankings and the chart use the adjusted figure. The idea follows Evan Miya's point that observed lineup results should count for more as a lineup logs more possessions.</p>
+    <p>Player stats: rebound percentages and usage use team and opponent totals from the box score of each game the player played, and assume his minutes were spread evenly across the game. Usage is (FGA + 0.44 × FTA + TOV) as a share of the team's while he was on the floor. On OER and On DER come from the lineup data, using Kentucky's possessions for both ends.</p>
     <p>Positions are approximate. Lineups are listed from point guard (1) to center (5) using each player's usual positions: Diallo 1/2; Wilkins 2/1/3; M. Williams 1/2; B. Hawthorne 3/2/4; Z. Hawthorne 2/3; Momcilovic 3/4; N'Diaye and McBride 4/5; Moreno, Kepnang and Potter 5. The 1 goes to the first of Diallo, Wilkins, M. Williams or Morton on the floor. In practice ball-handling is shared (Diallo and M. Williams both bring it up when they play together), so the order is a reading aid, not a record of who played where.</p>
     <p>Notable dates: a big game is a triple-double, 30+ points, 6+ made threes, or 80%+ shooting on at least 10 shots. Streaks are 3+ straight official games with 20+ points or a double-double, and 5+ straight official wins. A starting-lineup change compares each game's starters with the game before.</p>
     <p>Combinations: pair and trio numbers pool every stint those players shared, so they gather minutes faster than full lineups. They also credit or blame the players for whoever else was on the floor.</p>
@@ -309,7 +425,7 @@
 
 </main>
 <script>
-  const STINTS = 'stints', SCHED = 'schedule', PLAYERS = 'players';
+  const STINTS = 'stints', SCHED = 'schedule', PLAYERS = 'players', TEAM = 'team';
 
   dash.calc('scopes', {
     title: 'Game filter choices',
@@ -542,7 +658,7 @@
 
   dash.calc('player_stats', {
     title: 'Player on/off',
-    description: 'For each player and set of games: minutes on the floor, margin per 40 with them on and off, and the difference.',
+    description: 'For each player and set of games: minutes on the floor, margin per 40 with them on and off and the difference, and points scored and allowed per 100 possessions with them on and off.',
     inputs: [STINTS],
     fn: (stints) => {
       // Which games belong to each filter choice, and possessions per stint (estimated at the game's pace where a unit didn't score).
@@ -564,17 +680,79 @@
   
       const tot = {}, on = new Map();
       rows.forEach((r) => scopesOf(r).forEach((s) => {
-        const t = tot[s] || (tot[s] = {sec: 0, pm: 0}); t.sec += r.seconds; t.pm += r.uk_pts - r.opp_pts;
+        const t = tot[s] || (tot[s] = {sec: 0, pm: 0, uk: 0, opp: 0, poss: 0}); t.sec += r.seconds; t.pm += r.uk_pts - r.opp_pts; t.uk += r.uk_pts; t.opp += r.opp_pts; t.poss += r.poss;
         r.players.split(';').forEach((p) => {
-          const k = s + '|' + p; const a = on.get(k) || {scope: s, player: p, sec: 0, pm: 0};
-          a.sec += r.seconds; a.pm += r.uk_pts - r.opp_pts; on.set(k, a);
+          const k = s + '|' + p; const a = on.get(k) || {scope: s, player: p, sec: 0, pm: 0, uk: 0, opp: 0, poss: 0};
+          a.sec += r.seconds; a.pm += r.uk_pts - r.opp_pts; a.uk += r.uk_pts; a.opp += r.opp_pts; a.poss += r.poss; on.set(k, a);
         });
       }));
+      const r1 = (v) => v === null ? null : Math.round(v * 10) / 10;
       return [...on.values()].map((a) => {
         const t = tot[a.scope], offSec = t.sec - a.sec, onN = a.pm / a.sec * 2400, offN = offSec > 0 ? (t.pm - a.pm) / offSec * 2400 : null;
+        const offPoss = t.poss - a.poss;
+        const onDer = a.poss ? a.opp / a.poss * 100 : null, offDer = offPoss > 0.5 ? (t.opp - a.opp) / offPoss * 100 : null;
         return {scope: a.scope, player: a.player, minutes: Math.round(a.sec / 6) / 10, plus_minus: a.pm,
-          on_net40: Math.round(onN * 10) / 10, off_net40: offN === null ? null : Math.round(offN * 10) / 10,
-          on_off: offN === null ? null : Math.round((onN - offN) * 10) / 10};
+          on_net40: r1(onN), off_net40: r1(offN), on_off: offN === null ? null : r1(onN - offN),
+          // Points scored and allowed per 100 possessions with the player on (and off) the floor.
+          on_oer: a.poss ? r1(a.uk / a.poss * 100) : null, on_der: r1(onDer), off_der: r1(offDer),
+          on_off_der: onDer === null || offDer === null ? null : r1(onDer - offDer)};
+      });
+    },
+  });
+
+  dash.calc('player_box', {
+    title: 'Player box score stats',
+    description: 'Each player over the chosen games: games, starts, minutes, scoring and shooting (with eFG% and TS%), assists, turnovers, rebounds, steals, blocks and fouls per game and per 40 minutes, rebound percentages and usage from team and opponent totals in the games he played, and on-court efficiency from the lineup data.',
+    inputs: [PLAYERS, TEAM, 'player_stats'],
+    fn: (players, team, player_stats) => {
+      // Same game sets as the other tables (main view with exhibitions phasing out, each season phase, last 5, each game).
+      const games = [...new Map(players.map((r) => [r.game_id, r])).values()].sort((a, b) => a.date < b.date ? -1 : 1);
+      const last5 = new Set(games.slice(-5).map((g) => g.game_id));
+      const official = games.filter((g) => g.game_type !== 'Exhibition'), exhibitions = games.filter((g) => g.game_type === 'Exhibition');
+      const phasedOut = new Set(exhibitions.slice(0, Math.max(0, official.length - 3)).map((g) => g.game_id));
+      const scopesOf = (r) => (phasedOut.has(r.game_id) ? [] : ['all']).concat([r.game_type, r.game_id], r.game_type !== 'Exhibition' ? ['official'] : [], last5.has(r.game_id) && games.length > 5 ? ['last5'] : []);
+      const tm = new Map(team.map((t) => [t.game_id, t]));
+      const N = ['fgm', 'fga', 'tpm', 'tpa', 'ftm', 'fta', 'oreb', 'dreb', 'reb', 'pf', 'pts', 'ast', 'tov', 'stl', 'blk'];
+      const acc = new Map();
+      players.filter((p) => Number(p.seconds) > 0).forEach((p) => scopesOf(p).forEach((s) => {
+        const k = s + '|' + p.player;
+        const a = acc.get(k) || {scope: s, player: p.player, full_name: p.full_name, gp: 0, gs: 0, sec: 0, ...Object.fromEntries(N.map((n) => [n, 0])),
+          t_min: 0, t_oreb: 0, t_dreb: 0, o_oreb: 0, o_dreb: 0, t_use: 0};
+        a.gp += 1; a.gs += p.started ? 1 : 0; a.sec += Number(p.seconds);
+        N.forEach((n) => { a[n] += Number(p[n]); });
+        // Team and opponent totals from the games he played, for rebound percentages and usage.
+        const t = tm.get(p.game_id);
+        if (t) {
+          a.t_min += 200 + 25 * Number(t.overtimes || 0);
+          a.t_oreb += Number(t.uk_oreb); a.t_dreb += Number(t.uk_dreb); a.o_oreb += Number(t.opp_oreb); a.o_dreb += Number(t.opp_dreb);
+          a.t_use += Number(t.uk_fga) + 0.44 * Number(t.uk_fta) + Number(t.uk_tov);
+        }
+        acc.set(k, a);
+      }));
+      const onoff = new Map(player_stats.map((r) => [r.scope + '|' + r.player, r]));
+      const r1 = (v) => Math.round(v * 10) / 10, r3 = (v) => Math.round(v * 1000) / 1000;
+      const pct = (m, a) => a ? r3(m / a) : null;
+      return [...acc.values()].map((a) => {
+        const min = a.sec / 60, pg = (v) => r1(v / a.gp), p40 = (v) => min ? r1(v / min * 40) : null;
+        const ma = (m, x, f) => `${f(m).toFixed(1)}-${f(x).toFixed(1)}`;
+        const share = min && a.t_min ? (a.t_min / 5) / min : null;
+        const o = onoff.get(a.scope + '|' + a.player) || {};
+        return {scope: a.scope, player: a.player, full_name: a.full_name, gp: a.gp, gs: a.gs, minutes: r1(min), mpg: pg(min),
+          pts_pg: pg(a.pts), pts_40: p40(a.pts),
+          fg_pg: ma(a.fgm, a.fga, (v) => v / a.gp), fg_40: ma(a.fgm, a.fga, (v) => v / min * 40), fg_pct: pct(a.fgm, a.fga),
+          tp_pg: ma(a.tpm, a.tpa, (v) => v / a.gp), tp_40: ma(a.tpm, a.tpa, (v) => v / min * 40), tp_pct: pct(a.tpm, a.tpa),
+          ft_pg: ma(a.ftm, a.fta, (v) => v / a.gp), ft_40: ma(a.ftm, a.fta, (v) => v / min * 40), ft_pct: pct(a.ftm, a.fta),
+          efg: a.fga ? r3((a.fgm + 0.5 * a.tpm) / a.fga) : null,
+          ts: a.fga + a.fta ? r3(a.pts / (2 * (a.fga + 0.44 * a.fta))) : null,
+          ast_pg: pg(a.ast), ast_40: p40(a.ast), tov_pg: pg(a.tov), tov_40: p40(a.tov), ast_to: a.tov ? r1(a.ast / a.tov) : null,
+          oreb_pg: pg(a.oreb), oreb_40: p40(a.oreb), dreb_pg: pg(a.dreb), dreb_40: p40(a.dreb),
+          // Share of available rebounds he grabbed while on the floor, and share of team possessions he used.
+          oreb_pct: share && (a.t_oreb + a.o_dreb) ? r3(a.oreb * share / (a.t_oreb + a.o_dreb)) : null,
+          dreb_pct: share && (a.t_dreb + a.o_oreb) ? r3(a.dreb * share / (a.t_dreb + a.o_oreb)) : null,
+          usg: share && a.t_use ? r3((a.fga + 0.44 * a.fta + a.tov) * share / a.t_use) : null,
+          stl_pg: pg(a.stl), stl_40: p40(a.stl), blk_pg: pg(a.blk), blk_40: p40(a.blk), stocks_40: p40(a.stl + a.blk),
+          pf_pg: pg(a.pf), pf_40: p40(a.pf),
+          on_oer: o.on_oer ?? null, on_der: o.on_der ?? null, off_der: o.off_der ?? null, on_off_der: o.on_off_der ?? null};
       });
     },
   });
@@ -640,7 +818,9 @@
 </script>
 <script>
   const kl = {
-    sort: {lineups: {key: 'minutes', dir: -1}, players: {key: 'minutes', dir: -1}, combos: {key: 'minutes', dir: -1}},
+    sort: {lineups: {key: 'minutes', dir: -1}, players: {key: 'minutes', dir: -1}, combos: {key: 'minutes', dir: -1},
+      'off-pg': {key: 'mpg', dir: -1}, 'off-40': {key: 'mpg', dir: -1}, 'def-pg': {key: 'mpg', dir: -1}, 'def-40': {key: 'mpg', dir: -1}},
+    rate: () => dash.params().rate === '40' ? '40' : 'pg',
     comboSize: () => Number(dash.params().combo ?? 2),
     scope: () => dash.params().scope || 'all',
     minmin: () => Number(dash.params().minmin ?? 0),
@@ -698,6 +878,13 @@
   const minSel = document.querySelectorAll('.kl-minmin');
   minSel.forEach((s) => s.addEventListener('change', () => dash.setParams({minmin: Number(s.value)})));
   dash.onData(() => minSel.forEach((s) => { s.value = String(kl.minmin()); }));
+  const rateSel = document.querySelectorAll('.kl-rate');
+  rateSel.forEach((s) => s.addEventListener('change', () => dash.setParams({rate: s.value})));
+  dash.onData(() => {
+    rateSel.forEach((s) => { s.value = kl.rate(); });
+    document.querySelectorAll('.kl-rate-pg').forEach((el) => { el.hidden = kl.rate() !== 'pg'; });
+    document.querySelectorAll('.kl-rate-40').forEach((el) => { el.hidden = kl.rate() !== '40'; });
+  });
   const sizeSel = document.querySelectorAll('.kl-combo-size');
   sizeSel.forEach((s) => s.addEventListener('change', () => dash.setParams({combo: Number(s.value)})));
   dash.onData(() => sizeSel.forEach((s) => { s.value = String(kl.comboSize()); }));
@@ -715,7 +902,7 @@
     const which = b.closest('table').querySelector('tbody').dataset.draw;
     const st = kl.sort[which]; if (!st) return;
     const key = b.dataset.sort;
-    st.dir = st.key === key ? -st.dir : (key === 'lineup' || key === 'player' || key === 'combo' ? 1 : -1); st.key = key;
+    st.dir = st.key === key ? -st.dir : (['lineup', 'player', 'combo', 'on_der', 'off_der', 'on_off_der', 'tov_pg', 'tov_40', 'pf_pg', 'pf_40'].includes(key) ? 1 : -1); st.key = key;
     b.closest('thead').querySelectorAll('th').forEach((th) => th.removeAttribute('aria-sort'));
     b.closest('th').setAttribute('aria-sort', st.dir > 0 ? 'ascending' : 'descending');
     dash.draw(which);
@@ -806,6 +993,33 @@
       td(tr, kl.signed(r.plus_minus), kl.cls(r.plus_minus)); td(tr, kl.signed(r.net40, 1), kl.cls(r.net40)); td(tr, kl.signed(r.adj_net40, 1), kl.cls(r.adj_net40));
       td(tr, r.oer === null ? '—' : r.oer.toFixed(1), '', 'kl-hide-sm'); td(tr, r.der === null ? '—' : r.der.toFixed(1), '', 'kl-hide-sm');
       return tr;
+    });
+  });
+
+  // Player stats tables: one drawing per table; the per-game and per-40 versions differ only in which columns they read.
+  const pctF = (v) => v === null || v === undefined ? '—' : (v * 100).toFixed(1) + '%';
+  const numF = (v) => v === null || v === undefined ? '—' : v.toFixed(1);
+  const offRow = (m) => (tb, r) => {
+    const tr = tb.insertRow(); tr.dataset.key = kl.enc(r.scope) + ',' + kl.enc(r.player);
+    td(tr, r.player); td(tr, String(r.gp)); td(tr, String(r.gs), '', 'kl-hide-sm'); td(tr, numF(r.mpg)); td(tr, numF(r['pts_' + m]));
+    td(tr, r['fg_' + m], '', 'kl-hide-md'); td(tr, pctF(r.fg_pct)); td(tr, r['tp_' + m], '', 'kl-hide-md'); td(tr, pctF(r.tp_pct));
+    td(tr, r['ft_' + m], '', 'kl-hide-md'); td(tr, pctF(r.ft_pct)); td(tr, pctF(r.efg), '', 'kl-hide-sm'); td(tr, pctF(r.ts));
+    td(tr, numF(r['ast_' + m])); td(tr, numF(r['tov_' + m])); td(tr, numF(r.ast_to), '', 'kl-hide-sm'); td(tr, numF(r['oreb_' + m]), '', 'kl-hide-sm');
+    td(tr, pctF(r.oreb_pct)); td(tr, pctF(r.usg)); td(tr, numF(r.on_oer));
+    return tr;
+  };
+  const defRow = (m) => (tb, r) => {
+    const tr = tb.insertRow(); tr.dataset.key = kl.enc(r.scope) + ',' + kl.enc(r.player);
+    td(tr, r.player); td(tr, String(r.gp)); td(tr, numF(r.mpg)); td(tr, numF(r['dreb_' + m])); td(tr, pctF(r.dreb_pct));
+    td(tr, numF(r['stl_' + m])); td(tr, numF(r['blk_' + m])); td(tr, numF(r.stocks_40)); td(tr, numF(r['pf_' + m]));
+    td(tr, numF(r.on_der)); td(tr, numF(r.off_der), '', 'kl-hide-sm');
+    td(tr, r.on_off_der === null ? '—' : kl.signed(r.on_off_der, 1), r.on_off_der < 0 ? 'kl-pos' : r.on_off_der > 0 ? 'kl-neg' : '');
+    return tr;
+  };
+  [['off-pg', offRow('pg')], ['off-40', offRow('40')], ['def-pg', defRow('pg')], ['def-40', defRow('40')]].forEach(([name, row]) => {
+    dash.draw(name, (tb) => {
+      tb.replaceChildren();
+      splitBelow(tb, sorted(inScope('player_box'), kl.sort[name]), 'player', (r) => row(tb, r));
     });
   });
 
