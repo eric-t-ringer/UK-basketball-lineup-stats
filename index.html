@@ -73,12 +73,14 @@
 </style>
 <style id="uk-theme">
   /* Kentucky blue and white */
-  :root { --uk-blue: #0033a0; --uk-blue-deep: #002579; --uk-blue-tint: #e8eef9; --accent: #0033a0;
+  :root { --uk-blue: #0033a0; --uk-blue-deep: #002579; --uk-blue-tint: #e8eef9; --accent: #0033a0; --series-1: #0033a0;
     --color-bg: #f3f6fb; --color-border-line: #dde3ee; --cds-chart-grid: #e6ebf3; --cds-chart-axis: #c3cbd9; }
   @media (prefers-color-scheme: dark) {
-    :root { --uk-blue: #0033a0; --uk-blue-deep: #00205f; --uk-blue-tint: #1a2a52; --accent: #7fa6ff;
-      --color-bg: #0a1224; --color-panel: #111c36; --color-border-line: #24335a; --cds-surface-popover: #17254a; --cds-border: #2c3d68;
-      --cds-chart-grid: #1c2a4c; --cds-chart-axis: #34466f; --cds-chart-muted: #5d6c90; }
+    /* Neutral charcoal instead of navy, so the blue reads as an accent rather than fighting the background */
+    :root { --uk-blue: #0033a0; --uk-blue-deep: #00266f; --uk-blue-tint: #1d2129; --accent: #f2f4f8; --series-1: #7fa6ff;
+      --color-bg: #111317; --color-panel: #1a1d23; --color-fg: #f2f4f8; --color-fg-muted: #b4bac6; --color-border-line: #2d323c;
+      --cds-surface-popover: #22262e; --cds-border: #3a404c; --cds-text-secondary: #b4bac6;
+      --cds-chart-grid: #262a33; --cds-chart-axis: #454c59; --cds-chart-muted: #6f7787; --cds-chart-reference: #8a92a2; }
   }
   .kl-page { padding-top: 20px; }
   .kl-head { background: linear-gradient(135deg, var(--uk-blue) 0%, var(--uk-blue-deep) 100%); color: #fff; border-radius: 14px; padding: 26px 24px 22px; border-bottom: 4px solid #fff; box-shadow: 0 0 0 1px var(--uk-blue); }
@@ -98,6 +100,14 @@
   .kl th[aria-sort] button { text-decoration: underline; text-underline-offset: 3px; }
   .kl tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--uk-blue-tint) 55%, transparent); }
   .kl-method { border-top: 4px solid var(--uk-blue); padding-top: 14px; }
+  @media (prefers-color-scheme: dark) {
+    .kl-head { border-bottom: none; box-shadow: none; }
+    .kl-controls select { border-color: var(--color-border-line); }
+    .kl-controls select:focus-visible { outline-color: #7fa6ff; }
+    .kl-tile, .kl-card, .kl-method { border-top-color: #2f5fd0; }
+    .kl-head .kl-take { color: rgba(255,255,255,.88); }
+    .kl-head .kl-next { color: rgba(255,255,255,.78); }
+  }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script src="shim.js"></script>

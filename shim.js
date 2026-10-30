@@ -8,7 +8,7 @@
   try { const q = new URLSearchParams(location.search); if (q.get('scope')) params.scope = q.get('scope'); if (q.get('min')) params.minmin = Number(q.get('min')); } catch (e) {}
   const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
   const dash = {
-    get colors() { return [css('--accent'), '#e07b39', '#2a9d8f', '#8e6cc9', '#d1495b', '#6a994e', '#c9a227', '#577590']; },
+    get colors() { return [css('--series-1') || css('--accent'), '#e07b39', '#2a9d8f', '#8e6cc9', '#d1495b', '#6a994e', '#c9a227', '#577590']; },
     data(id) {
       if (status !== 'ok') return {status, data: []};
       if (id in raw) return {status: 'ok', data: raw[id]};
