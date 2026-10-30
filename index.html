@@ -71,6 +71,34 @@
   @media (max-width: 640px) { .kl-hide-sm { display: none; } .kl td:first-child { min-width: 8.5rem; } .kl td, .kl th { padding: 6px 5px; } }
   [data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
 </style>
+<style id="uk-theme">
+  /* Kentucky blue and white */
+  :root { --uk-blue: #0033a0; --uk-blue-deep: #002579; --uk-blue-tint: #e8eef9; --accent: #0033a0;
+    --color-bg: #f3f6fb; --color-border-line: #dde3ee; --cds-chart-grid: #e6ebf3; --cds-chart-axis: #c3cbd9; }
+  @media (prefers-color-scheme: dark) {
+    :root { --uk-blue: #0033a0; --uk-blue-deep: #00205f; --uk-blue-tint: #1a2a52; --accent: #7fa6ff;
+      --color-bg: #0a1224; --color-panel: #111c36; --color-border-line: #24335a; --cds-surface-popover: #17254a; --cds-border: #2c3d68;
+      --cds-chart-grid: #1c2a4c; --cds-chart-axis: #34466f; --cds-chart-muted: #5d6c90; }
+  }
+  .kl-page { padding-top: 20px; }
+  .kl-head { background: linear-gradient(135deg, var(--uk-blue) 0%, var(--uk-blue-deep) 100%); color: #fff; border-radius: 14px; padding: 26px 24px 22px; border-bottom: 4px solid #fff; box-shadow: 0 0 0 1px var(--uk-blue); }
+  .kl-head h1 { color: #fff; letter-spacing: -0.01em; }
+  .kl-head .kl-take { color: rgba(255,255,255,.82); }
+  .kl .kl-head .kl-take b { color: #fff; }
+  .kl-head .kl-next { color: rgba(255,255,255,.7); }
+  .kl-head .kl-next span { color: #fff; }
+  .kl-controls select { border-color: var(--uk-blue); }
+  .kl-controls select:focus-visible { outline: 2px solid var(--uk-blue); outline-offset: 2px; }
+  .kl-tile { border-top: 4px solid var(--uk-blue); }
+  .kl-tile .kl-big { color: var(--accent); }
+  .kl-card { border-top: 4px solid var(--uk-blue); }
+  .kl-card h2, .kl-method h2 { color: var(--accent); }
+  .kl th { background: var(--uk-blue); color: #fff; border-bottom: none; }
+  .kl th:first-child { border-top-left-radius: 6px; } .kl th:last-child { border-top-right-radius: 6px; }
+  .kl th[aria-sort] button { text-decoration: underline; text-underline-offset: 3px; }
+  .kl tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--uk-blue-tint) 55%, transparent); }
+  .kl-method { border-top: 4px solid var(--uk-blue); padding-top: 14px; }
+</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script src="shim.js"></script>
 </head>
