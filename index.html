@@ -34,6 +34,7 @@
   .kl-failed .kl-page::before { content: "Couldn't load the data. Try refreshing the page."; display: block; margin-bottom: 16px; color: var(--color-bad); }
 
   
+  
   .kl { font-family: var(--font-anthropic-sans); color: var(--color-fg); display: grid; gap: var(--cds-gap-lg); }
   .kl-head h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0 0 var(--cds-gap-xs); }
   .kl-take { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); line-height: 1.5; }
@@ -153,7 +154,7 @@
 
   <section class="kl-card" id="games">
     <h2>Game log</h2>
-    <p class="kl-note">Every game on the schedule. Lineup data is added the morning after each game, once the official box score is posted.</p>
+    <p class="kl-note">Every game on the schedule. Lineup data is added the morning after each game, once the official box score is posted. "In main view" shows which games count toward the main view's numbers.</p>
     <div class="kl-scroll">
       <table data-source="game_summary" data-row-key="game_id">
         <thead><tr>
@@ -164,6 +165,7 @@
           <th data-field="lineups_used">Lineups</th>
           <th data-field="top_lineup" class="kl-hide-sm kl-left">Most-used lineup</th>
           <th data-field="top_minutes" class="kl-hide-sm">Its min</th>
+          <th data-field="main_view">In main view</th>
         </tr></thead>
         <tbody data-draw="games"></tbody>
       </table>
@@ -174,6 +176,7 @@
     <h2>How the numbers work</h2>
     <p>Source: the "Line Up Analysis" page of Kentucky's official box score book for each game, posted on UK Athletics. Each row there is a five-man unit's time on the floor, points for and against, and Kentucky's points per possession.</p>
     <p>Possessions are worked out as points ÷ points per possession. For units that didn't score, possessions are estimated from their minutes at that game's pace, so points per possession and turnover rate are close approximations, not official figures.</p>
+    <p>Exhibitions phase out: the main view includes the three exhibition games until there are three official games. From then on, each new official game replaces the oldest exhibition (the 4th official game replaces Little Rock, the 5th Texas Tech, the 6th UCF), so after six official games the main view is official games only. The exhibitions stay viewable under the "Exhibitions" choice in the Games filter.</p>
     <p>Small samples: a lineup that played 2 minutes can show +60 per 40 on one run. Use the minimum-minutes setting before trusting a ranking.</p>
     <p>Unofficial fan project, not affiliated with the University of Kentucky. Lineup data comes from the official box scores posted at ukathletics.com and is added the morning after each game.</p>
   </section>
@@ -185,19 +188,22 @@
 
   dash.calc('scopes', {
     title: 'Game filter choices',
-    description: 'All games, each season phase, the last five games and each game with lineup data.',
+    description: 'The main view (exhibitions phase out as official games are played), official games only, exhibitions, the last five games and each game with lineup data.',
     inputs: [STINTS],
     fn: (stints) => {
       const games = [...new Map(stints.map((r) => [r.game_id, r])).values()].sort((a, b) => a.date < b.date ? 1 : -1);
-      const out = [{scope: 'all', label: 'All games'}];
-      if (games.some((g) => g.game_type === 'Regular season')) out.push({scope: 'Regular season', label: 'Regular season'});
-      if (games.some((g) => g.game_type === 'Exhibition')) out.push({scope: 'Exhibition', label: 'Exhibitions'});
+      const official = games.filter((g) => g.game_type !== 'Exhibition'), exhibitions = games.filter((g) => g.game_type === 'Exhibition');
+      const keptExh = Math.max(0, exhibitions.length - Math.max(0, official.length - 3));
+      const mainLabel = !official.length ? 'All games' : !keptExh ? 'Main view: official games' : `Main view: ${official.length} official + ${keptExh} exhibition`;
+      const out = [{scope: 'all', label: mainLabel}];
+      if (official.length && exhibitions.length) out.push({scope: 'official', label: 'Official games only'});
+      if (games.some((g) => g.game_type === 'Postseason')) out.push({scope: 'Regular season', label: 'Regular season'}, {scope: 'Postseason', label: 'Postseason'});
+      if (exhibitions.length) out.push({scope: 'Exhibition', label: 'Exhibitions'});
       if (games.length > 5) out.push({scope: 'last5', label: 'Last 5 games'});
       games.forEach((g) => out.push({scope: g.game_id, label: g.date.slice(5).replace('-', '/') + ' vs. ' + g.opponent}));
       return out;
     },
   });
-
 
   dash.calc('lineup_stats', {
     title: 'Lineup totals',
@@ -216,7 +222,10 @@
         });
         const rows = stints.map((r) => ({...r, seconds: Number(r.seconds), uk_pts: Number(r.uk_pts), opp_pts: Number(r.opp_pts), tov: Number(r.tov),
           poss: Number(r.ppp) > 0 ? Number(r.uk_pts) / Number(r.ppp) : Number(r.seconds) * pace[r.game_id]}));
-        const scopesOf = (r) => ['all', r.game_type, r.game_id].concat(last5.has(r.game_id) && games.length > 5 ? ['last5'] : []);
+        // Exhibitions count until official games replace them: each official game after the 3rd drops the oldest exhibition from the main view.
+        const official = games.filter((g) => g.game_type !== 'Exhibition'), exhibitions = games.filter((g) => g.game_type === 'Exhibition');
+        const phasedOut = new Set(exhibitions.slice(0, Math.max(0, official.length - 3)).map((g) => g.game_id));
+        const scopesOf = (r) => (phasedOut.has(r.game_id) ? [] : ['all']).concat([r.game_type, r.game_id], r.game_type !== 'Exhibition' ? ['official'] : [], last5.has(r.game_id) && games.length > 5 ? ['last5'] : []);
   
       const acc = new Map(), scopeSecs = {};
       rows.forEach((r) => scopesOf(r).forEach((s) => {
@@ -254,7 +263,10 @@
         });
         const rows = stints.map((r) => ({...r, seconds: Number(r.seconds), uk_pts: Number(r.uk_pts), opp_pts: Number(r.opp_pts), tov: Number(r.tov),
           poss: Number(r.ppp) > 0 ? Number(r.uk_pts) / Number(r.ppp) : Number(r.seconds) * pace[r.game_id]}));
-        const scopesOf = (r) => ['all', r.game_type, r.game_id].concat(last5.has(r.game_id) && games.length > 5 ? ['last5'] : []);
+        // Exhibitions count until official games replace them: each official game after the 3rd drops the oldest exhibition from the main view.
+        const official = games.filter((g) => g.game_type !== 'Exhibition'), exhibitions = games.filter((g) => g.game_type === 'Exhibition');
+        const phasedOut = new Set(exhibitions.slice(0, Math.max(0, official.length - 3)).map((g) => g.game_id));
+        const scopesOf = (r) => (phasedOut.has(r.game_id) ? [] : ['all']).concat([r.game_type, r.game_id], r.game_type !== 'Exhibition' ? ['official'] : [], last5.has(r.game_id) && games.length > 5 ? ['last5'] : []);
   
       const tot = {}, on = new Map();
       rows.forEach((r) => scopesOf(r).forEach((s) => {
@@ -290,7 +302,10 @@
         });
         const rows = stints.map((r) => ({...r, seconds: Number(r.seconds), uk_pts: Number(r.uk_pts), opp_pts: Number(r.opp_pts), tov: Number(r.tov),
           poss: Number(r.ppp) > 0 ? Number(r.uk_pts) / Number(r.ppp) : Number(r.seconds) * pace[r.game_id]}));
-        const scopesOf = (r) => ['all', r.game_type, r.game_id].concat(last5.has(r.game_id) && games.length > 5 ? ['last5'] : []);
+        // Exhibitions count until official games replace them: each official game after the 3rd drops the oldest exhibition from the main view.
+        const official = games.filter((g) => g.game_type !== 'Exhibition'), exhibitions = games.filter((g) => g.game_type === 'Exhibition');
+        const phasedOut = new Set(exhibitions.slice(0, Math.max(0, official.length - 3)).map((g) => g.game_id));
+        const scopesOf = (r) => (phasedOut.has(r.game_id) ? [] : ['all']).concat([r.game_type, r.game_id], r.game_type !== 'Exhibition' ? ['official'] : [], last5.has(r.game_id) && games.length > 5 ? ['last5'] : []);
   
       const per = {};
       rows.forEach((r) => scopesOf(r).forEach((s) => {
@@ -309,16 +324,22 @@
 
   dash.calc('game_summary', {
     title: 'Game log',
-    description: 'Each scheduled game with its result and, once loaded, how many lineups Kentucky used and which played the most.',
+    description: 'Each scheduled game with its result and, once loaded, how many lineups Kentucky used, which played the most, and whether the game still counts in the main view.',
     inputs: [SCHED, STINTS],
-    fn: (schedule, stints) => schedule.map((g) => {
+    fn: (schedule, stints) => {
+      const played = [...new Map(stints.map((r) => [r.game_id, r])).values()].sort((a, b) => a.date < b.date ? -1 : 1);
+      const official = played.filter((g) => g.game_type !== 'Exhibition');
+      const phasedOut = new Set(played.filter((g) => g.game_type === 'Exhibition').slice(0, Math.max(0, official.length - 3)).map((g) => g.game_id));
+      return schedule.map((g) => {
       const mine = stints.filter((r) => r.game_id === g.game_id);
       const by = {};
       mine.forEach((r) => { by[r.lineup] = (by[r.lineup] || 0) + Number(r.seconds); });
       const top = Object.entries(by).sort((a, b) => b[1] - a[1])[0];
       return {game_id: g.game_id, date: g.date, opponent: g.opponent, site: g.site, result: g.result || (g.tipoff_et ? g.tipoff_et + ' ET' : ''),
-        lineups_used: mine.length ? Object.keys(by).length : null, top_lineup: top ? top[0] : null, top_minutes: top ? Math.round(top[1] / 6) / 10 : null};
-    }),
+        lineups_used: mine.length ? Object.keys(by).length : null, top_lineup: top ? top[0] : null, top_minutes: top ? Math.round(top[1] / 6) / 10 : null,
+        main_view: !mine.length ? null : phasedOut.has(g.game_id) ? 'Phased out' : 'Yes'};
+      });
+    },
   });
 </script>
 <script>
@@ -424,6 +445,7 @@
       td(tr, r.lineups_used === null ? '—' : String(r.lineups_used));
       const c = td(tr, r.top_lineup || '—', 'kl-left', 'kl-hide-sm'); c.style.whiteSpace = 'normal';
       td(tr, r.top_minutes === null ? '—' : r.top_minutes.toFixed(1), '', 'kl-hide-sm');
+      td(tr, r.main_view || '—', r.main_view === 'Phased out' ? 'kl-small' : '');
     });
   });
 
