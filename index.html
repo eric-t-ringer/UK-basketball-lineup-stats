@@ -41,6 +41,8 @@
   
   
   
+  
+  
   .kl { font-family: var(--font-anthropic-sans); color: var(--color-fg); display: grid; gap: var(--cds-gap-lg); }
   .kl-head h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0 0 var(--cds-gap-xs); }
   .kl-take { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); line-height: 1.5; }
@@ -183,7 +185,7 @@
 
   <section class="kl-card" id="lineups">
     <h2>All lineups</h2>
-    <p class="kl-note">Sorted by minutes; click a column to re-sort. Net /40 is the scoring margin per 40 minutes; Adj. /40 pulls it toward the team average until a lineup has played enough to trust (see below). Points per possession is Kentucky's offense only.</p>
+    <p class="kl-note">Sorted by minutes; click a column to re-sort. Net /40 is the scoring margin per 40 minutes; Adj. /40 pulls it toward the team average until a lineup has played enough to trust (see below). OER and DER are points scored and allowed per 100 possessions (lower DER is better).</p>
     <div class="kl-scroll">
       <table data-source="lineup_stats" data-row-key="scope,lineup">
         <thead><tr>
@@ -195,7 +197,8 @@
           <th data-field="plus_minus"><button data-sort="plus_minus">+/-</button></th>
           <th data-field="net40"><button data-sort="net40">Net /40</button></th>
           <th data-field="adj_net40"><button data-sort="adj_net40">Adj. /40</button></th>
-          <th data-field="ppp"><button data-sort="ppp">Pts/poss</button></th>
+          <th data-field="oer"><button data-sort="oer">OER</button></th>
+          <th data-field="der"><button data-sort="der">DER</button></th>
           <th data-field="tov_pct" class="kl-hide-sm"><button data-sort="tov_pct">TO %</button></th>
         </tr></thead>
         <tbody data-draw="lineups"></tbody>
@@ -224,6 +227,8 @@
           <th data-field="plus_minus"><button data-sort="plus_minus">+/-</button></th>
           <th data-field="net40"><button data-sort="net40">Net /40</button></th>
           <th data-field="adj_net40"><button data-sort="adj_net40">Adj. /40</button></th>
+          <th data-field="oer" class="kl-hide-sm"><button data-sort="oer">OER</button></th>
+          <th data-field="der" class="kl-hide-sm"><button data-sort="der">DER</button></th>
         </tr></thead>
         <tbody data-draw="combos"></tbody>
       </table>
@@ -253,7 +258,8 @@
   <section class="kl-method" id="method">
     <h2>How the numbers work</h2>
     <p>Source: the "Line Up Analysis" page of Kentucky's official box score book for each game, posted on UK Athletics. Each row there is a five-man unit's time on the floor, points for and against, and Kentucky's points per possession.</p>
-    <p>Possessions are worked out as points ÷ points per possession. For units that didn't score, possessions are estimated from their minutes at that game's pace, so points per possession and turnover rate are close approximations, not official figures.</p>
+    <p>Possessions are worked out as points ÷ points per possession, from the box score. For units that didn't score, possessions are estimated from their minutes at that game's pace. OER and DER are points scored and allowed per 100 possessions, using Kentucky's possessions for both ends (over a stretch of play the two teams' possession counts differ by at most one). They're close approximations, not official figures.</p>
+    <p>How the measures relate: OER − DER is the scoring margin per 100 possessions. Net /40 is the same margin per 40 minutes, so it also reflects pace: at Kentucky’s exhibition pace of about 69 possessions per 40 minutes, a +10 margin per 100 possessions is about +7 per 40. Adj. /40 is Net /40 pulled toward the team average for small samples; OER and DER are shown unadjusted, so treat them with the same caution on short stints.</p>
     <p>Exhibitions phase out: the main view includes the three exhibition games until there are three official games. From then on, each new official game replaces the oldest exhibition (the 4th official game replaces Little Rock, the 5th Texas Tech, the 6th UCF), so after six official games the main view is official games only. The exhibitions stay viewable under the "Exhibitions" choice in the Games filter.</p>
     <p>Adjusted net (Adj. /40): a lineup that played 2 minutes can show +60 per 40 on one run, so raw margins over short stints are mostly noise. The adjusted figure blends each lineup's actual margin with the team's average margin, as if the lineup had also played 50 extra minutes at the team's average. A lineup that has played a few minutes stays close to the team average; one that has played 100+ minutes is judged mostly on its own results. The 50-minute weight is a judgment call, not a fitted value. Rankings and the chart use the adjusted figure. The idea follows Evan Miya's point that observed lineup results should count for more as a lineup logs more possessions.</p>
     <p>Combinations: pair and trio numbers pool every stint those players shared, so they gather minutes faster than full lineups. They also credit or blame the players for whoever else was on the floor.</p>
@@ -301,7 +307,7 @@
 
   dash.calc('lineup_stats', {
     title: 'Lineup totals',
-    description: 'Each five-man lineup summed over the chosen games: minutes, points for and against, margin per 40 minutes, the margin adjusted toward the team average by minutes played, points per possession and turnover rate.',
+    description: 'Each five-man lineup summed over the chosen games: minutes, points for and against, margin per 40 minutes, the margin adjusted toward the team average by minutes played, points scored and allowed per 100 possessions (OER and DER) and turnover rate.',
     inputs: [STINTS],
     fn: (stints) => {
       // Which games belong to each filter choice, and possessions per stint (estimated at the game's pace where a unit didn't score).
@@ -338,7 +344,10 @@
         uk_pts: a.uk_pts, opp_pts: a.opp_pts, score: a.uk_pts + '–' + a.opp_pts, plus_minus: a.uk_pts - a.opp_pts,
         net40: Math.round((a.uk_pts - a.opp_pts) / a.seconds * 2400 * 10) / 10,
         adj_net40: Math.round(((a.uk_pts - a.opp_pts) + PRIOR_SECONDS * scopePm[a.scope] / scopeSecs[a.scope]) / (a.seconds + PRIOR_SECONDS) * 2400 * 10) / 10,
-        ppp: a.poss ? Math.round(a.uk_pts / a.poss * 100) / 100 : null,
+        // Points scored (OER) and allowed (DER) per 100 possessions; defensive possessions are taken as equal to offensive ones.
+        oer: a.poss ? Math.round(a.uk_pts / a.poss * 1000) / 10 : null,
+        der: a.poss ? Math.round(a.opp_pts / a.poss * 1000) / 10 : null,
+        poss: Math.round(a.poss),
         tov_pct: a.poss ? Math.round(a.tov / a.poss * 1000) / 10 : null,
       }));
     },
@@ -346,7 +355,7 @@
 
   dash.calc('combos', {
     title: 'Two- and three-player combinations',
-    description: 'Every pair and trio of players, summed over all the time they shared the floor in the chosen games: minutes, points for and against, margin per 40, and the margin adjusted toward the team average.',
+    description: 'Every pair and trio of players, summed over all the time they shared the floor in the chosen games: minutes, points for and against, margin per 40, the margin adjusted toward the team average, and points scored and allowed per 100 possessions.',
     inputs: [STINTS],
     fn: (stints) => {
       // Which games belong to each filter choice, and possessions per stint (estimated at the game's pace where a unit didn't score).
@@ -375,15 +384,16 @@
           scopeSecs[s] = (scopeSecs[s] || 0) + r.seconds; scopePm[s] = (scopePm[s] || 0) + r.uk_pts - r.opp_pts;
           [2, 3].forEach((k) => subsets(players, k).forEach((c) => {
             const combo = c.join(' · '), key = s + '|' + k + '|' + combo;
-            const a = acc.get(key) || {scope: s, size: k, combo, seconds: 0, uk_pts: 0, opp_pts: 0, g: new Set()};
-            a.seconds += r.seconds; a.uk_pts += r.uk_pts; a.opp_pts += r.opp_pts; a.g.add(r.game_id); acc.set(key, a);
+            const a = acc.get(key) || {scope: s, size: k, combo, seconds: 0, uk_pts: 0, opp_pts: 0, poss: 0, g: new Set()};
+            a.seconds += r.seconds; a.uk_pts += r.uk_pts; a.opp_pts += r.opp_pts; a.poss += r.poss; a.g.add(r.game_id); acc.set(key, a);
           }));
         });
       });
       return [...acc.values()].map((a) => ({scope: a.scope, size: a.size, combo: a.combo, games: a.g.size,
         minutes: Math.round(a.seconds / 6) / 10, uk_pts: a.uk_pts, opp_pts: a.opp_pts, score: a.uk_pts + '–' + a.opp_pts, plus_minus: a.uk_pts - a.opp_pts,
         net40: Math.round((a.uk_pts - a.opp_pts) / a.seconds * 2400 * 10) / 10,
-        adj_net40: Math.round(((a.uk_pts - a.opp_pts) + PRIOR_SECONDS * scopePm[a.scope] / scopeSecs[a.scope]) / (a.seconds + PRIOR_SECONDS) * 2400 * 10) / 10}));
+        adj_net40: Math.round(((a.uk_pts - a.opp_pts) + PRIOR_SECONDS * scopePm[a.scope] / scopeSecs[a.scope]) / (a.seconds + PRIOR_SECONDS) * 2400 * 10) / 10,
+        oer: a.poss ? Math.round(a.uk_pts / a.poss * 1000) / 10 : null, der: a.poss ? Math.round(a.opp_pts / a.poss * 1000) / 10 : null}));
     },
   });
 
@@ -584,7 +594,7 @@
       if (r.minutes < kl.minmin()) tr.classList.add('kl-small');
       td(tr, r.lineup); td(tr, r.minutes.toFixed(1)); td(tr, d3.format('.0%')(r.share), '', 'kl-hide-sm'); td(tr, String(r.games), '', 'kl-hide-sm');
       td(tr, r.score); td(tr, kl.signed(r.plus_minus), kl.cls(r.plus_minus)); td(tr, kl.signed(r.net40, 1), kl.cls(r.net40)); td(tr, kl.signed(r.adj_net40, 1), kl.cls(r.adj_net40));
-      td(tr, r.ppp === null ? '—' : r.ppp.toFixed(2)); td(tr, r.tov_pct === null ? '—' : r.tov_pct.toFixed(0) + '%', '', 'kl-hide-sm');
+      td(tr, r.oer === null ? '—' : r.oer.toFixed(1)); td(tr, r.der === null ? '—' : r.der.toFixed(1)); td(tr, r.tov_pct === null ? '—' : r.tov_pct.toFixed(0) + '%', '', 'kl-hide-sm');
     });
   });
 
@@ -596,6 +606,7 @@
       if (r.minutes < kl.minmin()) tr.classList.add('kl-small');
       td(tr, r.combo); td(tr, r.minutes.toFixed(1)); td(tr, String(r.games), '', 'kl-hide-sm'); td(tr, r.score);
       td(tr, kl.signed(r.plus_minus), kl.cls(r.plus_minus)); td(tr, kl.signed(r.net40, 1), kl.cls(r.net40)); td(tr, kl.signed(r.adj_net40, 1), kl.cls(r.adj_net40));
+      td(tr, r.oer === null ? '—' : r.oer.toFixed(1), '', 'kl-hide-sm'); td(tr, r.der === null ? '—' : r.der.toFixed(1), '', 'kl-hide-sm');
     });
   });
 
