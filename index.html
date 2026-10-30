@@ -35,6 +35,7 @@
 
   
   
+  
   .kl { font-family: var(--font-anthropic-sans); color: var(--color-fg); display: grid; gap: var(--cds-gap-lg); }
   .kl-head h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0 0 var(--cds-gap-xs); }
   .kl-take { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); line-height: 1.5; }
@@ -136,8 +137,8 @@
   </div>
 
   <section class="kl-tiles" id="totals">
-    <div class="kl-tile"><p>Games</p><p class="kl-big" data-draw="t-games" data-source="scope_totals" data-field="games">—</p></div>
-    <div class="kl-tile"><p>Record</p><p class="kl-big" data-draw="t-record" data-source="scope_totals" data-field="record">—</p></div>
+    <div class="kl-tile"><p>Official games</p><p class="kl-big" data-draw="t-games" data-source="scope_totals" data-field="games">—</p></div>
+    <div class="kl-tile"><p>Official record</p><p class="kl-big" data-draw="t-record" data-source="scope_totals" data-field="record">—</p></div>
     <div class="kl-tile"><p>Lineups used</p><p class="kl-big" data-draw="t-lineups" data-source="scope_totals" data-field="lineups">—</p></div>
     <div class="kl-tile"><p>Most-used lineup, share of minutes</p><p class="kl-big" data-draw="t-share" data-source="scope_totals" data-field="top_share">—</p></div>
     <div class="kl-tile"><p>Team net points per 40</p><p class="kl-big" data-draw="t-net" data-source="scope_totals" data-field="net40">—</p></div>
@@ -324,7 +325,7 @@
 
   dash.calc('scope_totals', {
     title: 'Totals for the chosen games',
-    description: 'Games, record, lineups used, the most-used lineup’s share of minutes and the team margin per 40, for each set of games.',
+    description: 'Official games and record (exhibitions excluded), exhibitions included, lineups used, the most-used lineup’s share of minutes and the team margin per 40, for each set of games.',
     inputs: ['lineup_stats', STINTS],
     fn: (lineup_stats, stints) => {
       // Which games belong to each filter choice, and possessions per stint (estimated at the game's pace where a unit didn't score).
@@ -346,14 +347,16 @@
   
       const per = {};
       rows.forEach((r) => scopesOf(r).forEach((s) => {
-        const p = per[s] || (per[s] = {games: {}, sec: 0, pm: 0});
-        const g = p.games[r.game_id] || (p.games[r.game_id] = 0);
-        p.games[r.game_id] = g + r.uk_pts - r.opp_pts; p.sec += r.seconds; p.pm += r.uk_pts - r.opp_pts;
+        const p = per[s] || (per[s] = {games: {}, exh: new Set(), sec: 0, pm: 0});
+        // Games and record count official games only; exhibitions are tallied separately.
+        if (r.game_type === 'Exhibition') p.exh.add(r.game_id);
+        else p.games[r.game_id] = (p.games[r.game_id] || 0) + r.uk_pts - r.opp_pts;
+        p.sec += r.seconds; p.pm += r.uk_pts - r.opp_pts;
       }));
       return Object.entries(per).map(([s, p]) => {
         const ls = lineup_stats.filter((l) => l.scope === s);
         const margins = Object.values(p.games);
-        return {scope: s, games: margins.length, record: margins.filter((m) => m > 0).length + '–' + margins.filter((m) => m < 0).length,
+        return {scope: s, games: margins.length, record: margins.filter((m) => m > 0).length + '–' + margins.filter((m) => m < 0).length, exhibitions: p.exh.size,
           lineups: ls.length, top_share: Math.max(...ls.map((l) => l.share)), net40: Math.round(p.pm / p.sec * 2400 * 10) / 10};
       });
     },
