@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kentucky Lineup Tracker 2026-27</title>
+<meta name="description" content="Which five-man lineups Kentucky men's basketball uses most, and how each one performs. Updated after every game from the official box scores.">
+<style>
+  :root {
+    color-scheme: light dark;
+    --font-anthropic-sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-anthropic-serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    --color-bg: #f7f7f5; --color-panel: #ffffff; --color-fg: #1d1d1b; --color-fg-muted: #66665f; --color-border-line: #e3e2dc;
+    --color-ok: #1f7a43; --color-warn: #a66300; --color-bad: #b42318; --accent: #0033a0;
+    --cds-font-size-caption: 0.8125rem; --cds-font-size-body: 0.9375rem; --cds-font-size-heading: 1.0625rem; --cds-font-size-title: 1.75rem;
+    --cds-font-weight-medium: 550;
+    --cds-gap-xs: 4px; --cds-gap-sm: 8px; --cds-gap-md: 14px; --cds-gap-lg: 24px; --cds-gap-xl: 36px;
+    --cds-pad-xs: 4px; --cds-pad-sm: 8px; --cds-pad-md: 12px; --cds-pad-lg: 18px;
+    --cds-radius: 8px; --cds-dur-slow: 240ms;
+    --cds-surface-popover: #ffffff; --cds-border: #d9d8d1; --cds-shadow-popover: 0 4px 16px rgba(0,0,0,.12); --cds-text-secondary: #66665f;
+    --cds-chart-grid: #ecebe6; --cds-chart-axis: #c9c8c0; --cds-chart-reference: #8f8e86; --cds-chart-muted: #a9a8a0; --cds-chart-status-critical: #d9480f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-bg: #161615; --color-panel: #1f1f1e; --color-fg: #ecebe6; --color-fg-muted: #a3a29b; --color-border-line: #33332f;
+      --color-ok: #5cc28a; --color-warn: #e0a24a; --color-bad: #f2766b; --accent: #6f9bff;
+      --cds-surface-popover: #2a2a28; --cds-border: #3d3d38; --cds-shadow-popover: 0 4px 16px rgba(0,0,0,.5); --cds-text-secondary: #a3a29b;
+      --cds-chart-grid: #2c2c29; --cds-chart-axis: #4a4a45; --cds-chart-reference: #7c7b74; --cds-chart-muted: #6b6a64; --cds-chart-status-critical: #ff8a4c;
+    }
+  }
+  html { background: var(--color-bg); }
+  body { margin: 0; background: var(--color-bg); color: var(--color-fg); font-family: var(--font-anthropic-sans); -webkit-text-size-adjust: 100%; }
+  .kl-page { max-width: 1180px; margin: 0 auto; padding: 28px 16px 48px; }
+  .kl-failed .kl-page::before { content: "Couldn't load the data. Try refreshing the page."; display: block; margin-bottom: 16px; color: var(--color-bad); }
+
+  
+  .kl { font-family: var(--font-anthropic-sans); color: var(--color-fg); display: grid; gap: var(--cds-gap-lg); }
+  .kl-head h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0 0 var(--cds-gap-xs); }
+  .kl-take { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); line-height: 1.5; }
+  .kl .kl-take b { color: var(--color-fg); font-weight: 600; }
+  .kl-next { margin: var(--cds-gap-xs) 0 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .kl-controls { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); align-items: end; }
+  .kl-controls label { display: grid; gap: 4px; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .kl-controls select { font: inherit; font-size: var(--cds-font-size-body); color: var(--color-fg); background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-xs) var(--cds-pad-sm); }
+  .kl-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr)); gap: var(--cds-gap-md); }
+  .kl-tile { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md) var(--cds-pad-lg); }
+  .kl-tile p { margin: 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .kl-tile .kl-big { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); color: var(--color-fg); margin: 4px 0 0; font-variant-numeric: tabular-nums; }
+  .kl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr)); gap: var(--cds-gap-md); }
+  .kl-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); min-width: 0; }
+  .kl-card h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; }
+  .kl-note { margin: 4px 0 var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.45; }
+  .kl-chart { position: relative; min-height: 320px; }
+  .kl-tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); max-width: 260px; line-height: 1.4; }
+  .kl-tip .kl-tip-h { color: var(--cds-text-secondary); }
+  .kl-scroll { max-height: 460px; overflow: auto; }
+  .kl table { width: 100%; border-collapse: collapse; font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+  .kl th { position: sticky; top: 0; background: var(--color-panel); text-align: right; font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); padding: 6px 8px; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+  .kl th button { all: unset; cursor: pointer; }
+  .kl th:first-child, .kl td:first-child { text-align: left; }
+  .kl td { text-align: right; padding: 6px 8px; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+  .kl td:first-child { white-space: normal; min-width: 14rem; }
+  .kl .kl-pos { color: var(--color-ok); }
+  .kl .kl-neg { color: var(--color-bad); }
+  .kl-small { color: var(--color-fg-muted); }
+  .kl-method { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.5; }
+  .kl-method h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); color: var(--color-fg); margin: 0 0 var(--cds-gap-xs); }
+  .kl-method p { margin: 0 0 var(--cds-gap-xs); }
+  .kl th.kl-left, .kl td.kl-left { text-align: left; }
+  @media (max-width: 640px) { .kl-hide-sm { display: none; } .kl td:first-child { min-width: 8.5rem; } .kl td, .kl th { padding: 6px 5px; } }
+  [data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="shim.js"></script>
+</head>
+<body>
+<main class="kl-page">
+<div class="kl">
+  <header class="kl-head" id="top">
+    <h1>Kentucky lineup tracker, 2026-27</h1>
+    <p class="kl-take">Most-used lineup: <b data-draw="top-lineup" data-source="lineup_stats" data-field="lineup">—</b> (<span data-draw="top-min" data-source="lineup_stats" data-field="minutes">—</span> min). Best net rating with at least <span data-draw="min-label">—</span> minutes: <b data-draw="best-lineup" data-source="lineup_stats" data-field="lineup">—</b> (<span data-draw="best-net" data-source="lineup_stats" data-field="net40">—</span> per 40).</p>
+    <p class="kl-next">Data through <span data-draw="through">—</span> · Next game: <span data-draw="next-game" data-source="schedule" data-field="opponent">—</span></p>
+  </header>
+
+  <div class="kl-controls">
+    <label>Games
+      <select data-draw="scope" aria-label="Games" data-source="scopes"></select>
+    </label>
+    <label>Minimum minutes for rankings
+      <select class="kl-minmin" aria-label="Minimum minutes">
+        <option value="0">Any</option>
+        <option value="3">3 min</option>
+        <option value="5">5 min</option>
+        <option value="10">10 min</option>
+        <option value="20">20 min</option>
+      </select>
+    </label>
+  </div>
+
+  <section class="kl-tiles" id="totals">
+    <div class="kl-tile"><p>Games</p><p class="kl-big" data-draw="t-games" data-source="scope_totals" data-field="games">—</p></div>
+    <div class="kl-tile"><p>Record</p><p class="kl-big" data-draw="t-record" data-source="scope_totals" data-field="record">—</p></div>
+    <div class="kl-tile"><p>Lineups used</p><p class="kl-big" data-draw="t-lineups" data-source="scope_totals" data-field="lineups">—</p></div>
+    <div class="kl-tile"><p>Most-used lineup, share of minutes</p><p class="kl-big" data-draw="t-share" data-source="scope_totals" data-field="top_share">—</p></div>
+    <div class="kl-tile"><p>Team net points per 40</p><p class="kl-big" data-draw="t-net" data-source="scope_totals" data-field="net40">—</p></div>
+  </section>
+
+  <section class="kl-grid">
+    <div class="kl-card" id="usage-vs-results">
+      <h2>Usage vs. results</h2>
+      <p class="kl-note">Each dot is a five-man lineup. Further right means more minutes; higher means a better scoring margin per 40 minutes. Lineups below the minimum-minutes setting are faded: their margins are mostly noise.</p>
+      <div class="kl-chart" data-draw="scatter" data-source="lineup_stats"></div>
+    </div>
+    <div class="kl-card" id="players">
+      <h2>Player on/off</h2>
+      <p class="kl-note">Scoring margin per 40 minutes with each player on the floor versus off it. On/off is noisy over few games, and it credits players for who they share the floor with.</p>
+      <div class="kl-scroll">
+        <table data-source="player_stats" data-row-key="scope,player">
+          <thead><tr>
+            <th data-field="player"><button data-sort="player">Player</button></th>
+            <th data-field="minutes"><button data-sort="minutes">Min</button></th>
+            <th data-field="plus_minus"><button data-sort="plus_minus">+/-</button></th>
+            <th data-field="on_net40"><button data-sort="on_net40">On /40</button></th>
+            <th data-field="off_net40" class="kl-hide-sm"><button data-sort="off_net40">Off /40</button></th>
+            <th data-field="on_off"><button data-sort="on_off">On − off</button></th>
+          </tr></thead>
+          <tbody data-draw="players"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="kl-card" id="lineups">
+    <h2>All lineups</h2>
+    <p class="kl-note">Sorted by minutes; click a column to re-sort. Net /40 is the scoring margin per 40 minutes. Points per possession is Kentucky's offense only.</p>
+    <div class="kl-scroll">
+      <table data-source="lineup_stats" data-row-key="scope,lineup">
+        <thead><tr>
+          <th data-field="lineup"><button data-sort="lineup">Lineup</button></th>
+          <th data-field="minutes"><button data-sort="minutes">Min</button></th>
+          <th data-field="share" class="kl-hide-sm"><button data-sort="share">Share</button></th>
+          <th data-field="games" class="kl-hide-sm"><button data-sort="games">Games</button></th>
+          <th data-field="score"><button data-sort="uk_pts">Score</button></th>
+          <th data-field="plus_minus"><button data-sort="plus_minus">+/-</button></th>
+          <th data-field="net40"><button data-sort="net40">Net /40</button></th>
+          <th data-field="ppp"><button data-sort="ppp">Pts/poss</button></th>
+          <th data-field="tov_pct" class="kl-hide-sm"><button data-sort="tov_pct">TO %</button></th>
+        </tr></thead>
+        <tbody data-draw="lineups"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="kl-card" id="games">
+    <h2>Game log</h2>
+    <p class="kl-note">Every game on the schedule. Lineup data is added the morning after each game, once the official box score is posted.</p>
+    <div class="kl-scroll">
+      <table data-source="game_summary" data-row-key="game_id">
+        <thead><tr>
+          <th data-field="date">Date</th>
+          <th data-field="opponent" class="kl-left">Opponent</th>
+          <th data-field="site" class="kl-hide-sm">Site</th>
+          <th data-field="result">Result</th>
+          <th data-field="lineups_used">Lineups</th>
+          <th data-field="top_lineup" class="kl-hide-sm kl-left">Most-used lineup</th>
+          <th data-field="top_minutes" class="kl-hide-sm">Its min</th>
+        </tr></thead>
+        <tbody data-draw="games"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="kl-method" id="method">
+    <h2>How the numbers work</h2>
+    <p>Source: the "Line Up Analysis" page of Kentucky's official box score book for each game, posted on UK Athletics. Each row there is a five-man unit's time on the floor, points for and against, and Kentucky's points per possession.</p>
+    <p>Possessions are worked out as points ÷ points per possession. For units that didn't score, possessions are estimated from their minutes at that game's pace, so points per possession and turnover rate are close approximations, not official figures.</p>
+    <p>Small samples: a lineup that played 2 minutes can show +60 per 40 on one run. Use the minimum-minutes setting before trusting a ranking.</p>
+    <p>Unofficial fan project, not affiliated with the University of Kentucky. Lineup data comes from the official box scores posted at ukathletics.com and is added the morning after each game.</p>
+  </section>
+</div>
+
+</main>
+<script>
+  const STINTS = 'stints', SCHED = 'schedule';
+
+  dash.calc('scopes', {
+    title: 'Game filter choices',
+    description: 'All games, each season phase, the last five games and each game with lineup data.',
+    inputs: [STINTS],
+    fn: (stints) => {
+      const games = [...new Map(stints.map((r) => [r.game_id, r])).values()].sort((a, b) => a.date < b.date ? 1 : -1);
+      const out = [{scope: 'all', label: 'All games'}];
+      if (games.some((g) => g.game_type === 'Regular season')) out.push({scope: 'Regular season', label: 'Regular season'});
+      if (games.some((g) => g.game_type === 'Exhibition')) out.push({scope: 'Exhibition', label: 'Exhibitions'});
+      if (games.length > 5) out.push({scope: 'last5', label: 'Last 5 games'});
+      games.forEach((g) => out.push({scope: g.game_id, label: g.date.slice(5).replace('-', '/') + ' vs. ' + g.opponent}));
+      return out;
+    },
+  });
+
+
+  dash.calc('lineup_stats', {
+    title: 'Lineup totals',
+    description: 'Each five-man lineup summed over the chosen games: minutes, points for and against, margin per 40 minutes, points per possession and turnover rate.',
+    inputs: [STINTS],
+    fn: (stints) => {
+      // Which games belong to each filter choice, and possessions per stint (estimated at the game's pace where a unit didn't score).
+        const games = [...new Map(stints.map((r) => [r.game_id, r])).values()].sort((a, b) => a.date < b.date ? -1 : 1);
+        const last5 = new Set(games.slice(-5).map((g) => g.game_id));
+        const pace = {};
+        games.forEach((g) => {
+          const known = stints.filter((r) => r.game_id === g.game_id && Number(r.ppp) > 0);
+          const poss = known.reduce((s, r) => s + Number(r.uk_pts) / Number(r.ppp), 0);
+          const secs = known.reduce((s, r) => s + Number(r.seconds), 0);
+          pace[g.game_id] = secs ? poss / secs : 0;
+        });
+        const rows = stints.map((r) => ({...r, seconds: Number(r.seconds), uk_pts: Number(r.uk_pts), opp_pts: Number(r.opp_pts), tov: Number(r.tov),
+          poss: Number(r.ppp) > 0 ? Number(r.uk_pts) / Number(r.ppp) : Number(r.seconds) * pace[r.game_id]}));
+        const scopesOf = (r) => ['all', r.game_type, r.game_id].concat(last5.has(r.game_id) && games.length > 5 ? ['last5'] : []);
+  
+      const acc = new Map(), scopeSecs = {};
+      rows.forEach((r) => scopesOf(r).forEach((s) => {
+        scopeSecs[s] = (scopeSecs[s] || 0) + r.seconds;
+        const k = s + '|' + r.lineup;
+        const a = acc.get(k) || {scope: s, lineup: r.lineup, players: r.players, seconds: 0, uk_pts: 0, opp_pts: 0, poss: 0, tov: 0, g: new Set()};
+        a.seconds += r.seconds; a.uk_pts += r.uk_pts; a.opp_pts += r.opp_pts; a.poss += r.poss; a.tov += r.tov; a.g.add(r.game_id);
+        acc.set(k, a);
+      }));
+      return [...acc.values()].map((a) => ({
+        scope: a.scope, lineup: a.lineup, players: a.players, games: a.g.size,
+        minutes: Math.round(a.seconds / 6) / 10, share: a.seconds / scopeSecs[a.scope],
+        uk_pts: a.uk_pts, opp_pts: a.opp_pts, score: a.uk_pts + '–' + a.opp_pts, plus_minus: a.uk_pts - a.opp_pts,
+        net40: Math.round((a.uk_pts - a.opp_pts) / a.seconds * 2400 * 10) / 10,
+        ppp: a.poss ? Math.round(a.uk_pts / a.poss * 100) / 100 : null,
+        tov_pct: a.poss ? Math.round(a.tov / a.poss * 1000) / 10 : null,
+      }));
+    },
+  });
+
+  dash.calc('player_stats', {
+    title: 'Player on/off',
+    description: 'For each player and set of games: minutes on the floor, margin per 40 with them on and off, and the difference.',
+    inputs: [STINTS],
+    fn: (stints) => {
+      // Which games belong to each filter choice, and possessions per stint (estimated at the game's pace where a unit didn't score).
+        const games = [...new Map(stints.map((r) => [r.game_id, r])).values()].sort((a, b) => a.date < b.date ? -1 : 1);
+        const last5 = new Set(games.slice(-5).map((g) => g.game_id));
+        const pace = {};
+        games.forEach((g) => {
+          const known = stints.filter((r) => r.game_id === g.game_id && Number(r.ppp) > 0);
+          const poss = known.reduce((s, r) => s + Number(r.uk_pts) / Number(r.ppp), 0);
+          const secs = known.reduce((s, r) => s + Number(r.seconds), 0);
+          pace[g.game_id] = secs ? poss / secs : 0;
+        });
+        const rows = stints.map((r) => ({...r, seconds: Number(r.seconds), uk_pts: Number(r.uk_pts), opp_pts: Number(r.opp_pts), tov: Number(r.tov),
+          poss: Number(r.ppp) > 0 ? Number(r.uk_pts) / Number(r.ppp) : Number(r.seconds) * pace[r.game_id]}));
+        const scopesOf = (r) => ['all', r.game_type, r.game_id].concat(last5.has(r.game_id) && games.length > 5 ? ['last5'] : []);
+  
+      const tot = {}, on = new Map();
+      rows.forEach((r) => scopesOf(r).forEach((s) => {
+        const t = tot[s] || (tot[s] = {sec: 0, pm: 0}); t.sec += r.seconds; t.pm += r.uk_pts - r.opp_pts;
+        r.players.split(';').forEach((p) => {
+          const k = s + '|' + p; const a = on.get(k) || {scope: s, player: p, sec: 0, pm: 0};
+          a.sec += r.seconds; a.pm += r.uk_pts - r.opp_pts; on.set(k, a);
+        });
+      }));
+      return [...on.values()].map((a) => {
+        const t = tot[a.scope], offSec = t.sec - a.sec, onN = a.pm / a.sec * 2400, offN = offSec > 0 ? (t.pm - a.pm) / offSec * 2400 : null;
+        return {scope: a.scope, player: a.player, minutes: Math.round(a.sec / 6) / 10, plus_minus: a.pm,
+          on_net40: Math.round(onN * 10) / 10, off_net40: offN === null ? null : Math.round(offN * 10) / 10,
+          on_off: offN === null ? null : Math.round((onN - offN) * 10) / 10};
+      });
+    },
+  });
+
+  dash.calc('scope_totals', {
+    title: 'Totals for the chosen games',
+    description: 'Games, record, lineups used, the most-used lineup’s share of minutes and the team margin per 40, for each set of games.',
+    inputs: ['lineup_stats', STINTS],
+    fn: (lineup_stats, stints) => {
+      // Which games belong to each filter choice, and possessions per stint (estimated at the game's pace where a unit didn't score).
+        const games = [...new Map(stints.map((r) => [r.game_id, r])).values()].sort((a, b) => a.date < b.date ? -1 : 1);
+        const last5 = new Set(games.slice(-5).map((g) => g.game_id));
+        const pace = {};
+        games.forEach((g) => {
+          const known = stints.filter((r) => r.game_id === g.game_id && Number(r.ppp) > 0);
+          const poss = known.reduce((s, r) => s + Number(r.uk_pts) / Number(r.ppp), 0);
+          const secs = known.reduce((s, r) => s + Number(r.seconds), 0);
+          pace[g.game_id] = secs ? poss / secs : 0;
+        });
+        const rows = stints.map((r) => ({...r, seconds: Number(r.seconds), uk_pts: Number(r.uk_pts), opp_pts: Number(r.opp_pts), tov: Number(r.tov),
+          poss: Number(r.ppp) > 0 ? Number(r.uk_pts) / Number(r.ppp) : Number(r.seconds) * pace[r.game_id]}));
+        const scopesOf = (r) => ['all', r.game_type, r.game_id].concat(last5.has(r.game_id) && games.length > 5 ? ['last5'] : []);
+  
+      const per = {};
+      rows.forEach((r) => scopesOf(r).forEach((s) => {
+        const p = per[s] || (per[s] = {games: {}, sec: 0, pm: 0});
+        const g = p.games[r.game_id] || (p.games[r.game_id] = 0);
+        p.games[r.game_id] = g + r.uk_pts - r.opp_pts; p.sec += r.seconds; p.pm += r.uk_pts - r.opp_pts;
+      }));
+      return Object.entries(per).map(([s, p]) => {
+        const ls = lineup_stats.filter((l) => l.scope === s);
+        const margins = Object.values(p.games);
+        return {scope: s, games: margins.length, record: margins.filter((m) => m > 0).length + '–' + margins.filter((m) => m < 0).length,
+          lineups: ls.length, top_share: Math.max(...ls.map((l) => l.share)), net40: Math.round(p.pm / p.sec * 2400 * 10) / 10};
+      });
+    },
+  });
+
+  dash.calc('game_summary', {
+    title: 'Game log',
+    description: 'Each scheduled game with its result and, once loaded, how many lineups Kentucky used and which played the most.',
+    inputs: [SCHED, STINTS],
+    fn: (schedule, stints) => schedule.map((g) => {
+      const mine = stints.filter((r) => r.game_id === g.game_id);
+      const by = {};
+      mine.forEach((r) => { by[r.lineup] = (by[r.lineup] || 0) + Number(r.seconds); });
+      const top = Object.entries(by).sort((a, b) => b[1] - a[1])[0];
+      return {game_id: g.game_id, date: g.date, opponent: g.opponent, site: g.site, result: g.result || (g.tipoff_et ? g.tipoff_et + ' ET' : ''),
+        lineups_used: mine.length ? Object.keys(by).length : null, top_lineup: top ? top[0] : null, top_minutes: top ? Math.round(top[1] / 6) / 10 : null};
+    }),
+  });
+</script>
+<script>
+  const kl = {
+    sort: {lineups: {key: 'minutes', dir: -1}, players: {key: 'minutes', dir: -1}},
+    scope: () => dash.params().scope || 'all',
+    minmin: () => Number(dash.params().minmin ?? 5),
+    rows: (id) => { const d = dash.data(id); return d.status === 'ok' ? d.data : null; },
+    enc: (v) => encodeURIComponent(String(v)),
+    signed: (v, d = 0) => v === null || v === undefined || Number.isNaN(v) ? '—' : (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v).toLocaleString('en', {minimumFractionDigits: d, maximumFractionDigits: Math.max(d, 1)}),
+    cls: (v) => v > 0 ? 'kl-pos' : v < 0 ? 'kl-neg' : '',
+    dash: (el) => { el.textContent = '—'; },
+  };
+  window.kl = kl;
+
+  const minSel = document.querySelectorAll('.kl-minmin');
+  minSel.forEach((s) => s.addEventListener('change', () => dash.setParams({minmin: Number(s.value)})));
+  dash.onData(() => minSel.forEach((s) => { s.value = String(kl.minmin()); }));
+
+  document.querySelectorAll('th button[data-sort]').forEach((b) => b.addEventListener('click', () => {
+    const which = b.closest('table').querySelector('tbody').dataset.draw;
+    const st = kl.sort[which]; if (!st) return;
+    const key = b.dataset.sort;
+    st.dir = st.key === key ? -st.dir : (key === 'lineup' || key === 'player' ? 1 : -1); st.key = key;
+    b.closest('thead').querySelectorAll('th').forEach((th) => th.removeAttribute('aria-sort'));
+    b.closest('th').setAttribute('aria-sort', st.dir > 0 ? 'ascending' : 'descending');
+    dash.draw(which);
+  }));
+
+  dash.draw('scope', (sel) => {
+    const rows = kl.rows('scopes') || [];
+    sel.replaceChildren(...rows.map((r) => new Option(r.label, r.scope)));
+    sel.value = kl.scope();
+    sel.onchange = () => dash.setParams({scope: sel.value});
+  });
+
+  const inScope = (id) => (kl.rows(id) || []).filter((r) => r.scope === kl.scope());
+  const topBy = () => inScope('lineup_stats').sort((a, b) => b.minutes - a.minutes)[0];
+  const bestBy = () => inScope('lineup_stats').filter((r) => r.minutes >= kl.minmin()).sort((a, b) => b.net40 - a.net40)[0];
+  const setMark = (el, r) => { if (r) el.setAttribute('data-where', 'scope=' + kl.enc(r.scope) + '&lineup=' + kl.enc(r.lineup)); };
+
+  dash.draw('top-lineup', (el) => { const r = topBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = r.lineup; });
+  dash.draw('top-min', (el) => { const r = topBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = r.minutes.toFixed(1); });
+  dash.draw('min-label', (el) => { el.textContent = String(kl.minmin()); });
+  dash.draw('best-lineup', (el) => { const r = bestBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = r.lineup; });
+  dash.draw('best-net', (el) => { const r = bestBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = kl.signed(r.net40, 1); });
+
+  dash.draw('next-game', (el) => {
+    const s = kl.rows('schedule'); if (!s) return kl.dash(el);
+    const today = new Date().toISOString().slice(0, 10);
+    const g = s.filter((x) => !x.result && x.date >= today).sort((a, b) => a.date < b.date ? -1 : 1)[0];
+    if (!g) { el.textContent = 'none scheduled'; return; }
+    el.setAttribute('data-where', 'game_id=' + kl.enc(g.game_id));
+    el.textContent = (g.site === 'Away' ? 'at ' : 'vs. ') + g.opponent;
+  });
+
+  const tile = (field, fmt) => (el) => {
+    const r = inScope('scope_totals')[0]; if (!r) return kl.dash(el);
+    el.setAttribute('data-where', 'scope=' + kl.enc(r.scope)); el.textContent = fmt(r[field]);
+  };
+  dash.draw('t-games', tile('games', (v) => String(v)));
+  dash.draw('t-record', tile('record', (v) => v));
+  dash.draw('t-lineups', tile('lineups', (v) => String(v)));
+  dash.draw('t-share', tile('top_share', (v) => d3.format('.0%')(v)));
+  dash.draw('t-net', tile('net40', (v) => kl.signed(v, 1)));
+
+  const sorted = (rows, st) => rows.sort((a, b) => {
+    const x = a[st.key], y = b[st.key];
+    if (x === null || x === undefined) return 1; if (y === null || y === undefined) return -1;
+    return (typeof x === 'string' ? x.localeCompare(y) : x - y) * st.dir;
+  });
+  const td = (tr, text, cls, extra) => { const c = tr.insertCell(); c.textContent = text; if (cls) c.className = cls; if (extra) c.classList.add(extra); return c; };
+
+  dash.draw('lineups', (tb) => {
+    tb.replaceChildren();
+    const rows = sorted(inScope('lineup_stats'), kl.sort.lineups);
+    rows.forEach((r) => {
+      const tr = tb.insertRow(); tr.dataset.key = kl.enc(r.scope) + ',' + kl.enc(r.lineup);
+      if (r.minutes < kl.minmin()) tr.classList.add('kl-small');
+      td(tr, r.lineup); td(tr, r.minutes.toFixed(1)); td(tr, d3.format('.0%')(r.share), '', 'kl-hide-sm'); td(tr, String(r.games), '', 'kl-hide-sm');
+      td(tr, r.score); td(tr, kl.signed(r.plus_minus), kl.cls(r.plus_minus)); td(tr, kl.signed(r.net40, 1), kl.cls(r.net40));
+      td(tr, r.ppp === null ? '—' : r.ppp.toFixed(2)); td(tr, r.tov_pct === null ? '—' : r.tov_pct.toFixed(0) + '%', '', 'kl-hide-sm');
+    });
+  });
+
+  dash.draw('players', (tb) => {
+    tb.replaceChildren();
+    sorted(inScope('player_stats'), kl.sort.players).forEach((r) => {
+      const tr = tb.insertRow(); tr.dataset.key = kl.enc(r.scope) + ',' + kl.enc(r.player);
+      td(tr, r.player); td(tr, r.minutes.toFixed(1)); td(tr, kl.signed(r.plus_minus), kl.cls(r.plus_minus));
+      td(tr, kl.signed(r.on_net40, 1), kl.cls(r.on_net40)); td(tr, kl.signed(r.off_net40, 1), kl.cls(r.off_net40), 'kl-hide-sm'); td(tr, kl.signed(r.on_off, 1), kl.cls(r.on_off));
+    });
+  });
+
+  dash.draw('games', (tb) => {
+    tb.replaceChildren();
+    const rows = kl.rows('game_summary') || [];
+    const fmt = d3.utcFormat('%b %-d');
+    rows.slice().sort((a, b) => a.date < b.date ? -1 : 1).forEach((r) => {
+      const tr = tb.insertRow(); tr.dataset.key = kl.enc(r.game_id);
+      td(tr, fmt(new Date(r.date + 'T12:00:00Z'))); td(tr, r.opponent, 'kl-left'); td(tr, r.site, '', 'kl-hide-sm');
+      td(tr, r.result || '—', r.result && r.result[0] === 'W' ? 'kl-pos' : r.result && r.result[0] === 'L' ? 'kl-neg' : '');
+      td(tr, r.lineups_used === null ? '—' : String(r.lineups_used));
+      const c = td(tr, r.top_lineup || '—', 'kl-left', 'kl-hide-sm'); c.style.whiteSpace = 'normal';
+      td(tr, r.top_minutes === null ? '—' : r.top_minutes.toFixed(1), '', 'kl-hide-sm');
+    });
+  });
+
+  dash.draw('scatter', (el) => {
+    el.replaceChildren();
+    const rows = inScope('lineup_stats');
+    if (!rows.length) return;
+    const W = el.clientWidth || 600, H = 320, mm = kl.minmin();
+    const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Lineup minutes versus net points per 40');
+    const ext = d3.extent(rows, (r) => r.net40); const lim = Math.max(20, Math.abs(ext[0]), Math.abs(ext[1]));
+    const y = d3.scaleLinear([-lim, lim], [H - 30, 10]).nice();
+    const yAxis = svg.append('g').call(d3.axisLeft(y).ticks(6).tickFormat((v) => kl.signed(v))).attr('font-size', null).attr('font-family', null);
+    let wMax = 0; yAxis.selectAll('text').each(function () { wMax = Math.max(wMax, this.getComputedTextLength()); });
+    const left = wMax + 12;
+    yAxis.attr('transform', `translate(${left},0)`);
+    const x = d3.scaleLinear([0, d3.max(rows, (r) => r.minutes) * 1.05], [left, W - 12]).nice();
+    svg.insert('g', ':first-child').selectAll('line').data(y.ticks(6)).join('line')
+      .attr('x1', left).attr('x2', W - 12).attr('y1', (v) => y(v)).attr('y2', (v) => y(v))
+      .attr('stroke', (v) => v === 0 ? 'var(--cds-chart-reference)' : 'var(--cds-chart-grid)');
+    const xAxis = svg.append('g').attr('transform', `translate(0,${H - 30})`).call(d3.axisBottom(x).ticks(Math.max(2, Math.floor(W / 90))).tickFormat((v) => v + ' min')).attr('font-size', null).attr('font-family', null);
+    [xAxis, yAxis].forEach((a) => { a.selectAll('text').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)'); a.selectAll('line,path').attr('stroke', 'var(--cds-chart-axis)'); });
+    const top = topBy(), best = bestBy();
+    const tip = d3.select(el).append('div').attr('class', 'kl-tip').style('display', 'none');
+    svg.append('g').selectAll('circle').data(rows.sort((a, b) => a.minutes - b.minutes)).join('circle')
+      .attr('cx', (r) => x(r.minutes)).attr('cy', (r) => y(r.net40)).attr('r', (r) => 4 + Math.sqrt(r.minutes))
+      .attr('fill', (r) => r === best ? 'var(--cds-chart-status-critical)' : r === top ? dash.colors[0] : 'var(--cds-chart-muted)')
+      .attr('fill-opacity', (r) => r.minutes >= mm ? 0.85 : 0.3).attr('stroke', 'var(--color-panel)')
+      .on('mousemove', (ev, r) => {
+        const [px, py] = d3.pointer(ev, el);
+        tip.style('display', null).html('');
+        tip.append('div').attr('class', 'kl-tip-h').text(r.lineup);
+        tip.append('div').text(`${r.minutes.toFixed(1)} min · ${r.score} · ${kl.signed(r.net40, 1)} per 40`);
+        const tw = tip.node().offsetWidth;
+        tip.style('left', Math.min(Math.max(0, px + 12), el.clientWidth - tw) + 'px').style('top', Math.max(0, py - 48) + 'px');
+      })
+      .on('mouseleave', () => tip.style('display', 'none'));
+    const lab = svg.append('g').style('font-size', 'var(--cds-font-size-caption)');
+    [[top, 'Most used', dash.colors[0]], [best, 'Best net', 'var(--cds-chart-status-critical)']].forEach(([r, t, c], i) => {
+      if (!r || (i === 1 && r === top)) return;
+      const tx = x(r.minutes), anchor = tx > W * 0.7 ? 'end' : 'start';
+      lab.append('text').attr('x', tx + (anchor === 'end' ? -10 : 10)).attr('y', y(r.net40) - 10 - i * 2).attr('text-anchor', anchor).attr('fill', c).text(t);
+    });
+  });
+  dash.draw('through', (el) => {
+    const s = kl.rows('schedule'); if (!s) return kl.dash(el);
+    const g = s.filter((x) => x.lineups_loaded).sort((a, b) => a.date < b.date ? 1 : -1)[0];
+    el.textContent = g ? g.opponent + ' (' + d3.utcFormat('%b %-d')(new Date(g.date + 'T12:00:00Z')) + ')' : 'no games yet';
+  });
+</script>
+</body>
+</html>
