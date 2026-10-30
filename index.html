@@ -48,6 +48,8 @@
   
   
   
+  
+  
   .kl { font-family: var(--font-anthropic-sans); color: var(--color-fg); display: grid; gap: var(--cds-gap-lg); }
   .kl-head h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0 0 var(--cds-gap-xs); }
   .kl-take { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); line-height: 1.5; }
@@ -86,6 +88,10 @@
   .kl .kl-pos { color: var(--color-ok); }
   .kl .kl-neg { color: var(--color-bad); }
   .kl-small { color: var(--color-fg-muted); }
+  .kl .kl-diff { background: color-mix(in srgb, #f5c400 28%, transparent); font-weight: 600; border-radius: 3px; padding: 0 3px; }
+  .kl .kl-sep { color: var(--color-fg-muted); }
+  .kl .kl-name { white-space: nowrap; }
+  .kl tr.kl-below .kl-diff { background: none; font-weight: inherit; padding: 0; }
   /* Rows below the minimum-minutes setting: dimmed, uncolored, struck through, and grouped under a divider */
   .kl tr.kl-below td { opacity: .4; }
   .kl tr.kl-below td:first-child { text-decoration: line-through; text-decoration-color: var(--color-fg-muted); }
@@ -217,7 +223,7 @@
 
   <section class="kl-card" id="lineups">
     <h2>All lineups</h2>
-    <p class="kl-note">Sorted by minutes; click a column to re-sort. Net /40 is the scoring margin per 40 minutes; Adj. /40 pulls it toward the team average until a lineup has played enough to trust (see below). OER and DER are points scored and allowed per 100 possessions (lower DER is better).</p>
+    <p class="kl-note">Each lineup is listed 1 → 5, point guard to center; positions are approximate (see How the numbers work). Highlighted names are players who aren't in the most-used lineup. Sorted by minutes; click a column to re-sort. Net /40 is the scoring margin per 40 minutes; Adj. /40 pulls it toward the team average until a lineup has played enough to trust (see below). OER and DER are points scored and allowed per 100 possessions (lower DER is better).</p>
     <div class="kl-scroll">
       <table data-source="lineup_stats" data-row-key="scope,lineup">
         <thead><tr>
@@ -294,6 +300,7 @@
     <p>How the measures relate: OER − DER is the scoring margin per 100 possessions. Net /40 is the same margin per 40 minutes, so it also reflects pace: at Kentucky’s exhibition pace of about 69 possessions per 40 minutes, a +10 margin per 100 possessions is about +7 per 40. Adj. /40 is Net /40 pulled toward the team average for small samples; OER and DER are shown unadjusted, so treat them with the same caution on short stints.</p>
     <p>Exhibitions phase out: the main view includes the three exhibition games until there are three official games. From then on, each new official game replaces the oldest exhibition (the 4th official game replaces Little Rock, the 5th Texas Tech, the 6th UCF), so after six official games the main view is official games only. The exhibitions stay viewable under the "Exhibitions" choice in the Games filter.</p>
     <p>Adjusted net (Adj. /40): a lineup that played 2 minutes can show +60 per 40 on one run, so raw margins over short stints are mostly noise. The adjusted figure blends each lineup's actual margin with the team's average margin, as if the lineup had also played 50 extra minutes at the team's average. A lineup that has played a few minutes stays close to the team average; one that has played 100+ minutes is judged mostly on its own results. The 50-minute weight is a judgment call, not a fitted value. Rankings and the chart use the adjusted figure. The idea follows Evan Miya's point that observed lineup results should count for more as a lineup logs more possessions.</p>
+    <p>Positions are approximate. Lineups are listed from point guard (1) to center (5) using each player's usual positions: Diallo 1/2; Wilkins 2/1/3; M. Williams 1/2; B. Hawthorne 3/2/4; Z. Hawthorne 2/3; Momcilovic 3/4; N'Diaye and McBride 4/5; Moreno, Kepnang and Potter 5. The 1 goes to the first of Diallo, Wilkins, M. Williams or Morton on the floor. In practice ball-handling is shared (Diallo and M. Williams both bring it up when they play together), so the order is a reading aid, not a record of who played where.</p>
     <p>Notable dates: a big game is a triple-double, 30+ points, 6+ made threes, or 80%+ shooting on at least 10 shots. Streaks are 3+ straight official games with 20+ points or a double-double, and 5+ straight official wins. A starting-lineup change compares each game's starters with the game before.</p>
     <p>Combinations: pair and trio numbers pool every stint those players shared, so they gather minutes faster than full lineups. They also credit or blame the players for whoever else was on the floor.</p>
     <p>Unofficial fan project, not affiliated with the University of Kentucky. Lineup data comes from the official box scores posted at ukathletics.com and is added the morning after each game.</p>
@@ -645,6 +652,49 @@
   };
   window.kl = kl;
 
+  // Approximate positions, for display order only (point guard to center). Each player's positions in order of preference;
+  // the 1 goes to the first of POINT_PRIORITY on the floor, then the rest fill the spots closest to their preferences.
+  const POSITIONS = {
+    'Diallo': [1, 2], 'Wilkins': [2, 1, 3], 'M. Williams': [1, 2], 'Morton': [2, 1, 3],
+    'Z. Hawthorne': [2, 3], 'Noah': [2, 3, 4], 'B. Hawthorne': [3, 2, 4], 'K. Williams': [3, 2, 4],
+    'Momcilovic': [3, 4], "N'Diaye": [4, 5], 'McBride': [4, 5], 'Moreno': [5], 'Kepnang': [5], 'Potter': [5],
+  };
+  const POINT_PRIORITY = ['Diallo', 'Wilkins', 'M. Williams', 'Morton'];
+  const orderCache = new Map();
+  const perms = (a) => a.length <= 1 ? [a] : a.flatMap((x, i) => perms([...a.slice(0, i), ...a.slice(i + 1)]).map((p) => [x, ...p]));
+  // A lineup's five players in 1-to-5 order; anything else (pairs, trios, unknown players) sorts by usual position.
+  kl.order = (names) => {
+    const key = names.slice().sort().join(';');
+    if (orderCache.has(key)) return orderCache.get(key);
+    const pref = (n) => POSITIONS[n] || [1, 2, 3, 4, 5];
+    let out = null;
+    if (names.length === 5) {
+      const lead = POINT_PRIORITY.find((p) => names.includes(p));
+      let best = Infinity;
+      perms(names).forEach((p) => {
+        if (lead && p[0] !== lead) return;
+        let cost = 0;
+        for (let i = 0; i < 5; i++) { const k = pref(p[i]).indexOf(i + 1); if (k < 0) { cost = Infinity; break; } cost += k; }
+        if (cost < best) { best = cost; out = p; }
+      });
+    }
+    if (!out) out = names.slice().sort((a, b) => (pref(a)[0] - pref(b)[0]) || ((POINT_PRIORITY.indexOf(a) + 9) % 9 - (POINT_PRIORITY.indexOf(b) + 9) % 9) || a.localeCompare(b));
+    orderCache.set(key, out);
+    return out;
+  };
+  kl.ordered = (label) => kl.order(label.split(' · ')).join(' · ');
+  // Writes a lineup into a cell in 1-to-5 order, marking players who aren't in the reference lineup.
+  kl.lineupCell = (cell, label, ref) => {
+    const names = kl.order(label.split(' · ')), refs = ref ? ref.split(' · ') : null;
+    cell.replaceChildren();
+    names.forEach((n, i) => {
+      if (i) { const d = document.createElement('span'); d.className = 'kl-sep'; d.textContent = ' · '; cell.append(d); }
+      const sp = document.createElement('span'); sp.textContent = n; sp.className = 'kl-name';
+      if (refs && !refs.includes(n)) sp.classList.add('kl-diff');
+      cell.append(sp);
+    });
+  };
+
   const minSel = document.querySelectorAll('.kl-minmin');
   minSel.forEach((s) => s.addEventListener('change', () => dash.setParams({minmin: Number(s.value)})));
   dash.onData(() => minSel.forEach((s) => { s.value = String(kl.minmin()); }));
@@ -683,12 +733,12 @@
   const bestBy = () => inScope('lineup_stats').filter((r) => r.minutes >= kl.minmin()).sort((a, b) => b.adj_net40 - a.adj_net40)[0];
   const setMark = (el, r) => { if (r) el.setAttribute('data-where', 'scope=' + kl.enc(r.scope) + '&lineup=' + kl.enc(r.lineup)); };
 
-  dash.draw('top-lineup', (el) => { const r = topBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = r.lineup; });
+  dash.draw('top-lineup', (el) => { const r = topBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = kl.ordered(r.lineup); });
   dash.draw('top-min', (el) => { const r = topBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = r.min_per_game.toFixed(1); });
   dash.draw('top-share', (el) => { const r = topBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = d3.format('.0%')(r.share); });
   dash.draw('min-label', (el) => { el.textContent = String(kl.minmin()); });
   dash.draw('best-min', (el) => { const r = bestBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = r.min_per_game.toFixed(1); });
-  dash.draw('best-lineup', (el) => { const r = bestBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = r.lineup; });
+  dash.draw('best-lineup', (el) => { const r = bestBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = kl.ordered(r.lineup); });
   dash.draw('best-net', (el) => { const r = bestBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = kl.signed(r.adj_net40, 1); });
 
   dash.draw('next-game', (el) => {
@@ -737,9 +787,10 @@
   dash.draw('lineups', (tb) => {
     tb.replaceChildren();
     const rows = sorted(inScope('lineup_stats'), kl.sort.lineups);
+    const ref = topBy();
     splitBelow(tb, rows, 'lineup', (r) => {
       const tr = tb.insertRow(); tr.dataset.key = kl.enc(r.scope) + ',' + kl.enc(r.lineup);
-      td(tr, r.lineup); td(tr, r.minutes.toFixed(1)); td(tr, d3.format('.0%')(r.share), '', 'kl-hide-sm'); td(tr, String(r.games), '', 'kl-hide-sm');
+      kl.lineupCell(td(tr, ''), r.lineup, ref && ref !== r ? ref.lineup : null); td(tr, r.minutes.toFixed(1)); td(tr, d3.format('.0%')(r.share), '', 'kl-hide-sm'); td(tr, String(r.games), '', 'kl-hide-sm');
       td(tr, r.score); td(tr, kl.signed(r.plus_minus), kl.cls(r.plus_minus)); td(tr, kl.signed(r.net40, 1), kl.cls(r.net40)); td(tr, kl.signed(r.adj_net40, 1), kl.cls(r.adj_net40));
       td(tr, r.oer === null ? '—' : r.oer.toFixed(1)); td(tr, r.der === null ? '—' : r.der.toFixed(1)); td(tr, r.tov_pct === null ? '—' : r.tov_pct.toFixed(0) + '%', '', 'kl-hide-sm');
       return tr;
@@ -751,7 +802,7 @@
     const rows = sorted(inScope('combos').filter((r) => r.size === kl.comboSize()), kl.sort.combos);
     splitBelow(tb, rows, 'combination', (r) => {
       const tr = tb.insertRow(); tr.dataset.key = kl.enc(r.scope) + ',' + kl.enc(r.size) + ',' + kl.enc(r.combo);
-      td(tr, r.combo); td(tr, r.minutes.toFixed(1)); td(tr, String(r.games), '', 'kl-hide-sm'); td(tr, r.score);
+      td(tr, kl.ordered(r.combo)); td(tr, r.minutes.toFixed(1)); td(tr, String(r.games), '', 'kl-hide-sm'); td(tr, r.score);
       td(tr, kl.signed(r.plus_minus), kl.cls(r.plus_minus)); td(tr, kl.signed(r.net40, 1), kl.cls(r.net40)); td(tr, kl.signed(r.adj_net40, 1), kl.cls(r.adj_net40));
       td(tr, r.oer === null ? '—' : r.oer.toFixed(1), '', 'kl-hide-sm'); td(tr, r.der === null ? '—' : r.der.toFixed(1), '', 'kl-hide-sm');
       return tr;
@@ -797,7 +848,7 @@
       td(tr, fmt(new Date(r.date + 'T12:00:00Z'))); (() => { const c = td(tr, r.opponent, 'kl-left'); if (r.opponent_label !== r.opponent) { const t = document.createElement('span'); t.className = 'kl-tag'; t.textContent = r.opponent_label.slice(r.opponent.length); c.append(t); } })(); td(tr, r.site, '', 'kl-hide-sm');
       td(tr, r.result || '—', r.result && r.result[0] === 'W' ? 'kl-pos' : r.result && r.result[0] === 'L' ? 'kl-neg' : '');
       td(tr, r.lineups_used === null ? '—' : String(r.lineups_used));
-      const c = td(tr, r.top_lineup || '—', 'kl-left', 'kl-hide-sm'); c.style.whiteSpace = 'normal';
+      const c = td(tr, r.top_lineup ? kl.ordered(r.top_lineup) : '—', 'kl-left', 'kl-hide-sm'); c.style.whiteSpace = 'normal';
       td(tr, r.top_minutes === null ? '—' : r.top_minutes.toFixed(1), '', 'kl-hide-sm');
       td(tr, r.main_view || '—', r.main_view === 'Phased out' ? 'kl-small' : '');
     });
@@ -833,7 +884,7 @@
       .on('mousemove', (ev, r) => {
         const [px, py] = d3.pointer(ev, el);
         tip.style('display', null).html('');
-        tip.append('div').attr('class', 'kl-tip-h').text(r.lineup);
+        tip.append('div').attr('class', 'kl-tip-h').text(kl.ordered(r.lineup));
         tip.append('div').text(`${r.minutes.toFixed(1)} min · ${r.score} · ${kl.signed(r.adj_net40, 1)} per 40 adjusted (${kl.signed(r.net40, 1)} actual)`);
         const tw = tip.node().offsetWidth;
         tip.style('left', Math.min(Math.max(0, px + 12), el.clientWidth - tw) + 'px').style('top', Math.max(0, py - 48) + 'px');
