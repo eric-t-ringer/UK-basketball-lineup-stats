@@ -36,11 +36,15 @@
   
   
   
+  
   .kl { font-family: var(--font-anthropic-sans); color: var(--color-fg); display: grid; gap: var(--cds-gap-lg); }
   .kl-head h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0 0 var(--cds-gap-xs); }
   .kl-take { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); line-height: 1.5; }
   .kl .kl-take b { color: var(--color-fg); font-weight: 600; }
   .kl-next { margin: var(--cds-gap-xs) 0 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .kl-status { margin: var(--cds-gap-sm) 0 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.45; }
+  .kl-sub { margin: 4px 0 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .kl-tag { font-size: 0.75em; color: var(--color-fg-muted); white-space: nowrap; }
   .kl-controls { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); align-items: end; }
   .kl-controls label { display: grid; gap: 4px; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
   .kl-controls select { font: inherit; font-size: var(--cds-font-size-body); color: var(--color-fg); background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-xs) var(--cds-pad-sm); }
@@ -90,6 +94,8 @@
   .kl .kl-head .kl-take b { color: #fff; }
   .kl-head .kl-next { color: rgba(255,255,255,.7); }
   .kl-head .kl-next span { color: #fff; }
+  .kl-head .kl-status { color: rgba(255,255,255,.88); border-top: 1px solid rgba(255,255,255,.22); padding-top: 10px; margin-top: 12px; }
+  .kl .kl-head .kl-status b { color: #fff; }
   .kl-controls select { border-color: var(--uk-blue); }
   .kl-controls select:focus-visible { outline: 2px solid var(--uk-blue); outline-offset: 2px; }
   .kl-tile { border-top: 4px solid var(--uk-blue); }
@@ -119,6 +125,8 @@
     <h1>Kentucky lineup tracker, 2026-27</h1>
     <p class="kl-take">Most-used lineup: <b data-draw="top-lineup" data-source="lineup_stats" data-field="lineup">—</b> (<span data-draw="top-min" data-source="lineup_stats" data-field="minutes">—</span> min). Best net rating with at least <span data-draw="min-label">—</span> minutes: <b data-draw="best-lineup" data-source="lineup_stats" data-field="lineup">—</b> (<span data-draw="best-net" data-source="lineup_stats" data-field="net40">—</span> per 40).</p>
     <p class="kl-next">Data through <span data-draw="through">—</span> · Next game: <span data-draw="next-game" data-source="schedule" data-field="opponent">—</span></p>
+    <p class="kl-status kl-status-early" hidden>Lineup data so far includes <b data-draw="exh-kept" data-source="exh_status" data-field="exhibitions_kept">—</b> exhibition <span data-draw="exh-noun">—</span>, which don't count toward the record. From the 4th official game on, each new official game replaces one exhibition, so after <span data-draw="exh-end" data-source="exh_status" data-field="final_game">—</span> the data is official games only.</p>
+    <p class="kl-status kl-status-late" hidden><b data-draw="exh-kept" data-source="exh_status" data-field="exhibitions_kept">—</b> exhibition <span data-draw="exh-noun">—</span> still included. Exhibitions don't count toward the record and drop out after <span data-draw="exh-end" data-source="exh_status" data-field="final_game">—</span>.</p>
   </header>
 
   <div class="kl-controls">
@@ -137,7 +145,7 @@
   </div>
 
   <section class="kl-tiles" id="totals">
-    <div class="kl-tile"><p>Official games</p><p class="kl-big" data-draw="t-games" data-source="scope_totals" data-field="games">—</p></div>
+    <div class="kl-tile"><p>Official games</p><p class="kl-big" data-draw="t-games" data-source="scope_totals" data-field="games">—</p><p class="kl-sub" hidden>+<span data-draw="t-exh" data-source="scope_totals" data-field="exhibitions">—</span> exhibition <span data-draw="t-exh-noun">—</span> in the data, not counted</p></div>
     <div class="kl-tile"><p>Official record</p><p class="kl-big" data-draw="t-record" data-source="scope_totals" data-field="record">—</p></div>
     <div class="kl-tile"><p>Lineups used</p><p class="kl-big" data-draw="t-lineups" data-source="scope_totals" data-field="lineups">—</p></div>
     <div class="kl-tile"><p>Most-used lineup, share of minutes</p><p class="kl-big" data-draw="t-share" data-source="scope_totals" data-field="top_share">—</p></div>
@@ -197,7 +205,7 @@
       <table data-source="game_summary" data-row-key="game_id">
         <thead><tr>
           <th data-field="date">Date</th>
-          <th data-field="opponent" class="kl-left">Opponent</th>
+          <th data-field="opponent_label" class="kl-left">Opponent</th>
           <th data-field="site" class="kl-hide-sm">Site</th>
           <th data-field="result">Result</th>
           <th data-field="lineups_used">Lineups</th>
@@ -240,6 +248,21 @@
       if (games.length > 5) out.push({scope: 'last5', label: 'Last 5 games'});
       games.forEach((g) => out.push({scope: g.game_id, label: g.date.slice(5).replace('-', '/') + ' vs. ' + g.opponent}));
       return out;
+    },
+  });
+
+  dash.calc('exh_status', {
+    title: 'Exhibitions still counted',
+    description: 'How many exhibition games are still in the main view, and the official game after which none are.',
+    inputs: [STINTS, SCHED],
+    fn: (stints, schedule) => {
+      const played = [...new Map(stints.map((r) => [r.game_id, r])).values()];
+      const official = played.filter((g) => g.game_type !== 'Exhibition').length;
+      const exhibitions = played.filter((g) => g.game_type === 'Exhibition').length;
+      const kept = Math.max(0, exhibitions - Math.max(0, official - 3));
+      const last = schedule.filter((g) => g.game_type !== 'Exhibition').sort((a, b) => a.date < b.date ? -1 : 1)[exhibitions + 2];
+      const md = (d) => ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][Number(d.slice(5, 7)) - 1] + ' ' + Number(d.slice(8, 10));
+      return [{official_played: official, exhibitions, exhibitions_kept: kept, final_game: last ? `the ${last.opponent} game (${md(last.date)})` : 'the 6th official game'}];
     },
   });
 
@@ -375,7 +398,7 @@
       const by = {};
       mine.forEach((r) => { by[r.lineup] = (by[r.lineup] || 0) + Number(r.seconds); });
       const top = Object.entries(by).sort((a, b) => b[1] - a[1])[0];
-      return {game_id: g.game_id, date: g.date, opponent: g.opponent, site: g.site, result: g.result || (g.tipoff_et ? g.tipoff_et + ' ET' : ''),
+      return {game_id: g.game_id, date: g.date, opponent: g.opponent, opponent_label: g.game_type === 'Exhibition' ? g.opponent + ' · Exhibition' : g.opponent, site: g.site, result: g.result || (g.tipoff_et ? g.tipoff_et + ' ET' : ''),
         lineups_used: mine.length ? Object.keys(by).length : null, top_lineup: top ? top[0] : null, top_minutes: top ? Math.round(top[1] / 6) / 10 : null,
         main_view: !mine.length ? null : phasedOut.has(g.game_id) ? 'Phased out' : 'Yes'};
       });
@@ -398,6 +421,14 @@
   const minSel = document.querySelectorAll('.kl-minmin');
   minSel.forEach((s) => s.addEventListener('change', () => dash.setParams({minmin: Number(s.value)})));
   dash.onData(() => minSel.forEach((s) => { s.value = String(kl.minmin()); }));
+  dash.onData(() => {
+    const st = (kl.rows('exh_status') || [])[0];
+    const kept = st ? st.exhibitions_kept : 0, early = st && st.official_played <= 3;
+    document.querySelectorAll('.kl-status-early').forEach((el) => { el.hidden = !(st && kept > 0 && early); });
+    document.querySelectorAll('.kl-status-late').forEach((el) => { el.hidden = !(st && kept > 0 && !early); });
+    const t = (kl.rows('scope_totals') || []).find((r) => r.scope === kl.scope());
+    document.querySelectorAll('.kl-sub').forEach((el) => { el.hidden = !(t && t.exhibitions > 0); });
+  });
 
   document.querySelectorAll('th button[data-sort]').forEach((b) => b.addEventListener('click', () => {
     const which = b.closest('table').querySelector('tbody').dataset.draw;
@@ -441,6 +472,12 @@
     el.setAttribute('data-where', 'scope=' + kl.enc(r.scope)); el.textContent = fmt(r[field]);
   };
   dash.draw('t-games', tile('games', (v) => String(v)));
+  dash.draw('t-exh', tile('exhibitions', (v) => String(v)));
+  dash.draw('t-exh-noun', (el) => { const r = inScope('scope_totals')[0]; el.textContent = r && r.exhibitions === 1 ? 'game' : 'games'; });
+  const exhRow = () => (kl.rows('exh_status') || [])[0];
+  dash.draw('exh-kept', (el) => { const r = exhRow(); if (!r) return kl.dash(el); el.textContent = String(r.exhibitions_kept); });
+  dash.draw('exh-noun', (el) => { const r = exhRow(); el.textContent = r && r.exhibitions_kept === 1 ? 'game' : 'games'; });
+  dash.draw('exh-end', (el) => { const r = exhRow(); if (!r) return kl.dash(el); el.textContent = r.final_game; });
   dash.draw('t-record', tile('record', (v) => v));
   dash.draw('t-lineups', tile('lineups', (v) => String(v)));
   dash.draw('t-share', tile('top_share', (v) => d3.format('.0%')(v)));
@@ -480,7 +517,7 @@
     const fmt = d3.utcFormat('%b %-d');
     rows.slice().sort((a, b) => a.date < b.date ? -1 : 1).forEach((r) => {
       const tr = tb.insertRow(); tr.dataset.key = kl.enc(r.game_id);
-      td(tr, fmt(new Date(r.date + 'T12:00:00Z'))); td(tr, r.opponent, 'kl-left'); td(tr, r.site, '', 'kl-hide-sm');
+      td(tr, fmt(new Date(r.date + 'T12:00:00Z'))); (() => { const c = td(tr, r.opponent, 'kl-left'); if (r.opponent_label !== r.opponent) { const t = document.createElement('span'); t.className = 'kl-tag'; t.textContent = r.opponent_label.slice(r.opponent.length); c.append(t); } })(); td(tr, r.site, '', 'kl-hide-sm');
       td(tr, r.result || '—', r.result && r.result[0] === 'W' ? 'kl-pos' : r.result && r.result[0] === 'L' ? 'kl-neg' : '');
       td(tr, r.lineups_used === null ? '—' : String(r.lineups_used));
       const c = td(tr, r.top_lineup || '—', 'kl-left', 'kl-hide-sm'); c.style.whiteSpace = 'normal';
