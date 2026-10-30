@@ -1,19 +1,32 @@
 // Minimal stand-in for the dashboard runtime: loads the JSON data files,
 // runs the calculations and redraws on filter or width changes.
+// The From/To date range (public page only) narrows the lineup data that the
+// lineup, combination, player and totals calculations see. The game log,
+// exhibition status and notable dates always use the full season.
 (function () {
-  const SOURCES = {stints: 'data/kentucky_lineup_stints.json', schedule: 'data/kentucky_schedule.json'};
-  const DEFAULTS = {scope: 'all', minmin: 0, combo: 2};
-  const raw = {}, calcs = {}, draws = {}, onDatas = [], cache = {};
-  let status = 'loading', params = Object.assign({}, DEFAULTS);
-  try { const q = new URLSearchParams(location.search); if (q.get('scope')) params.scope = q.get('scope'); if (q.get('min')) params.minmin = Number(q.get('min')); if (q.get('combo')) params.combo = Number(q.get('combo')); } catch (e) {}
+  const SOURCES = {stints: 'data/kentucky_lineup_stints.json', schedule: 'data/kentucky_schedule.json', players: 'data/kentucky_player_games.json'};
+  const DATE_FILTERED = new Set(['scopes', 'lineup_stats', 'combos', 'player_stats', 'scope_totals']);
+  const DEFAULTS = {scope: 'all', minmin: 0, combo: 2, from: null, to: null};
+  const raw = {}, calcs = {}, draws = {}, onDatas = [];
+  let cache = {}, status = 'loading', params = Object.assign({}, DEFAULTS);
+  try {
+    const q = new URLSearchParams(location.search);
+    if (q.get('scope')) params.scope = q.get('scope');
+    if (q.get('min')) params.minmin = Number(q.get('min'));
+    if (q.get('combo')) params.combo = Number(q.get('combo'));
+    if (/^\d{4}-\d\d-\d\d$/.test(q.get('from') || '')) params.from = q.get('from');
+    if (/^\d{4}-\d\d-\d\d$/.test(q.get('to') || '')) params.to = q.get('to');
+  } catch (e) {}
   const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const inRange = (r) => (!params.from || r.date >= params.from) && (!params.to || r.date <= params.to);
+  const input = (id, forCalc) => (id === 'stints' && DATE_FILTERED.has(forCalc)) ? raw.stints.filter(inRange) : dash.data(id).data;
   const dash = {
     get colors() { return [css('--series-1') || css('--accent'), '#e07b39', '#2a9d8f', '#8e6cc9', '#d1495b', '#6a994e', '#c9a227', '#577590']; },
     data(id) {
       if (status !== 'ok') return {status, data: []};
       if (id in raw) return {status: 'ok', data: raw[id]};
       if (id in calcs) {
-        if (!(id in cache)) cache[id] = calcs[id].fn(...calcs[id].inputs.map((i) => dash.data(i).data));
+        if (!(id in cache)) cache[id] = calcs[id].fn(...calcs[id].inputs.map((i) => input(i, id)));
         return {status: 'ok', data: cache[id]};
       }
       return {status: 'missing', data: []};
@@ -26,11 +39,21 @@
     },
     params() { return Object.assign({}, params); },
     setParams(p) {
+      const datesChanged = ('from' in p && p.from !== params.from) || ('to' in p && p.to !== params.to);
       Object.assign(params, p);
-      try { const q = new URLSearchParams(); if (params.scope !== 'all') q.set('scope', params.scope); if (params.minmin !== 0) q.set('min', params.minmin); if (params.combo !== 2) q.set('combo', params.combo); history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash); } catch (e) {}
+      if (datesChanged) cache = {};
+      try {
+        const q = new URLSearchParams();
+        if (params.scope !== 'all') q.set('scope', params.scope);
+        if (params.minmin !== 0) q.set('min', params.minmin);
+        if (params.combo !== 2) q.set('combo', params.combo);
+        if (params.from) q.set('from', params.from);
+        if (params.to) q.set('to', params.to);
+        history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash);
+      } catch (e) {}
       render();
     },
-    resetParams() { params = Object.assign({}, DEFAULTS); render(); },
+    resetParams() { params = Object.assign({}, DEFAULTS); cache = {}; render(); },
     setLink() {}, refresh() {},
   };
   function run(name) {

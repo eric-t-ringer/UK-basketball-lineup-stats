@@ -44,6 +44,8 @@
   
   
   
+  
+  
   .kl { font-family: var(--font-anthropic-sans); color: var(--color-fg); display: grid; gap: var(--cds-gap-lg); }
   .kl-head h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0 0 var(--cds-gap-xs); }
   .kl-take { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); line-height: 1.5; }
@@ -52,6 +54,12 @@
   .kl-status { margin: var(--cds-gap-sm) 0 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.45; }
   .kl-sub { margin: 4px 0 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
   .kl-tag { font-size: 0.75em; color: var(--color-fg-muted); white-space: nowrap; }
+  .kl-events { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 0 var(--cds-gap-lg); }
+  .kl-events li { display: grid; grid-template-columns: 4.2rem 1fr; gap: var(--cds-gap-sm); padding: 8px 0; border-bottom: 1px solid var(--color-border-line); font-size: var(--cds-font-size-caption); line-height: 1.45; }
+  .kl-events .kl-ev-date { color: var(--color-fg-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .kl-events .kl-ev-kind { display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--color-fg-muted); }
+  .kl-upcoming { margin: var(--cds-gap-md) 0 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.6; }
+  .kl .kl-upcoming b { color: var(--color-fg); font-weight: 600; }
   .kl-controls { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); align-items: end; }
   .kl-controls label { display: grid; gap: 4px; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
   .kl-controls select { font: inherit; font-size: var(--cds-font-size-body); color: var(--color-fg); background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-xs) var(--cds-pad-sm); }
@@ -114,8 +122,10 @@
   .kl th[aria-sort] button { text-decoration: underline; text-underline-offset: 3px; }
   .kl tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--uk-blue-tint) 55%, transparent); }
   .kl-method { border-top: 4px solid var(--uk-blue); padding-top: 14px; }
+  .kl-controls input[type=date] { font: inherit; font-size: var(--cds-font-size-body); color: var(--color-fg); background: var(--color-panel); border: 1px solid var(--uk-blue); border-radius: var(--cds-radius); padding: calc(var(--cds-pad-xs) - 1px) var(--cds-pad-sm); color-scheme: light dark; }
+  .kl-controls .kl-clear-dates { font: inherit; font-size: var(--cds-font-size-caption); color: var(--accent); background: none; border: none; padding: 6px 2px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; align-self: end; }
   @media (prefers-color-scheme: dark) {
-    .kl-controls select { border-color: var(--color-border-line); }
+    .kl-controls select, .kl-controls input[type=date] { border-color: var(--color-border-line); }
     .kl-controls select:focus-visible { outline-color: #7fa6ff; }
     .kl-tile, .kl-card, .kl-method { border-top-color: #2f5fd0; }
     .kl-head .kl-take { color: rgba(255,255,255,.88); }
@@ -149,6 +159,13 @@
         <option value="20">20 min</option>
       </select>
     </label>
+    <label>From
+      <input type="date" class="kl-from" aria-label="From date">
+    </label>
+    <label>To
+      <input type="date" class="kl-to" aria-label="To date">
+    </label>
+    <button type="button" class="kl-clear-dates" hidden>Clear dates</button>
   </div>
 
   <section class="kl-tiles" id="totals">
@@ -157,6 +174,13 @@
     <div class="kl-tile"><p>Lineups used</p><p class="kl-big" data-draw="t-lineups" data-source="scope_totals" data-field="lineups">—</p></div>
     <div class="kl-tile"><p>Most-used lineup, share of minutes</p><p class="kl-big" data-draw="t-share" data-source="scope_totals" data-field="top_share">—</p></div>
     <div class="kl-tile"><p>Team net points per 40</p><p class="kl-big" data-draw="t-net" data-source="scope_totals" data-field="net40">—</p></div>
+  </section>
+
+  <section class="kl-card" id="notable-dates">
+    <h2>Notable dates</h2>
+    <p class="kl-note">Milestones, debuts, starting-lineup changes, big games and streaks, newest first. Covers the whole season, whatever the filters are set to. Streaks count official games only.</p>
+    <ul class="kl-events" data-draw="events" data-source="notables"></ul>
+    <p class="kl-upcoming"><span class="kl-up-next" hidden>Coming up: <b data-draw="up-next" data-source="notables_meta" data-field="next_milestone">—</b>.</span> <span class="kl-up-await" hidden>Awaiting season debut: <b data-draw="up-await" data-source="notables_meta" data-field="awaiting">—</b>.</span></p>
   </section>
 
   <section class="kl-grid">
@@ -263,6 +287,7 @@
     <p>How the measures relate: OER − DER is the scoring margin per 100 possessions. Net /40 is the same margin per 40 minutes, so it also reflects pace: at Kentucky’s exhibition pace of about 69 possessions per 40 minutes, a +10 margin per 100 possessions is about +7 per 40. Adj. /40 is Net /40 pulled toward the team average for small samples; OER and DER are shown unadjusted, so treat them with the same caution on short stints.</p>
     <p>Exhibitions phase out: the main view includes the three exhibition games until there are three official games. From then on, each new official game replaces the oldest exhibition (the 4th official game replaces Little Rock, the 5th Texas Tech, the 6th UCF), so after six official games the main view is official games only. The exhibitions stay viewable under the "Exhibitions" choice in the Games filter.</p>
     <p>Adjusted net (Adj. /40): a lineup that played 2 minutes can show +60 per 40 on one run, so raw margins over short stints are mostly noise. The adjusted figure blends each lineup's actual margin with the team's average margin, as if the lineup had also played 50 extra minutes at the team's average. A lineup that has played a few minutes stays close to the team average; one that has played 100+ minutes is judged mostly on its own results. The 50-minute weight is a judgment call, not a fitted value. Rankings and the chart use the adjusted figure. The idea follows Evan Miya's point that observed lineup results should count for more as a lineup logs more possessions.</p>
+    <p>Notable dates: a big game is a triple-double, 30+ points, 6+ made threes, or 80%+ shooting on at least 10 shots. Streaks are 3+ straight official games with 20+ points or a double-double, and 5+ straight official wins. A starting-lineup change compares each game's starters with the game before.</p>
     <p>Combinations: pair and trio numbers pool every stint those players shared, so they gather minutes faster than full lineups. They also credit or blame the players for whoever else was on the floor.</p>
     <p>Unofficial fan project, not affiliated with the University of Kentucky. Lineup data comes from the official box scores posted at ukathletics.com and is added the morning after each game.</p>
   </section>
@@ -270,7 +295,7 @@
 
 </main>
 <script>
-  const STINTS = 'stints', SCHED = 'schedule';
+  const STINTS = 'stints', SCHED = 'schedule', PLAYERS = 'players';
 
   dash.calc('scopes', {
     title: 'Game filter choices',
@@ -288,6 +313,106 @@
       if (games.length > 5) out.push({scope: 'last5', label: 'Last 5 games'});
       games.forEach((g) => out.push({scope: g.game_id, label: g.date.slice(5).replace('-', '/') + ' vs. ' + g.opponent}));
       return out;
+    },
+  });
+
+  dash.calc('notables', {
+    title: 'Notable dates',
+    description: 'Season milestones, first minutes, starting-lineup changes, single-game feats (triple-double, 30 points, 6+ threes, 80% shooting on 10+ shots) and streaks (3+ straight games of 20 points or a double-double; 5+ straight wins), from the schedule and player box scores.',
+    inputs: [SCHED, PLAYERS],
+    fn: (schedule, players) => {
+      const SEC = ['Alabama', 'Arkansas', 'Auburn', 'Florida', 'Georgia', 'LSU', 'Mississippi State', 'Missouri', 'Oklahoma', 'Ole Miss', 'South Carolina', 'Tennessee', 'Texas', 'Texas A&M', 'Vanderbilt'];
+      const md = (d) => ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][Number(d.slice(5, 7)) - 1] + ' ' + Number(d.slice(8, 10));
+      const vs = (g) => (g.site === 'Away' ? 'at ' : 'vs. ') + g.opponent;
+      const played = [...new Set(players.map((p) => p.game_id))].map((id) => schedule.find((g) => g.game_id === id) || players.find((p) => p.game_id === id))
+        .sort((a, b) => a.date < b.date ? -1 : 1);
+      const lastDate = played.length ? played[played.length - 1].date : '';
+      const ev = [];
+      const add = (g, kind, text, order) => ev.push({date: g.date, game_id: g.game_id, kind, text, exhibition: g.game_type === 'Exhibition', order});
+      // Season milestones
+      const sorted = schedule.slice().sort((a, b) => a.date < b.date ? -1 : 1);
+      const milestones = [
+        ['Regular season opens', sorted.find((g) => g.game_type === 'Regular season')],
+        ['SEC play begins', sorted.find((g) => g.game_type === 'Regular season' && SEC.includes(g.opponent))],
+        ['Postseason begins', sorted.find((g) => g.game_type === 'Postseason')],
+      ].filter(([, g]) => g);
+      milestones.forEach(([label, g]) => { if (g.date <= lastDate) add(g, 'Milestone', `${label}: ${vs(g)}${g.result ? ', ' + g.result : ''}`, 0); });
+      // Per-game player lines
+      const byGame = played.map((g) => ({g, lines: players.filter((p) => p.game_id === g.game_id)}));
+      const seen = new Set(); let prevStarters = null, officialSeen = false;
+      byGame.forEach(({g, lines}, gi) => {
+        lines.filter((p) => p.seconds > 0).forEach((p) => {
+          if (!seen.has(p.player) && gi > 0) add(g, 'Debut', `${p.full_name} plays his first minutes of the season (${Math.round(p.seconds / 60)} min, ${p.pts} pts)`, 1);
+          seen.add(p.player);
+          const tens = ['pts', 'reb', 'ast', 'stl', 'blk'].filter((k) => p[k] >= 10).length;
+          if (tens >= 3) add(g, 'Big game', `${p.full_name}: triple-double (${p.pts} pts, ${p.reb} reb, ${p.ast} ast) ${vs(g)}`, 2);
+          if (p.pts >= 30) add(g, 'Big game', `${p.full_name}: ${p.pts} points ${vs(g)}`, 2);
+          if (p.tpm >= 6) add(g, 'Hot shooting', `${p.full_name}: ${p.tpm}-of-${p.tpa} from three ${vs(g)}`, 3);
+          if (p.fga >= 10 && p.fgm / p.fga >= 0.8) add(g, 'Hot shooting', `${p.full_name}: ${p.fgm}-of-${p.fga} shooting ${vs(g)}`, 3);
+        });
+        const starters = lines.filter((p) => p.started).map((p) => p.player).sort();
+        const official = g.game_type !== 'Exhibition';
+        if (starters.length === 5) {
+          if (!prevStarters) add(g, 'Starting lineup', `Starters: ${starters.join(', ')}`, 4);
+          else {
+            const ins = starters.filter((x) => !prevStarters.includes(x)), outs = prevStarters.filter((x) => !starters.includes(x));
+            if (ins.length) add(g, 'Starting lineup', `Starting lineup change: ${ins.join(' and ')} in for ${outs.join(' and ')}`, 4);
+            else if (official && !officialSeen) add(g, 'Starting lineup', `Opening-night starters, unchanged from the exhibitions: ${starters.join(', ')}`, 4);
+          }
+          prevStarters = starters;
+        }
+        if (official) officialSeen = true;
+      });
+      // Streaks over official games only
+      const off = byGame.filter(({g}) => g.game_type !== 'Exhibition');
+      const streaks = (test, label) => {
+        const names = [...new Set(players.map((p) => p.player))];
+        names.forEach((n) => {
+          let run = [];
+          const flush = () => {
+            if (run.length >= 3) {
+              const last = run[run.length - 1], full = last.p.full_name;
+              add(last.g, 'Streak', `${full}: ${run.length} straight games with ${label} (${md(run[0].g.date)}–${md(last.g.date)})`, 5);
+            }
+            run = [];
+          };
+          off.forEach(({g, lines}) => { const p = lines.find((x) => x.player === n); if (p && test(p)) run.push({g, p}); else flush(); });
+          flush();
+        });
+      };
+      streaks((p) => p.pts >= 20, '20+ points');
+      streaks((p) => ['pts', 'reb', 'ast', 'stl', 'blk'].filter((k) => p[k] >= 10).length >= 2, 'a double-double');
+      // Team win streaks (official games with results)
+      let wins = [];
+      const flushW = () => { if (wins.length >= 5) { const l = wins[wins.length - 1]; add(l, 'Streak', `Team: ${wins.length} straight wins (${md(wins[0].date)}–${md(l.date)})`, 5); } wins = []; };
+      sorted.filter((g) => g.game_type !== 'Exhibition' && g.result).forEach((g) => { if (g.result[0] === 'W') wins.push(g); else flushW(); });
+      flushW();
+      return ev.sort((a, b) => a.date === b.date ? a.order - b.order : a.date < b.date ? 1 : -1)
+        .map((e, i) => ({id: String(i + 1).padStart(3, '0'), date: e.date, game_id: e.game_id, kind: e.kind, text: e.text, exhibition: e.exhibition}));
+    },
+  });
+
+  dash.calc('notables_meta', {
+    title: 'Next milestone and awaited debuts',
+    description: 'The next season milestone on the schedule, and injured players who have not yet played this season.',
+    inputs: [SCHED, PLAYERS],
+    fn: (schedule, players) => {
+      const SEC = ['Alabama', 'Arkansas', 'Auburn', 'Florida', 'Georgia', 'LSU', 'Mississippi State', 'Missouri', 'Oklahoma', 'Ole Miss', 'South Carolina', 'Tennessee', 'Texas', 'Texas A&M', 'Vanderbilt'];
+      // Players out injured at the start of the season (update this list as news changes).
+      const WATCH = [['K. Williams', 'Kam Williams'], ['Morton', 'Jerone Morton'], ['Noah', 'Trent Noah']];
+      const md = (d) => ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][Number(d.slice(5, 7)) - 1] + ' ' + Number(d.slice(8, 10));
+      const lastDate = players.reduce((m, p) => p.date > m ? p.date : m, '');
+      const sorted = schedule.slice().sort((a, b) => a.date < b.date ? -1 : 1);
+      const ms = [
+        ['Regular season opens', sorted.find((g) => g.game_type === 'Regular season')],
+        ['SEC play begins', sorted.find((g) => g.game_type === 'Regular season' && SEC.includes(g.opponent))],
+        ['Postseason begins', sorted.find((g) => g.game_type === 'Postseason')],
+      ].filter(([, g]) => g && g.date > lastDate);
+      const next = ms[0];
+      const debuted = new Set(players.filter((p) => p.seconds > 0).map((p) => p.player));
+      const awaiting = WATCH.filter(([n]) => !debuted.has(n)).map(([, full]) => full);
+      return [{key: 'season', next_milestone: next ? `${next[0]} ${md(next[1].date)} ${next[1].site === 'Away' ? 'at' : 'vs.'} ${next[1].opponent}` : '',
+        awaiting: awaiting.length > 1 ? awaiting.slice(0, -1).join(', ') + (awaiting.length > 2 ? ',' : '') + ' and ' + awaiting[awaiting.length - 1] : awaiting.join('')}];
     },
   });
 
@@ -624,6 +749,27 @@
     });
   });
 
+  dash.onData(() => {
+    const m = (kl.rows('notables_meta') || [])[0];
+    document.querySelectorAll('.kl-up-next').forEach((el) => { el.hidden = !(m && m.next_milestone); });
+    document.querySelectorAll('.kl-up-await').forEach((el) => { el.hidden = !(m && m.awaiting); });
+  });
+  dash.draw('up-next', (el) => { const m = (kl.rows('notables_meta') || [])[0]; if (!m) return kl.dash(el); el.setAttribute('data-where', 'key=season'); el.textContent = m.next_milestone; });
+  dash.draw('up-await', (el) => { const m = (kl.rows('notables_meta') || [])[0]; if (!m) return kl.dash(el); el.setAttribute('data-where', 'key=season'); el.textContent = m.awaiting; });
+  dash.draw('events', (ul) => {
+    ul.replaceChildren();
+    const rows = (kl.rows('notables') || []).slice(0, 8);
+    const fmt = d3.utcFormat('%b %-d');
+    rows.forEach((r) => {
+      const li = document.createElement('li');
+      const d = document.createElement('span'); d.className = 'kl-ev-date'; d.textContent = fmt(new Date(r.date + 'T12:00:00Z'));
+      const body = document.createElement('span');
+      const k = document.createElement('span'); k.className = 'kl-ev-kind'; k.textContent = r.kind + (r.exhibition ? ' · Exhibition' : '');
+      body.append(k, document.createTextNode(r.text));
+      li.append(d, body); ul.append(li);
+    });
+  });
+
   dash.draw('games', (tb) => {
     tb.replaceChildren();
     const rows = kl.rows('game_summary') || [];
@@ -689,6 +835,24 @@
     const g = s.filter((x) => x.lineups_loaded).sort((a, b) => a.date < b.date ? 1 : -1)[0];
     el.textContent = g ? g.opponent + ' (' + d3.utcFormat('%b %-d')(new Date(g.date + 'T12:00:00Z')) + ')' : 'no games yet';
   });
+
+  // Date range (public page only): narrows the lineup data within the Games choice.
+  (() => {
+    const from = document.querySelectorAll('.kl-from'), to = document.querySelectorAll('.kl-to'), clear = document.querySelectorAll('.kl-clear-dates');
+    const ok = (el) => el.value && el.validity.valid && /^\d{4}-\d\d-\d\d$/.test(el.value);
+    from.forEach((el) => el.addEventListener('change', () => { if (ok(el)) dash.setParams({from: el.value}); else if (!el.value) dash.setParams({from: null}); }));
+    to.forEach((el) => el.addEventListener('change', () => { if (ok(el)) dash.setParams({to: el.value}); else if (!el.value) dash.setParams({to: null}); }));
+    clear.forEach((b) => b.addEventListener('click', () => dash.setParams({from: null, to: null})));
+    const sync = () => {
+      const p = dash.params(), s = kl.rows('schedule') || [], st = kl.rows('stints') || [];
+      const dates = st.map((r) => r.date).sort(), lo = dates[0] || '', hi = s.map((g) => g.date).sort().slice(-1)[0] || '';
+      from.forEach((el) => { el.min = lo; el.max = hi; if (el !== document.activeElement) el.value = p.from || ''; });
+      to.forEach((el) => { el.min = lo; el.max = hi; if (el !== document.activeElement) el.value = p.to || ''; });
+      clear.forEach((b) => { b.hidden = !(p.from || p.to); });
+    };
+    [...from, ...to].forEach((el) => el.addEventListener('blur', sync));
+    dash.onData(sync);
+  })();
 </script>
 </body>
 </html>
