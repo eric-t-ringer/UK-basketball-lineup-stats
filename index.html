@@ -55,6 +55,7 @@
   
   
   
+  
   .kl { font-family: var(--font-anthropic-sans); color: var(--color-fg); display: grid; gap: var(--cds-gap-lg); }
   .kl-head h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0 0 var(--cds-gap-xs); }
   .kl-take { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); line-height: 1.5; }
@@ -1130,6 +1131,9 @@
 
   // On/off dumbbell chart: shown once the chosen games include 8 official games.
   const ONOFF = {games: 8, onShare: 0.25, offMin: 40, headGap: 15, headOff: 80};
+  // Hand-written headline for the main view, set after reviewing the chart. It shows only in the main view with no date range, and only while
+  // the data still has the official-game count it was written for (null = use the automatic headline).
+  const ONOFF_HEADLINE = {text: null, official_games: null};
   const onoffState = () => {
     const t = inScope('scope_totals')[0], rows = inScope('player_stats');
     const games = t ? t.games : 0;
@@ -1139,7 +1143,8 @@
   };
   const listNames = (n) => n.length === 1 ? n[0] : n.slice(0, -1).join(', ') + (n.length > 2 ? ',' : '') + ' and ' + n[n.length - 1];
   dash.draw('onoff-head', (el) => {
-    const st = onoffState();
+    const st = onoffState(), p = dash.params();
+    if (ONOFF_HEADLINE.text && kl.scope() === 'all' && !p.from && !p.to && st.games === ONOFF_HEADLINE.official_games) { el.textContent = ONOFF_HEADLINE.text; return; }
     // Name only the players at the top of the chart, in order, while each clears the headline bar; if the top row doesn't, the headline stays neutral.
     const lead = [];
     if (st.ready) for (const r of st.charted.slice(0, 2)) { if (r.on_off > ONOFF.headGap && r.off_minutes >= ONOFF.headOff) lead.push(r.player); else break; }
