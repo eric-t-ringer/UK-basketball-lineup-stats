@@ -56,6 +56,9 @@
   
   
   
+  
+  
+  
   .kl { font-family: var(--font-anthropic-sans); color: var(--color-fg); display: grid; gap: var(--cds-gap-lg); }
   .kl-head h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0 0 var(--cds-gap-xs); }
   .kl-take { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); line-height: 1.5; }
@@ -120,6 +123,11 @@
   .kl-method h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); color: var(--color-fg); margin: 0 0 var(--cds-gap-xs); }
   .kl-method p { margin: 0 0 var(--cds-gap-xs); }
   .kl th.kl-left, .kl td.kl-left { text-align: left; }
+  /* Rotation heatmap */
+  #rotation .kl-headline { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); line-height: 1.2; margin: 0 0 var(--cds-gap-xs); }
+  #rotation .kl-dek { margin: 0 0 var(--cds-gap-md); font-size: var(--cds-font-size-body); color: var(--color-fg-muted); line-height: 1.5; max-width: 46rem; }
+  #rotation .kl-rot-chart { position: relative; }
+  #rotation .kl-note { margin: var(--cds-gap-sm) 0 0; }
   /* On/off dumbbell chart */
   #onoff .kl-headline { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); line-height: 1.2; margin: 0 0 var(--cds-gap-xs); }
   #onoff .kl-dek { margin: 0 0 var(--cds-gap-md); font-size: var(--cds-font-size-body); color: var(--color-fg-muted); line-height: 1.5; max-width: 46rem; }
@@ -230,6 +238,13 @@
     <p class="kl-note">Milestones, debuts, starting-lineup changes, big games and streaks, newest first. Covers the whole season, whatever the filters are set to. Streaks count official games only.</p>
     <ul class="kl-events" data-draw="events" data-source="notables"></ul>
     <p class="kl-upcoming"><span class="kl-up-next" hidden>Coming up: <b data-draw="up-next" data-source="notables_meta" data-field="next_milestone">—</b>.</span> <span class="kl-up-await" hidden>Awaiting season debut: <b data-draw="up-await" data-source="notables_meta" data-field="awaiting">—</b>.</span></p>
+  </section>
+
+  <section class="kl-card" id="rotation">
+    <h2 class="kl-headline" data-draw="rot-head" data-source="rotation">Who has played, game by game</h2>
+    <p class="kl-dek" data-draw="rot-dek"></p>
+    <div class="kl-rot-chart" data-draw="rot-chart" data-source="rotation"></div>
+    <p class="kl-note">Shading is scaled to a 40-minute game, so overtime games (marked OT) don't look heavier. An empty cell means the player didn't play; the box score doesn't say why. The minimum-minutes setting doesn't apply here.</p>
   </section>
 
   <section class="kl-card" id="onoff">
@@ -511,6 +526,7 @@
     <p>Player stats: rebound percentages and usage use team and opponent totals from the box score of each game the player played, and assume his minutes were spread evenly across the game. Usage is (FGA + 0.44 × FTA + TOV) as a share of the team's while he was on the floor. On OER and On DER come from the lineup data, using Kentucky's possessions for both ends.</p>
     <p>Positions are approximate. Lineups are listed from point guard (1) to center (5) using each player's usual positions: Diallo 1/2; Wilkins 2/1/3; M. Williams 1/2; B. Hawthorne 3/2/4; Z. Hawthorne 2/3; Momcilovic 3/4; N'Diaye and McBride 4/5; Moreno, Kepnang and Potter 5. The 1 goes to the first of Diallo, Wilkins, M. Williams or Morton on the floor. In practice ball-handling is shared (Diallo and M. Williams both bring it up when they play together), so the order is a reading aid, not a record of who played where.</p>
     <p>Notable dates: a big game is a triple-double, 30+ points, 6+ made threes, or 80%+ shooting on at least 10 shots. Streaks are 3+ straight official games with 20+ points or a double-double, and 5+ straight official wins. A starting-lineup change compares each game's starters with the game before.</p>
+    <p>Rotation chart: minutes come from each game's box score. Rows are sorted by total minutes in the games shown, so a player who joins late doesn't jump to the top. A starting-lineup change is marked where a game's five starters differ from the game before. On a phone the chart shows the last 10 games of the selection; choose fewer games in the Games filter or a date range to see others.</p>
     <p>On/off chart: it appears once the chosen games include 8 official games, since over fewer games a player's on/off swings by 15+ points per 40 from chance alone. A player is charted if he has played at least a quarter of the team's minutes and sat at least 40 minutes, because the bench side of his line comes from those minutes. The headline names a player only when his gap is more than 15 points per 40 and he has sat at least 80 minutes. The minimum-minutes setting doesn't apply to this chart.</p>
     <p>Combinations: pair and trio numbers pool every stint those players shared, so they gather minutes faster than full lineups. They also credit or blame the players for whoever else was on the floor.</p>
     <p>Unofficial fan project, not affiliated with the University of Kentucky. Lineup data comes from the official box scores posted at ukathletics.com and is added the morning after each game.</p>
@@ -636,6 +652,7 @@
       const debuted = new Set(players.filter((p) => p.seconds > 0).map((p) => p.player));
       const awaiting = WATCH.filter(([n]) => !debuted.has(n)).map(([, full]) => full);
       return [{key: 'season', next_milestone: next ? `${next[0]} ${md(next[1].date)} ${next[1].site === 'Away' ? 'at' : 'vs.'} ${next[1].opponent}` : '',
+        awaiting_short: WATCH.filter(([n]) => !debuted.has(n)).map(([n]) => n).join(';'),
         awaiting: awaiting.length > 1 ? awaiting.slice(0, -1).join(', ') + (awaiting.length > 2 ? ',' : '') + ' and ' + awaiting[awaiting.length - 1] : awaiting.join('')}];
     },
   });
@@ -791,6 +808,30 @@
           on_oer: a.poss ? r1(a.uk / a.poss * 100) : null, on_der: r1(onDer), off_der: r1(offDer),
           on_off_der: onDer === null || offDer === null ? null : r1(onDer - offDer)};
       });
+    },
+  });
+
+  dash.calc('rotation', {
+    title: 'Minutes by player and game',
+    description: 'Each player’s minutes and whether he started, in every game of each set of games, with the game’s opponent, site, phase of the season (exhibition, non-conference, SEC, postseason) and overtime periods.',
+    inputs: [PLAYERS, SCHED, TEAM],
+    fn: (players, schedule, team) => {
+      const SEC = ['Alabama', 'Arkansas', 'Auburn', 'Florida', 'Georgia', 'LSU', 'Mississippi State', 'Missouri', 'Oklahoma', 'Ole Miss', 'South Carolina', 'Tennessee', 'Texas', 'Texas A&M', 'Vanderbilt'];
+      // Same game sets as the other tables (main view with exhibitions phasing out, each season phase, last 5, each game).
+      const games = [...new Map(players.map((r) => [r.game_id, r])).values()].sort((a, b) => a.date < b.date ? -1 : 1);
+      const last5 = new Set(games.slice(-5).map((g) => g.game_id));
+      const official = games.filter((g) => g.game_type !== 'Exhibition'), exhibitions = games.filter((g) => g.game_type === 'Exhibition');
+      const phasedOut = new Set(exhibitions.slice(0, Math.max(0, official.length - 3)).map((g) => g.game_id));
+      const scopesOf = (r) => (phasedOut.has(r.game_id) ? [] : ['all']).concat([r.game_type, r.game_id], r.game_type !== 'Exhibition' ? ['official'] : [], last5.has(r.game_id) && games.length > 5 ? ['last5'] : []);
+      const sch = new Map(schedule.map((g) => [g.game_id, g])), tm = new Map(team.map((t) => [t.game_id, t]));
+      const phase = (r) => r.game_type === 'Exhibition' ? 'Exhibition' : r.game_type === 'Postseason' ? 'Postseason' : SEC.includes(r.opponent) ? 'SEC' : 'Non-conference';
+      const out = [];
+      players.filter((p) => Number(p.seconds) > 0).forEach((p) => scopesOf(p).forEach((s) => {
+        const g = sch.get(p.game_id) || {}, t = tm.get(p.game_id) || {};
+        out.push({scope: s, game_id: p.game_id, date: p.date, opponent: p.opponent, site: g.site || '', phase: phase(p), ot: Number(t.overtimes || 0),
+          player: p.player, minutes: Math.round(Number(p.seconds) / 6) / 10, started: !!p.started});
+      }));
+      return out;
     },
   });
 
@@ -1128,6 +1169,124 @@
     });
   });
 
+
+  // Rotation heatmap: one row per player, one column per game, shaded by minutes.
+  // Hand-written headline for the main view, set after reviewing the chart; shows only in the main view with no date range,
+  // and only while the latest game in the data is the one it was written through (null = use the automatic headline).
+  const ROTATION_HEADLINE = {text: "Kentucky has leaned on eight players, led by Momcilovic and Moreno", through: "2026-10-28-ucf"};
+  const rotGames = () => {
+    const rows = inScope('rotation');
+    const games = [...new Map(rows.map((r) => [r.game_id, r])).values()].sort((a, b) => a.date < b.date ? -1 : 1);
+    return {rows, games};
+  };
+  dash.draw('rot-head', (el) => {
+    const {games} = rotGames(), p = dash.params(), last = games[games.length - 1];
+    el.textContent = ROTATION_HEADLINE.text && kl.scope() === 'all' && !p.from && !p.to && last && last.game_id === ROTATION_HEADLINE.through
+      ? ROTATION_HEADLINE.text : 'Who has played, game by game';
+  });
+  const rotNarrow = (el) => (el.clientWidth || 700) < 520;
+  dash.draw('rot-dek', (el) => {
+    const {games} = rotGames(), chart = el.parentElement.querySelector('.kl-rot-chart');
+    const cut = chart && rotNarrow(chart) && games.length > 10;
+    el.textContent = `Minutes played by each player in ${cut ? 'the last 10 games' : games.length === 1 ? 'this game' : 'each game'}. The stronger the blue, the more minutes; a dot marks a start. ${cut || games.length > 12 ? (matchMedia('(hover: hover)').matches ? 'Hover over' : 'Tap') + ' a cell for the exact minutes.' : ''}`;
+  });
+  dash.draw('rot-chart', (el) => {
+    el.replaceChildren();
+    const all = rotGames(); if (!all.games.length) return;
+    const narrow = rotNarrow(el), games = narrow ? all.games.slice(-10) : all.games, n = games.length;
+    const ids = new Set(games.map((g) => g.game_id));
+    const byPlayer = new Map();
+    all.rows.filter((r) => ids.has(r.game_id)).forEach((r) => { (byPlayer.get(r.player) || byPlayer.set(r.player, new Map()).get(r.player)).set(r.game_id, r); });
+    const total = (m) => [...m.values()].reduce((s, r) => s + r.minutes, 0);
+    const players = [...byPlayer.entries()].sort((a, b) => total(b[1]) - total(a[1]));
+    const meta = (kl.rows('notables_meta') || [])[0] || {};
+    const waiting = (meta.awaiting_short || '').split(';').filter((x) => x && !byPlayer.has(x));
+    // Starting-lineup changes between consecutive games shown.
+    const starters = games.map((g) => new Set(all.rows.filter((r) => r.game_id === g.game_id && r.started).map((r) => r.player)));
+    const changes = [];
+    for (let j = 1; j < n; j++) {
+      const inn = [...starters[j]].filter((x) => !starters[j - 1].has(x)), out = [...starters[j - 1]].filter((x) => !starters[j].has(x));
+      if (inn.length && starters[j].size === 5 && starters[j - 1].size === 5) changes.push({j, text: inn.length === 1 ? `${inn[0]} in for ${out[0]}` : 'New starting five'});
+    }
+    const W = el.clientWidth || 700, cellH = narrow ? 24 : 28;
+    const fs = getComputedStyle(el);
+    const probe = d3.select(el).append('svg').attr('width', 0).attr('height', 0).append('text').style('font-size', 'var(--cds-font-size-body)').style('font-weight', 600);
+    let nameW = 0; players.forEach(([p]) => { probe.text(p); nameW = Math.max(nameW, probe.node().getComputedTextLength()); });
+    probe.style('font-size', 'var(--cds-font-size-caption)');
+    let oppW = 0; games.forEach((g) => { probe.text((g.site === 'Away' ? 'at ' : '') + g.opponent); oppW = Math.max(oppW, probe.node().getComputedTextLength()); });
+    probe.node().ownerSVGElement.remove();
+    const left = nameW + 14, right = narrow ? 40 : 64, cellW = Math.min(96, (W - left - right) / n), gridW = cellW * n;
+    const showNums = cellW >= 30, rot = oppW > cellW - 8, colX = left + gridW + right - 2;
+    const phases = []; games.forEach((g, j) => { const last = phases[phases.length - 1]; if (last && last.phase === g.phase) last.b = j + 1; else phases.push({phase: g.phase, a: j, b: j + 1}); });
+    const labelH = rot ? Math.min(130, oppW * 0.87 + 14) : 38, T0 = 26 + labelH;
+    const notesH = changes.length ? Math.min(changes.length, 4) * 16 + 10 : 0;
+    const otRow = games.some((g) => g.ot) ? 16 : 0;
+    const H = T0 + players.length * cellH + otRow + notesH + (waiting.length ? waiting.length * cellH + 8 : 0) + 4;
+    const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Minutes played by each player in each game');
+    const panel = (() => { const d = document.createElement('div'); d.style.background = 'var(--color-panel)'; el.append(d); const c = getComputedStyle(d).backgroundColor; d.remove(); return c; })();
+    const hi = dash.colors[0], lo = d3.interpolateRgb(panel, hi)(0.08);
+    const shade = (m, ot) => d3.interpolateRgb(lo, hi)(Math.max(0, Math.min(1, m * 40 / (40 + 5 * ot) / 40)));
+    const ink = (c) => d3.lab(c).l > 62 ? '#121212' : '#ffffff';
+    const gx = (j) => left + j * cellW, gridBottom = T0 + players.length * cellH;
+    const fmt = d3.utcFormat('%b %-d');
+    // Phase bands (skip when the view is a single phase of one game).
+    phases.forEach((ph) => {
+      const short = (ph.b - ph.a) * cellW < 110;
+      const label = ph.phase === 'Non-conference' && short ? 'NON-CONF.' : ph.phase === 'Exhibition' && short ? 'EXH.' : ph.phase.toUpperCase();
+      svg.append('line').attr('x1', gx(ph.a) + 2).attr('x2', gx(ph.b) - 2).attr('y1', 16).attr('y2', 16).attr('stroke', 'var(--color-fg)');
+      if ((ph.b - ph.a) * cellW > 34) svg.append('text').attr('x', gx(ph.a) + 2).attr('y', 10).attr('fill', 'var(--color-fg)').style('font-size', 'var(--cds-font-size-caption)').style('font-weight', 700).style('letter-spacing', '.04em').text(label);
+      if (ph.a > 0) svg.append('line').attr('x1', gx(ph.a)).attr('x2', gx(ph.a)).attr('y1', T0 - 2).attr('y2', gridBottom).attr('stroke', 'var(--color-fg)').attr('stroke-width', 1.2);
+    });
+    games.forEach((g, j) => {
+      const cx = gx(j) + cellW / 2, name = (g.site === 'Away' ? 'at ' : '') + g.opponent;
+      if (rot) svg.append('text').attr('transform', `translate(${cx + 4},${T0 - 8}) rotate(-60)`).attr('fill', 'var(--color-fg)').style('font-size', 'var(--cds-font-size-caption)').text(name);
+      else {
+        svg.append('text').attr('x', cx).attr('y', T0 - 22).attr('text-anchor', 'middle').attr('fill', 'var(--color-fg)').style('font-size', 'var(--cds-font-size-caption)').style('font-weight', 600).text(name);
+        svg.append('text').attr('x', cx).attr('y', T0 - 8).attr('text-anchor', 'middle').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)').text(fmt(new Date(g.date + 'T12:00:00Z')));
+      }
+      if (g.ot) svg.append('text').attr('x', cx).attr('y', gridBottom + 12).attr('text-anchor', 'middle').attr('fill', 'var(--color-fg-muted)').style('font-size', '10px').style('font-weight', 700).text(g.ot > 1 ? g.ot + 'OT' : 'OT');
+    });
+    svg.append('text').attr('x', colX).attr('y', T0 - 8).attr('text-anchor', 'end').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)').text(narrow ? 'Min' : 'Min/gm');
+    const tip = d3.select(el).append('div').attr('class', 'kl-tip').style('display', 'none');
+    players.forEach(([p, m], i) => {
+      const y = T0 + i * cellH;
+      svg.append('text').attr('x', left - 10).attr('y', y + cellH / 2).attr('dy', '0.35em').attr('text-anchor', 'end').attr('fill', 'var(--color-fg)')
+        .style('font-size', 'var(--cds-font-size-body)').style('font-weight', 600).text(p);
+      games.forEach((g, j) => {
+        const v = m.get(g.game_id), x = gx(j), c = v ? shade(v.minutes, g.ot) : null;
+        const rect = svg.append('rect').attr('x', x + 0.75).attr('y', y + 0.75).attr('width', cellW - 1.5).attr('height', cellH - 1.5).attr('rx', 1.5)
+          .attr('fill', v ? c : 'transparent').attr('stroke', v ? 'none' : 'var(--color-border-line)');
+        if (v && showNums) svg.append('text').attr('x', x + cellW / 2).attr('y', y + cellH / 2).attr('dy', '0.35em').attr('text-anchor', 'middle').attr('fill', ink(c))
+          .style('font-size', 'var(--cds-font-size-caption)').style('font-variant-numeric', 'tabular-nums').style('pointer-events', 'none').text(Math.round(v.minutes));
+        if (v && v.started) svg.append('circle').attr('cx', showNums ? x + 7 : x + cellW / 2).attr('cy', showNums ? y + 7 : y + cellH / 2).attr('r', 2.4).attr('fill', ink(c)).style('pointer-events', 'none');
+        rect.on('mousemove', (ev) => {
+          const [px, py] = d3.pointer(ev, el);
+          tip.style('display', null).html('');
+          tip.append('div').attr('class', 'kl-tip-h').text(`${p} · ${g.site === 'Away' ? 'at' : 'vs.'} ${g.opponent}, ${fmt(new Date(g.date + 'T12:00:00Z'))}`);
+          tip.append('div').text(v ? `${Math.round(v.minutes)} min${v.started ? ', started' : ''}${g.ot ? ' (overtime game)' : ''}` : 'Did not play');
+          const tw = tip.node().offsetWidth;
+          tip.style('left', Math.min(Math.max(0, px + 12), el.clientWidth - tw) + 'px').style('top', Math.max(0, py - 52) + 'px');
+        }).on('mouseleave', () => tip.style('display', 'none'));
+      });
+      svg.append('text').attr('x', colX).attr('y', y + cellH / 2).attr('dy', '0.35em').attr('text-anchor', 'end').attr('fill', 'var(--color-fg)')
+        .style('font-size', 'var(--cds-font-size-body)').style('font-weight', 600).style('font-variant-numeric', 'tabular-nums').text((total(m) / m.size).toFixed(1));
+    });
+    // Starting-lineup changes: a dashed line through the top rows, captions for the four most recent.
+    const ny = gridBottom + otRow + 14;
+    changes.forEach((c, k) => {
+      svg.append('line').attr('x1', gx(c.j)).attr('x2', gx(c.j)).attr('y1', T0 - 2).attr('y2', T0 + 5 * cellH).attr('stroke', 'var(--color-fg)').attr('stroke-dasharray', '2 2');
+    });
+    changes.slice(-4).forEach((c, k) => {
+      const x = gx(c.j), end = x > left + gridW * 0.6;
+      svg.append('text').attr('x', x).attr('y', ny + k * 16).attr('text-anchor', end ? 'end' : 'start').attr('fill', 'var(--color-fg)').style('font-size', 'var(--cds-font-size-caption)')
+        .text(end ? `${c.text} ┆` : `┆ ${c.text}`);
+    });
+    waiting.forEach((p, k) => {
+      const y = gridBottom + otRow + notesH + 8 + k * cellH;
+      svg.append('text').attr('x', left - 10).attr('y', y + cellH / 2).attr('dy', '0.35em').attr('text-anchor', 'end').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-body)').text(p);
+      svg.append('text').attr('x', left + 2).attr('y', y + cellH / 2).attr('dy', '0.35em').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)').style('font-style', 'italic').text('Injured, awaiting season debut');
+    });
+  });
 
   // On/off dumbbell chart: shown once the chosen games include 8 official games.
   const ONOFF = {games: 8, onShare: 0.25, offMin: 40, headGap: 15, headOff: 80};

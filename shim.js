@@ -5,7 +5,7 @@
 // exhibition status and notable dates always use the full season.
 (function () {
   const SOURCES = {stints: 'data/kentucky_lineup_stints.json', schedule: 'data/kentucky_schedule.json', players: 'data/kentucky_player_games.json', team: 'data/kentucky_team_games.json'};
-  const DATE_FILTERED = new Set(['scopes', 'lineup_stats', 'combos', 'player_stats', 'scope_totals', 'player_box']);
+  const DATE_FILTERED = new Set(['scopes', 'lineup_stats', 'combos', 'player_stats', 'scope_totals', 'player_box', 'rotation']);
   const DEFAULTS = {scope: 'all', minmin: 0, combo: 2, rate: 'pg', from: null, to: null};
   const raw = {}, calcs = {}, draws = {}, onDatas = [];
   let cache = {}, status = 'loading', params = Object.assign({}, DEFAULTS);
