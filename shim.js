@@ -14,7 +14,7 @@
     if (q.get('scope')) params.scope = q.get('scope');
     if (q.get('min')) params.minmin = Number(q.get('min'));
     if (q.get('combo')) params.combo = Number(q.get('combo'));
-    if (q.get('rate') === '40') params.rate = '40';
+    if (['40', 'tot'].includes(q.get('rate'))) params.rate = q.get('rate');
     if (/^\d{4}-\d\d-\d\d$/.test(q.get('from') || '')) params.from = q.get('from');
     if (/^\d{4}-\d\d-\d\d$/.test(q.get('to') || '')) params.to = q.get('to');
   } catch (e) {}
@@ -48,7 +48,7 @@
         if (params.scope !== 'all') q.set('scope', params.scope);
         if (params.minmin !== 0) q.set('min', params.minmin);
         if (params.combo !== 2) q.set('combo', params.combo);
-        if (params.rate === '40') q.set('rate', '40');
+        if (params.rate !== 'pg') q.set('rate', params.rate);
         if (params.from) q.set('from', params.from);
         if (params.to) q.set('to', params.to);
         history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash);

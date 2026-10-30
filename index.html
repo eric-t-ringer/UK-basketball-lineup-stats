@@ -52,6 +52,7 @@
   
   
   
+  
   .kl { font-family: var(--font-anthropic-sans); color: var(--color-fg); display: grid; gap: var(--cds-gap-lg); }
   .kl-head h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0 0 var(--cds-gap-xs); }
   .kl-take { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); line-height: 1.5; }
@@ -95,8 +96,17 @@
   .kl .kl-name { white-space: nowrap; }
   .kl-sub-h { font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); margin: var(--cds-gap-lg) 0 0; }
   #player-stats .kl-scroll { max-height: none; }
-  #player-stats th, #player-stats td { padding-left: 4px; padding-right: 4px; }
-  @media (max-width: 1100px) { .kl-hide-md { display: none; } }
+  #player-stats th, #player-stats td { padding-left: 5px; padding-right: 5px; }
+  /* Grouped columns: the shaded block is what the switch changes */
+  #player-stats tr.kl-grp th { position: static; background: transparent; color: var(--color-fg-muted); font-weight: 400; font-size: var(--cds-font-size-caption); text-align: left; vertical-align: bottom; padding: 0 0 6px; border: none; }
+  #player-stats tr.kl-grp th.kl-gh { background: color-mix(in srgb, var(--accent, #3b6fd8) 10%, var(--color-panel)); border-radius: 6px 6px 0 0; padding: 6px 8px; }
+  #player-stats tr.kl-grp th.kl-fixed { padding-left: 8px; }
+  #player-stats .kl-rate { font: inherit; font-size: var(--cds-font-size-caption); font-weight: 600; color: var(--color-fg); background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 2px 6px; }
+  #player-stats .kl-hint { margin-left: 8px; }
+  #player-stats tbody td.kl-g { background: color-mix(in srgb, var(--accent, #3b6fd8) 6%, transparent); }
+  #player-stats th.kl-g { background: color-mix(in srgb, var(--accent, #3b6fd8) 12%, var(--color-panel)); }
+  #player-stats .kl-gs { border-left: 2px solid var(--accent, #3b6fd8); }
+  #player-stats .kl-rs { border-left: 2px solid var(--color-border-line); }
   .kl tr.kl-below .kl-diff { background: none; font-weight: inherit; padding: 0; }
   /* Rows below the minimum-minutes setting: dimmed, uncolored, struck through, and grouped under a divider */
   .kl tr.kl-below td { opacity: .4; }
@@ -141,6 +151,17 @@
   .kl th[aria-sort] button { text-decoration: underline; text-underline-offset: 3px; }
   .kl tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--uk-blue-tint) 55%, transparent); }
   .kl-method { border-top: 4px solid var(--uk-blue); padding-top: 14px; }
+  .kl-page #player-stats th.kl-g { background: #1d4fb8; color: #fff; }
+  .kl-page #player-stats tbody td.kl-g { background: color-mix(in srgb, var(--uk-blue) 7%, transparent); }
+  .kl-page #player-stats tr.kl-grp th.kl-gh { background: color-mix(in srgb, var(--uk-blue) 12%, var(--color-panel)); color: var(--color-fg); }
+  .kl-page #player-stats .kl-gs { border-left-color: var(--uk-blue); }
+  .kl-page #player-stats .kl-rate { border-color: var(--uk-blue); }
+  @media (prefers-color-scheme: dark) {
+    .kl-page #player-stats tbody td.kl-g { background: color-mix(in srgb, #2f5fd0 14%, transparent); }
+    .kl-page #player-stats tr.kl-grp th.kl-gh { background: color-mix(in srgb, #2f5fd0 28%, var(--color-panel)); }
+    .kl-page #player-stats .kl-gs { border-left-color: #2f5fd0; }
+    .kl-page #player-stats .kl-rate { border-color: var(--color-border-line); }
+  }
   .kl-controls input[type=date] { font: inherit; font-size: var(--cds-font-size-body); color: var(--color-fg); background: var(--color-panel); border: 1px solid var(--uk-blue); border-radius: var(--cds-radius); padding: calc(var(--cds-pad-xs) - 1px) var(--cds-pad-sm); color-scheme: light dark; }
   .kl-controls .kl-clear-dates { font: inherit; font-size: var(--cds-font-size-caption); color: var(--accent); background: none; border: none; padding: 6px 2px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; align-self: end; }
   @media (prefers-color-scheme: dark) {
@@ -229,111 +250,167 @@
 
   <section class="kl-card" id="player-stats">
     <h2>Player stats</h2>
-    <p class="kl-note">Per game is each total divided by the games the player played. Made–attempted shooting columns appear on wider screens. Per 40 scales counting stats to 40 minutes, for comparing starters with the bench; percentages are the same either way. MIN is minutes per game.</p>
-    <div class="kl-controls">
-      <label>Show
-        <select class="kl-rate" aria-label="Per game or per 40 minutes">
-          <option value="pg">Per game</option>
-          <option value="40">Per 40 minutes</option>
-        </select>
-      </label>
-    </div>
+    <p class="kl-note">The switch in each table changes only the shaded columns: per game (each total divided by the games the player played), per 40 minutes (for comparing starters with the bench), or totals for the chosen games. Percentages and rates stay the same in every view. MPG is minutes per game.</p>
     <h3 class="kl-sub-h" id="offense">Offense</h3>
-    <p class="kl-note">eFG% counts a three as 1.5 makes; TS% also counts free throws. OREB% is the share of available offensive rebounds he grabbed while on the floor; USG% is the share of team possessions he ended with a shot, free throws or a turnover while on the floor. On OER is team points per 100 possessions with him on the floor.</p>
-      <div class="kl-scroll kl-rate-pg">
-        <table data-source="player_box" data-row-key="scope,player">
-          <thead><tr>
-            <th data-field="player"><button data-sort="player">Player</button></th>
-            <th data-field="gp"><button data-sort="gp">GP</button></th>
-            <th data-field="gs" class="kl-hide-sm"><button data-sort="gs">GS</button></th>
-            <th data-field="mpg"><button data-sort="mpg">MIN</button></th>
-            <th data-field="pts_pg"><button data-sort="pts_pg">PTS</button></th>
-            <th data-field="fg_pg" class="kl-hide-md"><button data-sort="fg_pg">FG</button></th>
-            <th data-field="fg_pct"><button data-sort="fg_pct">FG%</button></th>
-            <th data-field="tp_pg" class="kl-hide-md"><button data-sort="tp_pg">3P</button></th>
-            <th data-field="tp_pct"><button data-sort="tp_pct">3P%</button></th>
-            <th data-field="ft_pg" class="kl-hide-md"><button data-sort="ft_pg">FT</button></th>
-            <th data-field="ft_pct"><button data-sort="ft_pct">FT%</button></th>
-            <th data-field="efg" class="kl-hide-sm"><button data-sort="efg">eFG%</button></th>
-            <th data-field="ts"><button data-sort="ts">TS%</button></th>
-            <th data-field="ast_pg"><button data-sort="ast_pg">AST</button></th>
-            <th data-field="tov_pg"><button data-sort="tov_pg">TOV</button></th>
-            <th data-field="ast_to" class="kl-hide-sm"><button data-sort="ast_to">A/TO</button></th>
-            <th data-field="oreb_pg" class="kl-hide-sm"><button data-sort="oreb_pg">OREB</button></th>
-            <th data-field="oreb_pct"><button data-sort="oreb_pct">OREB%</button></th>
-            <th data-field="usg"><button data-sort="usg">USG%</button></th>
-            <th data-field="on_oer"><button data-sort="on_oer">On OER</button></th>
-          </tr></thead>
-          <tbody data-draw="off-pg"></tbody>
-        </table>
-      </div>
-      <div class="kl-scroll kl-rate-40" hidden>
-        <table data-source="player_box" data-row-key="scope,player">
-          <thead><tr>
-            <th data-field="player"><button data-sort="player">Player</button></th>
-            <th data-field="gp"><button data-sort="gp">GP</button></th>
-            <th data-field="gs" class="kl-hide-sm"><button data-sort="gs">GS</button></th>
-            <th data-field="mpg"><button data-sort="mpg">MIN</button></th>
-            <th data-field="pts_40"><button data-sort="pts_40">PTS</button></th>
-            <th data-field="fg_40" class="kl-hide-md"><button data-sort="fg_40">FG</button></th>
-            <th data-field="fg_pct"><button data-sort="fg_pct">FG%</button></th>
-            <th data-field="tp_40" class="kl-hide-md"><button data-sort="tp_40">3P</button></th>
-            <th data-field="tp_pct"><button data-sort="tp_pct">3P%</button></th>
-            <th data-field="ft_40" class="kl-hide-md"><button data-sort="ft_40">FT</button></th>
-            <th data-field="ft_pct"><button data-sort="ft_pct">FT%</button></th>
-            <th data-field="efg" class="kl-hide-sm"><button data-sort="efg">eFG%</button></th>
-            <th data-field="ts"><button data-sort="ts">TS%</button></th>
-            <th data-field="ast_40"><button data-sort="ast_40">AST</button></th>
-            <th data-field="tov_40"><button data-sort="tov_40">TOV</button></th>
-            <th data-field="ast_to" class="kl-hide-sm"><button data-sort="ast_to">A/TO</button></th>
-            <th data-field="oreb_40" class="kl-hide-sm"><button data-sort="oreb_40">OREB</button></th>
-            <th data-field="oreb_pct"><button data-sort="oreb_pct">OREB%</button></th>
-            <th data-field="usg"><button data-sort="usg">USG%</button></th>
-            <th data-field="on_oer"><button data-sort="on_oer">On OER</button></th>
-          </tr></thead>
-          <tbody data-draw="off-40"></tbody>
-        </table>
-      </div>
+    <p class="kl-note">FGA, 3PA and FTA are shot attempts. eFG% counts a three as 1.5 makes; TS% also counts free throws. OREB% is the share of available offensive rebounds he grabbed while on the floor; USG% is the share of team possessions he ended with a shot, free throws or a turnover while on the floor. On OER is team points per 100 possessions with him on the floor.</p>
+    <div class="kl-scroll kl-rate-pg">
+      <table data-source="player_box" data-row-key="scope,player">
+        <thead>
+            <tr class="kl-grp"><th colspan="4"></th><th colspan="7" class="kl-gh kl-gs"><select class="kl-rate" aria-label="Show these columns per game, per 40 minutes or as totals"><option value="pg">Per game</option><option value="40">Per 40 min</option><option value="tot">Totals</option></select><span class="kl-hint">these columns change</span></th><th colspan="9" class="kl-rs kl-fixed">Percentages and rates · same in every view</th></tr>
+            <tr>
+              <th data-field="player"><button data-sort="player">Player</button></th>
+              <th data-field="gp"><button data-sort="gp">GP</button></th>
+              <th data-field="gs"><button data-sort="gs">GS</button></th>
+              <th data-field="mpg"><button data-sort="mpg">MPG</button></th>
+              <th data-field="pts_pg" class="kl-g kl-gs"><button data-sort="pts_pg">PTS</button></th>
+              <th data-field="fga_pg" class="kl-g"><button data-sort="fga_pg">FGA</button></th>
+              <th data-field="tpa_pg" class="kl-g"><button data-sort="tpa_pg">3PA</button></th>
+              <th data-field="fta_pg" class="kl-g"><button data-sort="fta_pg">FTA</button></th>
+              <th data-field="ast_pg" class="kl-g"><button data-sort="ast_pg">AST</button></th>
+              <th data-field="tov_pg" class="kl-g"><button data-sort="tov_pg">TOV</button></th>
+              <th data-field="oreb_pg" class="kl-g"><button data-sort="oreb_pg">OREB</button></th>
+              <th data-field="fg_pct" class="kl-rs"><button data-sort="fg_pct">FG%</button></th>
+              <th data-field="tp_pct"><button data-sort="tp_pct">3P%</button></th>
+              <th data-field="ft_pct"><button data-sort="ft_pct">FT%</button></th>
+              <th data-field="efg"><button data-sort="efg">eFG%</button></th>
+              <th data-field="ts"><button data-sort="ts">TS%</button></th>
+              <th data-field="ast_to"><button data-sort="ast_to">A/TO</button></th>
+              <th data-field="oreb_pct"><button data-sort="oreb_pct">OREB%</button></th>
+              <th data-field="usg"><button data-sort="usg">USG%</button></th>
+              <th data-field="on_oer"><button data-sort="on_oer">On OER</button></th>
+            </tr>
+        </thead>
+        <tbody data-draw="off-pg"></tbody>
+      </table>
+    </div>
+    <div class="kl-scroll kl-rate-40" hidden>
+      <table data-source="player_box" data-row-key="scope,player">
+        <thead>
+            <tr class="kl-grp"><th colspan="4"></th><th colspan="7" class="kl-gh kl-gs"><select class="kl-rate" aria-label="Show these columns per game, per 40 minutes or as totals"><option value="pg">Per game</option><option value="40">Per 40 min</option><option value="tot">Totals</option></select><span class="kl-hint">these columns change</span></th><th colspan="9" class="kl-rs kl-fixed">Percentages and rates · same in every view</th></tr>
+            <tr>
+              <th data-field="player"><button data-sort="player">Player</button></th>
+              <th data-field="gp"><button data-sort="gp">GP</button></th>
+              <th data-field="gs"><button data-sort="gs">GS</button></th>
+              <th data-field="mpg"><button data-sort="mpg">MPG</button></th>
+              <th data-field="pts_40" class="kl-g kl-gs"><button data-sort="pts_40">PTS</button></th>
+              <th data-field="fga_40" class="kl-g"><button data-sort="fga_40">FGA</button></th>
+              <th data-field="tpa_40" class="kl-g"><button data-sort="tpa_40">3PA</button></th>
+              <th data-field="fta_40" class="kl-g"><button data-sort="fta_40">FTA</button></th>
+              <th data-field="ast_40" class="kl-g"><button data-sort="ast_40">AST</button></th>
+              <th data-field="tov_40" class="kl-g"><button data-sort="tov_40">TOV</button></th>
+              <th data-field="oreb_40" class="kl-g"><button data-sort="oreb_40">OREB</button></th>
+              <th data-field="fg_pct" class="kl-rs"><button data-sort="fg_pct">FG%</button></th>
+              <th data-field="tp_pct"><button data-sort="tp_pct">3P%</button></th>
+              <th data-field="ft_pct"><button data-sort="ft_pct">FT%</button></th>
+              <th data-field="efg"><button data-sort="efg">eFG%</button></th>
+              <th data-field="ts"><button data-sort="ts">TS%</button></th>
+              <th data-field="ast_to"><button data-sort="ast_to">A/TO</button></th>
+              <th data-field="oreb_pct"><button data-sort="oreb_pct">OREB%</button></th>
+              <th data-field="usg"><button data-sort="usg">USG%</button></th>
+              <th data-field="on_oer"><button data-sort="on_oer">On OER</button></th>
+            </tr>
+        </thead>
+        <tbody data-draw="off-40"></tbody>
+      </table>
+    </div>
+    <div class="kl-scroll kl-rate-tot" hidden>
+      <table data-source="player_box" data-row-key="scope,player">
+        <thead>
+            <tr class="kl-grp"><th colspan="4"></th><th colspan="7" class="kl-gh kl-gs"><select class="kl-rate" aria-label="Show these columns per game, per 40 minutes or as totals"><option value="pg">Per game</option><option value="40">Per 40 min</option><option value="tot">Totals</option></select><span class="kl-hint">these columns change</span></th><th colspan="9" class="kl-rs kl-fixed">Percentages and rates · same in every view</th></tr>
+            <tr>
+              <th data-field="player"><button data-sort="player">Player</button></th>
+              <th data-field="gp"><button data-sort="gp">GP</button></th>
+              <th data-field="gs"><button data-sort="gs">GS</button></th>
+              <th data-field="mpg"><button data-sort="mpg">MPG</button></th>
+              <th data-field="pts_tot" class="kl-g kl-gs"><button data-sort="pts_tot">PTS</button></th>
+              <th data-field="fga_tot" class="kl-g"><button data-sort="fga_tot">FGA</button></th>
+              <th data-field="tpa_tot" class="kl-g"><button data-sort="tpa_tot">3PA</button></th>
+              <th data-field="fta_tot" class="kl-g"><button data-sort="fta_tot">FTA</button></th>
+              <th data-field="ast_tot" class="kl-g"><button data-sort="ast_tot">AST</button></th>
+              <th data-field="tov_tot" class="kl-g"><button data-sort="tov_tot">TOV</button></th>
+              <th data-field="oreb_tot" class="kl-g"><button data-sort="oreb_tot">OREB</button></th>
+              <th data-field="fg_pct" class="kl-rs"><button data-sort="fg_pct">FG%</button></th>
+              <th data-field="tp_pct"><button data-sort="tp_pct">3P%</button></th>
+              <th data-field="ft_pct"><button data-sort="ft_pct">FT%</button></th>
+              <th data-field="efg"><button data-sort="efg">eFG%</button></th>
+              <th data-field="ts"><button data-sort="ts">TS%</button></th>
+              <th data-field="ast_to"><button data-sort="ast_to">A/TO</button></th>
+              <th data-field="oreb_pct"><button data-sort="oreb_pct">OREB%</button></th>
+              <th data-field="usg"><button data-sort="usg">USG%</button></th>
+              <th data-field="on_oer"><button data-sort="on_oer">On OER</button></th>
+            </tr>
+        </thead>
+        <tbody data-draw="off-tot"></tbody>
+      </table>
+    </div>
     <h3 class="kl-sub-h" id="defense">Defense</h3>
     <p class="kl-note">Box scores barely measure individual defense, so read these together. DREB% is the share of available defensive rebounds he grabbed while on the floor. On DER is points allowed per 100 possessions with him on the floor, a team number credited to whoever was out there; On − off DER below zero means the defense allowed fewer points with him on the floor.</p>
-      <div class="kl-scroll kl-rate-pg">
-        <table data-source="player_box" data-row-key="scope,player">
-          <thead><tr>
-            <th data-field="player"><button data-sort="player">Player</button></th>
-            <th data-field="gp"><button data-sort="gp">GP</button></th>
-            <th data-field="mpg"><button data-sort="mpg">MIN</button></th>
-            <th data-field="dreb_pg"><button data-sort="dreb_pg">DREB</button></th>
-            <th data-field="dreb_pct"><button data-sort="dreb_pct">DREB%</button></th>
-            <th data-field="stl_pg"><button data-sort="stl_pg">STL</button></th>
-            <th data-field="blk_pg"><button data-sort="blk_pg">BLK</button></th>
-            <th data-field="stocks_40"><button data-sort="stocks_40">Stocks /40</button></th>
-            <th data-field="pf_pg"><button data-sort="pf_pg">PF</button></th>
-            <th data-field="on_der"><button data-sort="on_der">On DER</button></th>
-            <th data-field="off_der" class="kl-hide-sm"><button data-sort="off_der">Off DER</button></th>
-            <th data-field="on_off_der"><button data-sort="on_off_der">On − off DER</button></th>
-          </tr></thead>
-          <tbody data-draw="def-pg"></tbody>
-        </table>
-      </div>
-      <div class="kl-scroll kl-rate-40" hidden>
-        <table data-source="player_box" data-row-key="scope,player">
-          <thead><tr>
-            <th data-field="player"><button data-sort="player">Player</button></th>
-            <th data-field="gp"><button data-sort="gp">GP</button></th>
-            <th data-field="mpg"><button data-sort="mpg">MIN</button></th>
-            <th data-field="dreb_40"><button data-sort="dreb_40">DREB</button></th>
-            <th data-field="dreb_pct"><button data-sort="dreb_pct">DREB%</button></th>
-            <th data-field="stl_40"><button data-sort="stl_40">STL</button></th>
-            <th data-field="blk_40"><button data-sort="blk_40">BLK</button></th>
-            <th data-field="stocks_40"><button data-sort="stocks_40">Stocks /40</button></th>
-            <th data-field="pf_40"><button data-sort="pf_40">PF</button></th>
-            <th data-field="on_der"><button data-sort="on_der">On DER</button></th>
-            <th data-field="off_der" class="kl-hide-sm"><button data-sort="off_der">Off DER</button></th>
-            <th data-field="on_off_der"><button data-sort="on_off_der">On − off DER</button></th>
-          </tr></thead>
-          <tbody data-draw="def-40"></tbody>
-        </table>
-      </div>
+    <div class="kl-scroll kl-rate-pg">
+      <table data-source="player_box" data-row-key="scope,player">
+        <thead>
+            <tr class="kl-grp"><th colspan="3"></th><th colspan="4" class="kl-gh kl-gs"><select class="kl-rate" aria-label="Show these columns per game, per 40 minutes or as totals"><option value="pg">Per game</option><option value="40">Per 40 min</option><option value="tot">Totals</option></select><span class="kl-hint">these columns change</span></th><th colspan="5" class="kl-rs kl-fixed">Percentages and rates · same in every view</th></tr>
+            <tr>
+              <th data-field="player"><button data-sort="player">Player</button></th>
+              <th data-field="gp"><button data-sort="gp">GP</button></th>
+              <th data-field="mpg"><button data-sort="mpg">MPG</button></th>
+              <th data-field="dreb_pg" class="kl-g kl-gs"><button data-sort="dreb_pg">DREB</button></th>
+              <th data-field="stl_pg" class="kl-g"><button data-sort="stl_pg">STL</button></th>
+              <th data-field="blk_pg" class="kl-g"><button data-sort="blk_pg">BLK</button></th>
+              <th data-field="pf_pg" class="kl-g"><button data-sort="pf_pg">PF</button></th>
+              <th data-field="dreb_pct" class="kl-rs"><button data-sort="dreb_pct">DREB%</button></th>
+              <th data-field="stocks_40"><button data-sort="stocks_40">Stocks /40</button></th>
+              <th data-field="on_der"><button data-sort="on_der">On DER</button></th>
+              <th data-field="off_der"><button data-sort="off_der">Off DER</button></th>
+              <th data-field="on_off_der"><button data-sort="on_off_der">On − off DER</button></th>
+            </tr>
+        </thead>
+        <tbody data-draw="def-pg"></tbody>
+      </table>
+    </div>
+    <div class="kl-scroll kl-rate-40" hidden>
+      <table data-source="player_box" data-row-key="scope,player">
+        <thead>
+            <tr class="kl-grp"><th colspan="3"></th><th colspan="4" class="kl-gh kl-gs"><select class="kl-rate" aria-label="Show these columns per game, per 40 minutes or as totals"><option value="pg">Per game</option><option value="40">Per 40 min</option><option value="tot">Totals</option></select><span class="kl-hint">these columns change</span></th><th colspan="5" class="kl-rs kl-fixed">Percentages and rates · same in every view</th></tr>
+            <tr>
+              <th data-field="player"><button data-sort="player">Player</button></th>
+              <th data-field="gp"><button data-sort="gp">GP</button></th>
+              <th data-field="mpg"><button data-sort="mpg">MPG</button></th>
+              <th data-field="dreb_40" class="kl-g kl-gs"><button data-sort="dreb_40">DREB</button></th>
+              <th data-field="stl_40" class="kl-g"><button data-sort="stl_40">STL</button></th>
+              <th data-field="blk_40" class="kl-g"><button data-sort="blk_40">BLK</button></th>
+              <th data-field="pf_40" class="kl-g"><button data-sort="pf_40">PF</button></th>
+              <th data-field="dreb_pct" class="kl-rs"><button data-sort="dreb_pct">DREB%</button></th>
+              <th data-field="stocks_40"><button data-sort="stocks_40">Stocks /40</button></th>
+              <th data-field="on_der"><button data-sort="on_der">On DER</button></th>
+              <th data-field="off_der"><button data-sort="off_der">Off DER</button></th>
+              <th data-field="on_off_der"><button data-sort="on_off_der">On − off DER</button></th>
+            </tr>
+        </thead>
+        <tbody data-draw="def-40"></tbody>
+      </table>
+    </div>
+    <div class="kl-scroll kl-rate-tot" hidden>
+      <table data-source="player_box" data-row-key="scope,player">
+        <thead>
+            <tr class="kl-grp"><th colspan="3"></th><th colspan="4" class="kl-gh kl-gs"><select class="kl-rate" aria-label="Show these columns per game, per 40 minutes or as totals"><option value="pg">Per game</option><option value="40">Per 40 min</option><option value="tot">Totals</option></select><span class="kl-hint">these columns change</span></th><th colspan="5" class="kl-rs kl-fixed">Percentages and rates · same in every view</th></tr>
+            <tr>
+              <th data-field="player"><button data-sort="player">Player</button></th>
+              <th data-field="gp"><button data-sort="gp">GP</button></th>
+              <th data-field="mpg"><button data-sort="mpg">MPG</button></th>
+              <th data-field="dreb_tot" class="kl-g kl-gs"><button data-sort="dreb_tot">DREB</button></th>
+              <th data-field="stl_tot" class="kl-g"><button data-sort="stl_tot">STL</button></th>
+              <th data-field="blk_tot" class="kl-g"><button data-sort="blk_tot">BLK</button></th>
+              <th data-field="pf_tot" class="kl-g"><button data-sort="pf_tot">PF</button></th>
+              <th data-field="dreb_pct" class="kl-rs"><button data-sort="dreb_pct">DREB%</button></th>
+              <th data-field="stocks_40"><button data-sort="stocks_40">Stocks /40</button></th>
+              <th data-field="on_der"><button data-sort="on_der">On DER</button></th>
+              <th data-field="off_der"><button data-sort="off_der">Off DER</button></th>
+              <th data-field="on_off_der"><button data-sort="on_off_der">On − off DER</button></th>
+            </tr>
+        </thead>
+        <tbody data-draw="def-tot"></tbody>
+      </table>
+    </div>
   </section>
 
   <section class="kl-card" id="lineups">
@@ -702,7 +779,7 @@
 
   dash.calc('player_box', {
     title: 'Player box score stats',
-    description: 'Each player over the chosen games: games, starts, minutes, scoring and shooting (with eFG% and TS%), assists, turnovers, rebounds, steals, blocks and fouls per game and per 40 minutes, rebound percentages and usage from team and opponent totals in the games he played, and on-court efficiency from the lineup data.',
+    description: 'Each player over the chosen games: games, starts, minutes, scoring and shooting (with eFG% and TS%), assists, turnovers, rebounds, steals, blocks and fouls per game, per 40 minutes and in total, rebound percentages and usage from team and opponent totals in the games he played, and on-court efficiency from the lineup data.',
     inputs: [PLAYERS, TEAM, 'player_stats'],
     fn: (players, team, player_stats) => {
       // Same game sets as the other tables (main view with exhibitions phasing out, each season phase, last 5, each game).
@@ -734,14 +811,15 @@
       const pct = (m, a) => a ? r3(m / a) : null;
       return [...acc.values()].map((a) => {
         const min = a.sec / 60, pg = (v) => r1(v / a.gp), p40 = (v) => min ? r1(v / min * 40) : null;
-        const ma = (m, x, f) => `${f(m).toFixed(1)}-${f(x).toFixed(1)}`;
         const share = min && a.t_min ? (a.t_min / 5) / min : null;
         const o = onoff.get(a.scope + '|' + a.player) || {};
         return {scope: a.scope, player: a.player, full_name: a.full_name, gp: a.gp, gs: a.gs, minutes: r1(min), mpg: pg(min),
           pts_pg: pg(a.pts), pts_40: p40(a.pts),
-          fg_pg: ma(a.fgm, a.fga, (v) => v / a.gp), fg_40: ma(a.fgm, a.fga, (v) => v / min * 40), fg_pct: pct(a.fgm, a.fga),
-          tp_pg: ma(a.tpm, a.tpa, (v) => v / a.gp), tp_40: ma(a.tpm, a.tpa, (v) => v / min * 40), tp_pct: pct(a.tpm, a.tpa),
-          ft_pg: ma(a.ftm, a.fta, (v) => v / a.gp), ft_40: ma(a.ftm, a.fta, (v) => v / min * 40), ft_pct: pct(a.ftm, a.fta),
+          fga_pg: pg(a.fga), fga_40: p40(a.fga), fg_pct: pct(a.fgm, a.fga),
+          tpa_pg: pg(a.tpa), tpa_40: p40(a.tpa), tp_pct: pct(a.tpm, a.tpa),
+          fta_pg: pg(a.fta), fta_40: p40(a.fta), ft_pct: pct(a.ftm, a.fta),
+          // Season totals for the chosen games.
+          ...Object.fromEntries(['pts', 'fgm', 'fga', 'tpm', 'tpa', 'ftm', 'fta', 'ast', 'tov', 'oreb', 'dreb', 'stl', 'blk', 'pf'].map((n) => [n + '_tot', a[n]])),
           efg: a.fga ? r3((a.fgm + 0.5 * a.tpm) / a.fga) : null,
           ts: a.fga + a.fta ? r3(a.pts / (2 * (a.fga + 0.44 * a.fta))) : null,
           ast_pg: pg(a.ast), ast_40: p40(a.ast), tov_pg: pg(a.tov), tov_40: p40(a.tov), ast_to: a.tov ? r1(a.ast / a.tov) : null,
@@ -819,8 +897,9 @@
 <script>
   const kl = {
     sort: {lineups: {key: 'minutes', dir: -1}, players: {key: 'minutes', dir: -1}, combos: {key: 'minutes', dir: -1},
-      'off-pg': {key: 'mpg', dir: -1}, 'off-40': {key: 'mpg', dir: -1}, 'def-pg': {key: 'mpg', dir: -1}, 'def-40': {key: 'mpg', dir: -1}},
-    rate: () => dash.params().rate === '40' ? '40' : 'pg',
+      'off-pg': {key: 'mpg', dir: -1}, 'off-40': {key: 'mpg', dir: -1}, 'off-tot': {key: 'mpg', dir: -1},
+      'def-pg': {key: 'mpg', dir: -1}, 'def-40': {key: 'mpg', dir: -1}, 'def-tot': {key: 'mpg', dir: -1}},
+    rate: () => ['40', 'tot'].includes(dash.params().rate) ? dash.params().rate : 'pg',
     comboSize: () => Number(dash.params().combo ?? 2),
     scope: () => dash.params().scope || 'all',
     minmin: () => Number(dash.params().minmin ?? 0),
@@ -882,8 +961,7 @@
   rateSel.forEach((s) => s.addEventListener('change', () => dash.setParams({rate: s.value})));
   dash.onData(() => {
     rateSel.forEach((s) => { s.value = kl.rate(); });
-    document.querySelectorAll('.kl-rate-pg').forEach((el) => { el.hidden = kl.rate() !== 'pg'; });
-    document.querySelectorAll('.kl-rate-40').forEach((el) => { el.hidden = kl.rate() !== '40'; });
+    ['pg', '40', 'tot'].forEach((m) => document.querySelectorAll('.kl-rate-' + m).forEach((el) => { el.hidden = kl.rate() !== m; }));
   });
   const sizeSel = document.querySelectorAll('.kl-combo-size');
   sizeSel.forEach((s) => s.addEventListener('change', () => dash.setParams({combo: Number(s.value)})));
@@ -902,7 +980,7 @@
     const which = b.closest('table').querySelector('tbody').dataset.draw;
     const st = kl.sort[which]; if (!st) return;
     const key = b.dataset.sort;
-    st.dir = st.key === key ? -st.dir : (['lineup', 'player', 'combo', 'on_der', 'off_der', 'on_off_der', 'tov_pg', 'tov_40', 'pf_pg', 'pf_40'].includes(key) ? 1 : -1); st.key = key;
+    st.dir = st.key === key ? -st.dir : (['lineup', 'player', 'combo', 'on_der', 'off_der', 'on_off_der', 'tov_pg', 'tov_40', 'tov_tot', 'pf_pg', 'pf_40', 'pf_tot'].includes(key) ? 1 : -1); st.key = key;
     b.closest('thead').querySelectorAll('th').forEach((th) => th.removeAttribute('aria-sort'));
     b.closest('th').setAttribute('aria-sort', st.dir > 0 ? 'ascending' : 'descending');
     dash.draw(which);
@@ -999,24 +1077,25 @@
   // Player stats tables: one drawing per table; the per-game and per-40 versions differ only in which columns they read.
   const pctF = (v) => v === null || v === undefined ? '—' : (v * 100).toFixed(1) + '%';
   const numF = (v) => v === null || v === undefined ? '—' : v.toFixed(1);
+  // Shaded columns read the field for the chosen view: _pg (per game), _40 (per 40 minutes) or _tot (whole-number totals).
+  const cnt = (r, k, m) => { const v = r[k + '_' + m]; return v === null || v === undefined ? '—' : m === 'tot' ? String(v) : v.toFixed(1); };
   const offRow = (m) => (tb, r) => {
     const tr = tb.insertRow(); tr.dataset.key = kl.enc(r.scope) + ',' + kl.enc(r.player);
-    td(tr, r.player); td(tr, String(r.gp)); td(tr, String(r.gs), '', 'kl-hide-sm'); td(tr, numF(r.mpg)); td(tr, numF(r['pts_' + m]));
-    td(tr, r['fg_' + m], '', 'kl-hide-md'); td(tr, pctF(r.fg_pct)); td(tr, r['tp_' + m], '', 'kl-hide-md'); td(tr, pctF(r.tp_pct));
-    td(tr, r['ft_' + m], '', 'kl-hide-md'); td(tr, pctF(r.ft_pct)); td(tr, pctF(r.efg), '', 'kl-hide-sm'); td(tr, pctF(r.ts));
-    td(tr, numF(r['ast_' + m])); td(tr, numF(r['tov_' + m])); td(tr, numF(r.ast_to), '', 'kl-hide-sm'); td(tr, numF(r['oreb_' + m]), '', 'kl-hide-sm');
-    td(tr, pctF(r.oreb_pct)); td(tr, pctF(r.usg)); td(tr, numF(r.on_oer));
+    td(tr, r.player); td(tr, String(r.gp)); td(tr, String(r.gs)); td(tr, numF(r.mpg));
+    ['pts', 'fga', 'tpa', 'fta', 'ast', 'tov', 'oreb'].forEach((k, i) => td(tr, cnt(r, k, m), 'kl-g', i === 0 ? 'kl-gs' : null));
+    td(tr, pctF(r.fg_pct), 'kl-rs'); td(tr, pctF(r.tp_pct)); td(tr, pctF(r.ft_pct)); td(tr, pctF(r.efg)); td(tr, pctF(r.ts));
+    td(tr, numF(r.ast_to)); td(tr, pctF(r.oreb_pct)); td(tr, pctF(r.usg)); td(tr, numF(r.on_oer));
     return tr;
   };
   const defRow = (m) => (tb, r) => {
     const tr = tb.insertRow(); tr.dataset.key = kl.enc(r.scope) + ',' + kl.enc(r.player);
-    td(tr, r.player); td(tr, String(r.gp)); td(tr, numF(r.mpg)); td(tr, numF(r['dreb_' + m])); td(tr, pctF(r.dreb_pct));
-    td(tr, numF(r['stl_' + m])); td(tr, numF(r['blk_' + m])); td(tr, numF(r.stocks_40)); td(tr, numF(r['pf_' + m]));
-    td(tr, numF(r.on_der)); td(tr, numF(r.off_der), '', 'kl-hide-sm');
+    td(tr, r.player); td(tr, String(r.gp)); td(tr, numF(r.mpg));
+    ['dreb', 'stl', 'blk', 'pf'].forEach((k, i) => td(tr, cnt(r, k, m), 'kl-g', i === 0 ? 'kl-gs' : null));
+    td(tr, pctF(r.dreb_pct), 'kl-rs'); td(tr, numF(r.stocks_40)); td(tr, numF(r.on_der)); td(tr, numF(r.off_der));
     td(tr, r.on_off_der === null ? '—' : kl.signed(r.on_off_der, 1), r.on_off_der < 0 ? 'kl-pos' : r.on_off_der > 0 ? 'kl-neg' : '');
     return tr;
   };
-  [['off-pg', offRow('pg')], ['off-40', offRow('40')], ['def-pg', defRow('pg')], ['def-40', defRow('40')]].forEach(([name, row]) => {
+  [['off-pg', offRow('pg')], ['off-40', offRow('40')], ['off-tot', offRow('tot')], ['def-pg', defRow('pg')], ['def-40', defRow('40')], ['def-tot', defRow('tot')]].forEach(([name, row]) => {
     dash.draw(name, (tb) => {
       tb.replaceChildren();
       splitBelow(tb, sorted(inScope('player_box'), kl.sort[name]), 'player', (r) => row(tb, r));
