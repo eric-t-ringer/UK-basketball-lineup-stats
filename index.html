@@ -37,6 +37,10 @@
   
   
   
+  
+  
+  
+  
   .kl { font-family: var(--font-anthropic-sans); color: var(--color-fg); display: grid; gap: var(--cds-gap-lg); }
   .kl-head h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0 0 var(--cds-gap-xs); }
   .kl-take { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); line-height: 1.5; }
@@ -123,7 +127,7 @@
 <div class="kl">
   <header class="kl-head" id="top">
     <h1>Kentucky lineup tracker, 2026-27</h1>
-    <p class="kl-take">Most-used lineup: <b data-draw="top-lineup" data-source="lineup_stats" data-field="lineup">—</b> (<span data-draw="top-min" data-source="lineup_stats" data-field="minutes">—</span> min). Best net rating with at least <span data-draw="min-label">—</span> minutes: <b data-draw="best-lineup" data-source="lineup_stats" data-field="lineup">—</b> (<span data-draw="best-net" data-source="lineup_stats" data-field="net40">—</span> per 40).</p>
+    <p class="kl-take">Most-used lineup: <b data-draw="top-lineup" data-source="lineup_stats" data-field="lineup">—</b> (<span data-draw="top-min" data-source="lineup_stats" data-field="minutes">—</span> min). Best adjusted net rating<span class="kl-minnote" hidden> among lineups with at least <span data-draw="min-label">—</span> minutes</span>: <b data-draw="best-lineup" data-source="lineup_stats" data-field="lineup">—</b> (<span data-draw="best-net" data-source="lineup_stats" data-field="adj_net40">—</span> per 40 adjusted, in <span data-draw="best-min" data-source="lineup_stats" data-field="minutes">—</span> min).</p>
     <p class="kl-next">Data through <span data-draw="through">—</span> · Next game: <span data-draw="next-game" data-source="schedule" data-field="opponent">—</span></p>
     <p class="kl-status kl-status-early" hidden>Lineup data so far includes <b data-draw="exh-kept" data-source="exh_status" data-field="exhibitions_kept">—</b> exhibition <span data-draw="exh-noun">—</span>, which don't count toward the record. From the 4th official game on, each new official game replaces one exhibition, so after <span data-draw="exh-end" data-source="exh_status" data-field="final_game">—</span> the data is official games only.</p>
     <p class="kl-status kl-status-late" hidden><b data-draw="exh-kept" data-source="exh_status" data-field="exhibitions_kept">—</b> exhibition <span data-draw="exh-noun">—</span> still included. Exhibitions don't count toward the record and drop out after <span data-draw="exh-end" data-source="exh_status" data-field="final_game">—</span>.</p>
@@ -155,7 +159,7 @@
   <section class="kl-grid">
     <div class="kl-card" id="usage-vs-results">
       <h2>Usage vs. results</h2>
-      <p class="kl-note">Each dot is a five-man lineup. Further right means more minutes; higher means a better scoring margin per 40 minutes. Lineups below the minimum-minutes setting are faded: their margins are mostly noise.</p>
+      <p class="kl-note">Each dot is a five-man lineup. Further right means more minutes; higher means a better adjusted scoring margin per 40 minutes. Short stints sit near the team average until they've played enough to say otherwise.</p>
       <div class="kl-chart" data-draw="scatter" data-source="lineup_stats"></div>
     </div>
     <div class="kl-card" id="players">
@@ -179,7 +183,7 @@
 
   <section class="kl-card" id="lineups">
     <h2>All lineups</h2>
-    <p class="kl-note">Sorted by minutes; click a column to re-sort. Net /40 is the scoring margin per 40 minutes. Points per possession is Kentucky's offense only.</p>
+    <p class="kl-note">Sorted by minutes; click a column to re-sort. Net /40 is the scoring margin per 40 minutes; Adj. /40 pulls it toward the team average until a lineup has played enough to trust (see below). Points per possession is Kentucky's offense only.</p>
     <div class="kl-scroll">
       <table data-source="lineup_stats" data-row-key="scope,lineup">
         <thead><tr>
@@ -190,10 +194,38 @@
           <th data-field="score"><button data-sort="uk_pts">Score</button></th>
           <th data-field="plus_minus"><button data-sort="plus_minus">+/-</button></th>
           <th data-field="net40"><button data-sort="net40">Net /40</button></th>
+          <th data-field="adj_net40"><button data-sort="adj_net40">Adj. /40</button></th>
           <th data-field="ppp"><button data-sort="ppp">Pts/poss</button></th>
           <th data-field="tov_pct" class="kl-hide-sm"><button data-sort="tov_pct">TO %</button></th>
         </tr></thead>
         <tbody data-draw="lineups"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="kl-card" id="combos">
+    <h2>Player combinations</h2>
+    <p class="kl-note">Every pair or trio of players, counted across all the time they shared the floor, whoever the other players were. Combinations build up minutes much faster than full lineups, so they're more reliable early in the season.</p>
+    <div class="kl-controls">
+      <label>Show
+        <select class="kl-combo-size" aria-label="Combination size">
+          <option value="2">Pairs</option>
+          <option value="3">Trios</option>
+        </select>
+      </label>
+    </div>
+    <div class="kl-scroll">
+      <table data-source="combos" data-row-key="scope,size,combo">
+        <thead><tr>
+          <th data-field="combo"><button data-sort="combo">Players</button></th>
+          <th data-field="minutes"><button data-sort="minutes">Min</button></th>
+          <th data-field="games" class="kl-hide-sm"><button data-sort="games">Games</button></th>
+          <th data-field="score"><button data-sort="uk_pts">Score</button></th>
+          <th data-field="plus_minus"><button data-sort="plus_minus">+/-</button></th>
+          <th data-field="net40"><button data-sort="net40">Net /40</button></th>
+          <th data-field="adj_net40"><button data-sort="adj_net40">Adj. /40</button></th>
+        </tr></thead>
+        <tbody data-draw="combos"></tbody>
       </table>
     </div>
   </section>
@@ -223,7 +255,8 @@
     <p>Source: the "Line Up Analysis" page of Kentucky's official box score book for each game, posted on UK Athletics. Each row there is a five-man unit's time on the floor, points for and against, and Kentucky's points per possession.</p>
     <p>Possessions are worked out as points ÷ points per possession. For units that didn't score, possessions are estimated from their minutes at that game's pace, so points per possession and turnover rate are close approximations, not official figures.</p>
     <p>Exhibitions phase out: the main view includes the three exhibition games until there are three official games. From then on, each new official game replaces the oldest exhibition (the 4th official game replaces Little Rock, the 5th Texas Tech, the 6th UCF), so after six official games the main view is official games only. The exhibitions stay viewable under the "Exhibitions" choice in the Games filter.</p>
-    <p>Small samples: a lineup that played 2 minutes can show +60 per 40 on one run. Use the minimum-minutes setting before trusting a ranking.</p>
+    <p>Adjusted net (Adj. /40): a lineup that played 2 minutes can show +60 per 40 on one run, so raw margins over short stints are mostly noise. The adjusted figure blends each lineup's actual margin with the team's average margin, as if the lineup had also played 50 extra minutes at the team's average. A lineup that has played a few minutes stays close to the team average; one that has played 100+ minutes is judged mostly on its own results. The 50-minute weight is a judgment call, not a fitted value. Rankings and the chart use the adjusted figure. The idea follows Evan Miya's point that observed lineup results should count for more as a lineup logs more possessions.</p>
+    <p>Combinations: pair and trio numbers pool every stint those players shared, so they gather minutes faster than full lineups. They also credit or blame the players for whoever else was on the floor.</p>
     <p>Unofficial fan project, not affiliated with the University of Kentucky. Lineup data comes from the official box scores posted at ukathletics.com and is added the morning after each game.</p>
   </section>
 </div>
@@ -268,7 +301,7 @@
 
   dash.calc('lineup_stats', {
     title: 'Lineup totals',
-    description: 'Each five-man lineup summed over the chosen games: minutes, points for and against, margin per 40 minutes, points per possession and turnover rate.',
+    description: 'Each five-man lineup summed over the chosen games: minutes, points for and against, margin per 40 minutes, the margin adjusted toward the team average by minutes played, points per possession and turnover rate.',
     inputs: [STINTS],
     fn: (stints) => {
       // Which games belong to each filter choice, and possessions per stint (estimated at the game's pace where a unit didn't score).
@@ -288,9 +321,12 @@
         const phasedOut = new Set(exhibitions.slice(0, Math.max(0, official.length - 3)).map((g) => g.game_id));
         const scopesOf = (r) => (phasedOut.has(r.game_id) ? [] : ['all']).concat([r.game_type, r.game_id], r.game_type !== 'Exhibition' ? ['official'] : [], last5.has(r.game_id) && games.length > 5 ? ['last5'] : []);
   
-      const acc = new Map(), scopeSecs = {};
+      // Adjusted net blends a lineup's own margin with the team's, as if it had also played 50 minutes at the team's average.
+      const PRIOR_SECONDS = 50 * 60;
+      const acc = new Map(), scopeSecs = {}, scopePm = {};
       rows.forEach((r) => scopesOf(r).forEach((s) => {
         scopeSecs[s] = (scopeSecs[s] || 0) + r.seconds;
+        scopePm[s] = (scopePm[s] || 0) + r.uk_pts - r.opp_pts;
         const k = s + '|' + r.lineup;
         const a = acc.get(k) || {scope: s, lineup: r.lineup, players: r.players, seconds: 0, uk_pts: 0, opp_pts: 0, poss: 0, tov: 0, g: new Set()};
         a.seconds += r.seconds; a.uk_pts += r.uk_pts; a.opp_pts += r.opp_pts; a.poss += r.poss; a.tov += r.tov; a.g.add(r.game_id);
@@ -301,9 +337,53 @@
         minutes: Math.round(a.seconds / 6) / 10, share: a.seconds / scopeSecs[a.scope],
         uk_pts: a.uk_pts, opp_pts: a.opp_pts, score: a.uk_pts + '–' + a.opp_pts, plus_minus: a.uk_pts - a.opp_pts,
         net40: Math.round((a.uk_pts - a.opp_pts) / a.seconds * 2400 * 10) / 10,
+        adj_net40: Math.round(((a.uk_pts - a.opp_pts) + PRIOR_SECONDS * scopePm[a.scope] / scopeSecs[a.scope]) / (a.seconds + PRIOR_SECONDS) * 2400 * 10) / 10,
         ppp: a.poss ? Math.round(a.uk_pts / a.poss * 100) / 100 : null,
         tov_pct: a.poss ? Math.round(a.tov / a.poss * 1000) / 10 : null,
       }));
+    },
+  });
+
+  dash.calc('combos', {
+    title: 'Two- and three-player combinations',
+    description: 'Every pair and trio of players, summed over all the time they shared the floor in the chosen games: minutes, points for and against, margin per 40, and the margin adjusted toward the team average.',
+    inputs: [STINTS],
+    fn: (stints) => {
+      // Which games belong to each filter choice, and possessions per stint (estimated at the game's pace where a unit didn't score).
+        const games = [...new Map(stints.map((r) => [r.game_id, r])).values()].sort((a, b) => a.date < b.date ? -1 : 1);
+        const last5 = new Set(games.slice(-5).map((g) => g.game_id));
+        const pace = {};
+        games.forEach((g) => {
+          const known = stints.filter((r) => r.game_id === g.game_id && Number(r.ppp) > 0);
+          const poss = known.reduce((s, r) => s + Number(r.uk_pts) / Number(r.ppp), 0);
+          const secs = known.reduce((s, r) => s + Number(r.seconds), 0);
+          pace[g.game_id] = secs ? poss / secs : 0;
+        });
+        const rows = stints.map((r) => ({...r, seconds: Number(r.seconds), uk_pts: Number(r.uk_pts), opp_pts: Number(r.opp_pts), tov: Number(r.tov),
+          poss: Number(r.ppp) > 0 ? Number(r.uk_pts) / Number(r.ppp) : Number(r.seconds) * pace[r.game_id]}));
+        // Exhibitions count until official games replace them: each official game after the 3rd drops the oldest exhibition from the main view.
+        const official = games.filter((g) => g.game_type !== 'Exhibition'), exhibitions = games.filter((g) => g.game_type === 'Exhibition');
+        const phasedOut = new Set(exhibitions.slice(0, Math.max(0, official.length - 3)).map((g) => g.game_id));
+        const scopesOf = (r) => (phasedOut.has(r.game_id) ? [] : ['all']).concat([r.game_type, r.game_id], r.game_type !== 'Exhibition' ? ['official'] : [], last5.has(r.game_id) && games.length > 5 ? ['last5'] : []);
+  
+      const PRIOR_SECONDS = 50 * 60;
+      const acc = new Map(), scopeSecs = {}, scopePm = {};
+      const subsets = (list, k) => k === 0 ? [[]] : list.flatMap((p, i) => subsets(list.slice(i + 1), k - 1).map((rest) => [p, ...rest]));
+      rows.forEach((r) => {
+        const players = r.players.split(';').sort();
+        scopesOf(r).forEach((s) => {
+          scopeSecs[s] = (scopeSecs[s] || 0) + r.seconds; scopePm[s] = (scopePm[s] || 0) + r.uk_pts - r.opp_pts;
+          [2, 3].forEach((k) => subsets(players, k).forEach((c) => {
+            const combo = c.join(' · '), key = s + '|' + k + '|' + combo;
+            const a = acc.get(key) || {scope: s, size: k, combo, seconds: 0, uk_pts: 0, opp_pts: 0, g: new Set()};
+            a.seconds += r.seconds; a.uk_pts += r.uk_pts; a.opp_pts += r.opp_pts; a.g.add(r.game_id); acc.set(key, a);
+          }));
+        });
+      });
+      return [...acc.values()].map((a) => ({scope: a.scope, size: a.size, combo: a.combo, games: a.g.size,
+        minutes: Math.round(a.seconds / 6) / 10, uk_pts: a.uk_pts, opp_pts: a.opp_pts, score: a.uk_pts + '–' + a.opp_pts, plus_minus: a.uk_pts - a.opp_pts,
+        net40: Math.round((a.uk_pts - a.opp_pts) / a.seconds * 2400 * 10) / 10,
+        adj_net40: Math.round(((a.uk_pts - a.opp_pts) + PRIOR_SECONDS * scopePm[a.scope] / scopeSecs[a.scope]) / (a.seconds + PRIOR_SECONDS) * 2400 * 10) / 10}));
     },
   });
 
@@ -407,9 +487,10 @@
 </script>
 <script>
   const kl = {
-    sort: {lineups: {key: 'minutes', dir: -1}, players: {key: 'minutes', dir: -1}},
+    sort: {lineups: {key: 'minutes', dir: -1}, players: {key: 'minutes', dir: -1}, combos: {key: 'minutes', dir: -1}},
+    comboSize: () => Number(dash.params().combo ?? 2),
     scope: () => dash.params().scope || 'all',
-    minmin: () => Number(dash.params().minmin ?? 5),
+    minmin: () => Number(dash.params().minmin ?? 0),
     rows: (id) => { const d = dash.data(id); return d.status === 'ok' ? d.data : null; },
     enc: (v) => encodeURIComponent(String(v)),
     signed: (v, d = 0) => v === null || v === undefined || Number.isNaN(v) ? '—' : (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v).toLocaleString('en', {minimumFractionDigits: d, maximumFractionDigits: Math.max(d, 1)}),
@@ -421,6 +502,9 @@
   const minSel = document.querySelectorAll('.kl-minmin');
   minSel.forEach((s) => s.addEventListener('change', () => dash.setParams({minmin: Number(s.value)})));
   dash.onData(() => minSel.forEach((s) => { s.value = String(kl.minmin()); }));
+  const sizeSel = document.querySelectorAll('.kl-combo-size');
+  sizeSel.forEach((s) => s.addEventListener('change', () => dash.setParams({combo: Number(s.value)})));
+  dash.onData(() => sizeSel.forEach((s) => { s.value = String(kl.comboSize()); }));
   dash.onData(() => {
     const st = (kl.rows('exh_status') || [])[0];
     const kept = st ? st.exhibitions_kept : 0, early = st && st.official_played <= 3;
@@ -428,13 +512,14 @@
     document.querySelectorAll('.kl-status-late').forEach((el) => { el.hidden = !(st && kept > 0 && !early); });
     const t = (kl.rows('scope_totals') || []).find((r) => r.scope === kl.scope());
     document.querySelectorAll('.kl-sub').forEach((el) => { el.hidden = !(t && t.exhibitions > 0); });
+    document.querySelectorAll('.kl-minnote').forEach((el) => { el.hidden = !(kl.minmin() > 0); });
   });
 
   document.querySelectorAll('th button[data-sort]').forEach((b) => b.addEventListener('click', () => {
     const which = b.closest('table').querySelector('tbody').dataset.draw;
     const st = kl.sort[which]; if (!st) return;
     const key = b.dataset.sort;
-    st.dir = st.key === key ? -st.dir : (key === 'lineup' || key === 'player' ? 1 : -1); st.key = key;
+    st.dir = st.key === key ? -st.dir : (key === 'lineup' || key === 'player' || key === 'combo' ? 1 : -1); st.key = key;
     b.closest('thead').querySelectorAll('th').forEach((th) => th.removeAttribute('aria-sort'));
     b.closest('th').setAttribute('aria-sort', st.dir > 0 ? 'ascending' : 'descending');
     dash.draw(which);
@@ -449,14 +534,15 @@
 
   const inScope = (id) => (kl.rows(id) || []).filter((r) => r.scope === kl.scope());
   const topBy = () => inScope('lineup_stats').sort((a, b) => b.minutes - a.minutes)[0];
-  const bestBy = () => inScope('lineup_stats').filter((r) => r.minutes >= kl.minmin()).sort((a, b) => b.net40 - a.net40)[0];
+  const bestBy = () => inScope('lineup_stats').filter((r) => r.minutes >= kl.minmin()).sort((a, b) => b.adj_net40 - a.adj_net40)[0];
   const setMark = (el, r) => { if (r) el.setAttribute('data-where', 'scope=' + kl.enc(r.scope) + '&lineup=' + kl.enc(r.lineup)); };
 
   dash.draw('top-lineup', (el) => { const r = topBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = r.lineup; });
   dash.draw('top-min', (el) => { const r = topBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = r.minutes.toFixed(1); });
   dash.draw('min-label', (el) => { el.textContent = String(kl.minmin()); });
+  dash.draw('best-min', (el) => { const r = bestBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = r.minutes.toFixed(1); });
   dash.draw('best-lineup', (el) => { const r = bestBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = r.lineup; });
-  dash.draw('best-net', (el) => { const r = bestBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = kl.signed(r.net40, 1); });
+  dash.draw('best-net', (el) => { const r = bestBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = kl.signed(r.adj_net40, 1); });
 
   dash.draw('next-game', (el) => {
     const s = kl.rows('schedule'); if (!s) return kl.dash(el);
@@ -497,8 +583,19 @@
       const tr = tb.insertRow(); tr.dataset.key = kl.enc(r.scope) + ',' + kl.enc(r.lineup);
       if (r.minutes < kl.minmin()) tr.classList.add('kl-small');
       td(tr, r.lineup); td(tr, r.minutes.toFixed(1)); td(tr, d3.format('.0%')(r.share), '', 'kl-hide-sm'); td(tr, String(r.games), '', 'kl-hide-sm');
-      td(tr, r.score); td(tr, kl.signed(r.plus_minus), kl.cls(r.plus_minus)); td(tr, kl.signed(r.net40, 1), kl.cls(r.net40));
+      td(tr, r.score); td(tr, kl.signed(r.plus_minus), kl.cls(r.plus_minus)); td(tr, kl.signed(r.net40, 1), kl.cls(r.net40)); td(tr, kl.signed(r.adj_net40, 1), kl.cls(r.adj_net40));
       td(tr, r.ppp === null ? '—' : r.ppp.toFixed(2)); td(tr, r.tov_pct === null ? '—' : r.tov_pct.toFixed(0) + '%', '', 'kl-hide-sm');
+    });
+  });
+
+  dash.draw('combos', (tb) => {
+    tb.replaceChildren();
+    const rows = sorted(inScope('combos').filter((r) => r.size === kl.comboSize()), kl.sort.combos);
+    rows.forEach((r) => {
+      const tr = tb.insertRow(); tr.dataset.key = kl.enc(r.scope) + ',' + kl.enc(r.size) + ',' + kl.enc(r.combo);
+      if (r.minutes < kl.minmin()) tr.classList.add('kl-small');
+      td(tr, r.combo); td(tr, r.minutes.toFixed(1)); td(tr, String(r.games), '', 'kl-hide-sm'); td(tr, r.score);
+      td(tr, kl.signed(r.plus_minus), kl.cls(r.plus_minus)); td(tr, kl.signed(r.net40, 1), kl.cls(r.net40)); td(tr, kl.signed(r.adj_net40, 1), kl.cls(r.adj_net40));
     });
   });
 
@@ -532,8 +629,8 @@
     if (!rows.length) return;
     const W = el.clientWidth || 600, H = 320, mm = kl.minmin();
     const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Lineup minutes versus net points per 40');
-    const ext = d3.extent(rows, (r) => r.net40); const lim = Math.max(20, Math.abs(ext[0]), Math.abs(ext[1]));
-    const y = d3.scaleLinear([-lim, lim], [H - 30, 10]).nice();
+    const ext = d3.extent(rows, (r) => r.adj_net40);
+    const y = d3.scaleLinear([Math.min(0, ext[0]) - 4, Math.max(10, ext[1]) + 6], [H - 30, 14]).nice();
     const yAxis = svg.append('g').call(d3.axisLeft(y).ticks(6).tickFormat((v) => kl.signed(v))).attr('font-size', null).attr('font-family', null);
     let wMax = 0; yAxis.selectAll('text').each(function () { wMax = Math.max(wMax, this.getComputedTextLength()); });
     const left = wMax + 12;
@@ -547,23 +644,28 @@
     const top = topBy(), best = bestBy();
     const tip = d3.select(el).append('div').attr('class', 'kl-tip').style('display', 'none');
     svg.append('g').selectAll('circle').data(rows.sort((a, b) => a.minutes - b.minutes)).join('circle')
-      .attr('cx', (r) => x(r.minutes)).attr('cy', (r) => y(r.net40)).attr('r', (r) => 4 + Math.sqrt(r.minutes))
+      .attr('cx', (r) => x(r.minutes)).attr('cy', (r) => y(r.adj_net40)).attr('r', (r) => 4 + Math.sqrt(r.minutes))
       .attr('fill', (r) => r === best ? 'var(--cds-chart-status-critical)' : r === top ? dash.colors[0] : 'var(--cds-chart-muted)')
       .attr('fill-opacity', (r) => r.minutes >= mm ? 0.85 : 0.3).attr('stroke', 'var(--color-panel)')
       .on('mousemove', (ev, r) => {
         const [px, py] = d3.pointer(ev, el);
         tip.style('display', null).html('');
         tip.append('div').attr('class', 'kl-tip-h').text(r.lineup);
-        tip.append('div').text(`${r.minutes.toFixed(1)} min · ${r.score} · ${kl.signed(r.net40, 1)} per 40`);
+        tip.append('div').text(`${r.minutes.toFixed(1)} min · ${r.score} · ${kl.signed(r.adj_net40, 1)} per 40 adjusted (${kl.signed(r.net40, 1)} actual)`);
         const tw = tip.node().offsetWidth;
         tip.style('left', Math.min(Math.max(0, px + 12), el.clientWidth - tw) + 'px').style('top', Math.max(0, py - 48) + 'px');
       })
       .on('mouseleave', () => tip.style('display', 'none'));
+    const team = (inScope('scope_totals')[0] || {}).net40;
+    if (team !== undefined) {
+      svg.append('line').attr('x1', left).attr('x2', W - 12).attr('y1', y(team)).attr('y2', y(team)).attr('stroke', 'var(--cds-chart-reference)').attr('stroke-dasharray', '4 4');
+      svg.append('text').attr('x', (left + W - 12) / 2).attr('y', y(team) + 15).attr('text-anchor', 'middle').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)').text('Team average ' + kl.signed(team, 1));
+    }
     const lab = svg.append('g').style('font-size', 'var(--cds-font-size-caption)');
-    [[top, 'Most used', dash.colors[0]], [best, 'Best net', 'var(--cds-chart-status-critical)']].forEach(([r, t, c], i) => {
+    [[top, 'Most used', dash.colors[0]], [best, 'Best adjusted', 'var(--cds-chart-status-critical)']].forEach(([r, t, c], i) => {
       if (!r || (i === 1 && r === top)) return;
       const tx = x(r.minutes), anchor = tx > W * 0.7 ? 'end' : 'start';
-      lab.append('text').attr('x', tx + (anchor === 'end' ? -10 : 10)).attr('y', y(r.net40) - 10 - i * 2).attr('text-anchor', anchor).attr('fill', c).text(t);
+      lab.append('text').attr('x', tx + (anchor === 'end' ? -10 : 10)).attr('y', y(r.adj_net40) < 30 ? y(r.adj_net40) + 18 : y(r.adj_net40) - 10).attr('text-anchor', anchor).attr('fill', c).text(t);
     });
   });
   dash.draw('through', (el) => {

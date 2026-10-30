@@ -2,10 +2,10 @@
 // runs the calculations and redraws on filter or width changes.
 (function () {
   const SOURCES = {stints: 'data/kentucky_lineup_stints.json', schedule: 'data/kentucky_schedule.json'};
-  const DEFAULTS = {scope: 'all', minmin: 5};
+  const DEFAULTS = {scope: 'all', minmin: 0, combo: 2};
   const raw = {}, calcs = {}, draws = {}, onDatas = [], cache = {};
   let status = 'loading', params = Object.assign({}, DEFAULTS);
-  try { const q = new URLSearchParams(location.search); if (q.get('scope')) params.scope = q.get('scope'); if (q.get('min')) params.minmin = Number(q.get('min')); } catch (e) {}
+  try { const q = new URLSearchParams(location.search); if (q.get('scope')) params.scope = q.get('scope'); if (q.get('min')) params.minmin = Number(q.get('min')); if (q.get('combo')) params.combo = Number(q.get('combo')); } catch (e) {}
   const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
   const dash = {
     get colors() { return [css('--series-1') || css('--accent'), '#e07b39', '#2a9d8f', '#8e6cc9', '#d1495b', '#6a994e', '#c9a227', '#577590']; },
@@ -27,7 +27,7 @@
     params() { return Object.assign({}, params); },
     setParams(p) {
       Object.assign(params, p);
-      try { const q = new URLSearchParams(); if (params.scope !== 'all') q.set('scope', params.scope); if (params.minmin !== 5) q.set('min', params.minmin); history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash); } catch (e) {}
+      try { const q = new URLSearchParams(); if (params.scope !== 'all') q.set('scope', params.scope); if (params.minmin !== 0) q.set('min', params.minmin); if (params.combo !== 2) q.set('combo', params.combo); history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash); } catch (e) {}
       render();
     },
     resetParams() { params = Object.assign({}, DEFAULTS); render(); },
