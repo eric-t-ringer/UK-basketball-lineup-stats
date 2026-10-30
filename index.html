@@ -861,15 +861,26 @@
   (() => {
     const from = document.querySelectorAll('.kl-from'), to = document.querySelectorAll('.kl-to'), clear = document.querySelectorAll('.kl-clear-dates');
     const ok = (el) => el.value && el.validity.valid && /^\d{4}-\d\d-\d\d$/.test(el.value);
-    const span = () => { const d = (kl.rows('stints') || []).map((r) => r.date).sort(); return [d[0] || '', d[d.length - 1] || '']; };
+    // First and last game date of whatever the Games choice covers (one game, exhibitions, last 5, the main view...).
+    const span = () => {
+      const scope = dash.params().scope || 'all', sched = kl.rows('schedule') || [], log = kl.rows('game_summary') || [];
+      const played = log.filter((g) => g.lineups_used !== null).map((g) => ({...g, type: (sched.find((x) => x.game_id === g.game_id) || {}).game_type})).sort((a, b) => a.date < b.date ? -1 : 1);
+      const pick = scope === 'all' ? played.filter((g) => g.main_view === 'Yes')
+        : scope === 'official' ? played.filter((g) => g.type !== 'Exhibition')
+        : scope === 'last5' ? played.slice(-5)
+        : played.filter((g) => g.game_id === scope || g.type === scope);
+      const d = (pick.length ? pick : played).map((g) => g.date);
+      return [d[0] || '', d[d.length - 1] || ''];
+    };
     from.forEach((el) => el.addEventListener('change', () => { if (ok(el)) dash.setParams({from: el.value === span()[0] ? null : el.value}); else if (!el.value) dash.setParams({from: null}); }));
     to.forEach((el) => el.addEventListener('change', () => { if (ok(el)) dash.setParams({to: el.value === span()[1] ? null : el.value}); else if (!el.value) dash.setParams({to: null}); }));
     clear.forEach((b) => b.addEventListener('click', () => dash.setParams({from: null, to: null})));
     const sync = () => {
       const p = dash.params(), s = kl.rows('schedule') || [], st = kl.rows('stints') || [];
-      // With no dates chosen, show the range the data actually covers (first to latest game with lineup data).
-      const dates = st.map((r) => r.date).sort(), lo = dates[0] || '', last = dates[dates.length - 1] || '', hi = s.map((g) => g.date).sort().slice(-1)[0] || '';
-      from.forEach((el) => { el.min = lo; el.max = hi; if (el !== document.activeElement) el.value = p.from || lo; });
+      // With no dates chosen, show the dates the current Games choice covers (one game shows its own date in both).
+      const dates = st.map((r) => r.date).sort(), lo = dates[0] || '', hi = s.map((g) => g.date).sort().slice(-1)[0] || '';
+      const [first, last] = span();
+      from.forEach((el) => { el.min = lo; el.max = hi; if (el !== document.activeElement) el.value = p.from || first; });
       to.forEach((el) => { el.min = lo; el.max = hi; if (el !== document.activeElement) el.value = p.to || last; });
       clear.forEach((b) => { b.hidden = !(p.from || p.to); });
     };
