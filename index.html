@@ -43,6 +43,7 @@
   
   
   
+  
   .kl { font-family: var(--font-anthropic-sans); color: var(--color-fg); display: grid; gap: var(--cds-gap-lg); }
   .kl-head h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0 0 var(--cds-gap-xs); }
   .kl-take { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); line-height: 1.5; }
@@ -129,7 +130,7 @@
 <div class="kl">
   <header class="kl-head" id="top">
     <h1>Kentucky lineup tracker, 2026-27</h1>
-    <p class="kl-take">Most-used lineup: <b data-draw="top-lineup" data-source="lineup_stats" data-field="lineup">—</b> (<span data-draw="top-min" data-source="lineup_stats" data-field="minutes">—</span> min). Best adjusted net rating<span class="kl-minnote" hidden> among lineups with at least <span data-draw="min-label">—</span> minutes</span>: <b data-draw="best-lineup" data-source="lineup_stats" data-field="lineup">—</b> (<span data-draw="best-net" data-source="lineup_stats" data-field="adj_net40">—</span> per 40 adjusted, in <span data-draw="best-min" data-source="lineup_stats" data-field="minutes">—</span> min).</p>
+    <p class="kl-take">Most-used lineup: <b data-draw="top-lineup" data-source="lineup_stats" data-field="lineup">—</b> (<span data-draw="top-min" data-source="lineup_stats" data-field="min_per_game">—</span> min per game, <span data-draw="top-share" data-source="lineup_stats" data-field="share">—</span> of all minutes). Best adjusted net rating<span class="kl-minnote" hidden> among lineups with at least <span data-draw="min-label">—</span> minutes</span>: <b data-draw="best-lineup" data-source="lineup_stats" data-field="lineup">—</b> (<span data-draw="best-net" data-source="lineup_stats" data-field="adj_net40">—</span> per 40 adjusted, <span data-draw="best-min" data-source="lineup_stats" data-field="min_per_game">—</span> min per game).</p>
     <p class="kl-next">Data through <span data-draw="through">—</span> · Next game: <span data-draw="next-game" data-source="schedule" data-field="opponent">—</span></p>
     <p class="kl-status kl-status-early" hidden>Lineup data so far includes <b data-draw="exh-kept" data-source="exh_status" data-field="exhibitions_kept">—</b> exhibition <span data-draw="exh-noun">—</span>, which don't count toward the record. From the 4th official game on, each new official game replaces one exhibition, so after <span data-draw="exh-end" data-source="exh_status" data-field="final_game">—</span> the data is official games only.</p>
     <p class="kl-status kl-status-late" hidden><b data-draw="exh-kept" data-source="exh_status" data-field="exhibitions_kept">—</b> exhibition <span data-draw="exh-noun">—</span> still included. Exhibitions don't count toward the record and drop out after <span data-draw="exh-end" data-source="exh_status" data-field="final_game">—</span>.</p>
@@ -307,7 +308,7 @@
 
   dash.calc('lineup_stats', {
     title: 'Lineup totals',
-    description: 'Each five-man lineup summed over the chosen games: minutes, points for and against, margin per 40 minutes, the margin adjusted toward the team average by minutes played, points scored and allowed per 100 possessions (OER and DER) and turnover rate.',
+    description: 'Each five-man lineup summed over the chosen games: minutes, points for and against, margin per 40 minutes, minutes per game across the chosen games, the margin adjusted toward the team average by minutes played, points scored and allowed per 100 possessions (OER and DER) and turnover rate.',
     inputs: [STINTS],
     fn: (stints) => {
       // Which games belong to each filter choice, and possessions per stint (estimated at the game's pace where a unit didn't score).
@@ -329,10 +330,11 @@
   
       // Adjusted net blends a lineup's own margin with the team's, as if it had also played 50 minutes at the team's average.
       const PRIOR_SECONDS = 50 * 60;
-      const acc = new Map(), scopeSecs = {}, scopePm = {};
+      const acc = new Map(), scopeSecs = {}, scopePm = {}, scopeGames = {};
       rows.forEach((r) => scopesOf(r).forEach((s) => {
         scopeSecs[s] = (scopeSecs[s] || 0) + r.seconds;
         scopePm[s] = (scopePm[s] || 0) + r.uk_pts - r.opp_pts;
+        (scopeGames[s] = scopeGames[s] || new Set()).add(r.game_id);
         const k = s + '|' + r.lineup;
         const a = acc.get(k) || {scope: s, lineup: r.lineup, players: r.players, seconds: 0, uk_pts: 0, opp_pts: 0, poss: 0, tov: 0, g: new Set()};
         a.seconds += r.seconds; a.uk_pts += r.uk_pts; a.opp_pts += r.opp_pts; a.poss += r.poss; a.tov += r.tov; a.g.add(r.game_id);
@@ -341,6 +343,8 @@
       return [...acc.values()].map((a) => ({
         scope: a.scope, lineup: a.lineup, players: a.players, games: a.g.size,
         minutes: Math.round(a.seconds / 6) / 10, share: a.seconds / scopeSecs[a.scope],
+        // Minutes per game across every game in the chosen set, including games the lineup didn't play.
+        min_per_game: Math.round(a.seconds / 60 / scopeGames[a.scope].size * 10) / 10,
         uk_pts: a.uk_pts, opp_pts: a.opp_pts, score: a.uk_pts + '–' + a.opp_pts, plus_minus: a.uk_pts - a.opp_pts,
         net40: Math.round((a.uk_pts - a.opp_pts) / a.seconds * 2400 * 10) / 10,
         adj_net40: Math.round(((a.uk_pts - a.opp_pts) + PRIOR_SECONDS * scopePm[a.scope] / scopeSecs[a.scope]) / (a.seconds + PRIOR_SECONDS) * 2400 * 10) / 10,
@@ -548,9 +552,10 @@
   const setMark = (el, r) => { if (r) el.setAttribute('data-where', 'scope=' + kl.enc(r.scope) + '&lineup=' + kl.enc(r.lineup)); };
 
   dash.draw('top-lineup', (el) => { const r = topBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = r.lineup; });
-  dash.draw('top-min', (el) => { const r = topBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = r.minutes.toFixed(1); });
+  dash.draw('top-min', (el) => { const r = topBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = r.min_per_game.toFixed(1); });
+  dash.draw('top-share', (el) => { const r = topBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = d3.format('.0%')(r.share); });
   dash.draw('min-label', (el) => { el.textContent = String(kl.minmin()); });
-  dash.draw('best-min', (el) => { const r = bestBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = r.minutes.toFixed(1); });
+  dash.draw('best-min', (el) => { const r = bestBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = r.min_per_game.toFixed(1); });
   dash.draw('best-lineup', (el) => { const r = bestBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = r.lineup; });
   dash.draw('best-net', (el) => { const r = bestBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = kl.signed(r.adj_net40, 1); });
 
