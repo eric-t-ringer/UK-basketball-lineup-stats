@@ -11,6 +11,6 @@ The morning after each game, a scheduled task reads the "Line Up Analysis" page 
 - `data/kentucky_lineup_stints.json` — one row per five-man unit per game
 - `data/kentucky_schedule.json` — the schedule, with results
 
-The page (`index.html` + `shim.js`) computes every figure in the browser from those two files. d3 loads from cdnjs.
+The page (`index.html` + `shim.js`) computes every figure in the browser from those two files. d3 v7.9.0 is bundled in `vendor/` (ISC license), so the page loads nothing from other servers.
 
 Unofficial fan project, not affiliated with the University of Kentucky.
