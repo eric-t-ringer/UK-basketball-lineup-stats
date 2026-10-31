@@ -1,0 +1,1634 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kentucky Lineup Tracker 2024-25</title>
+<meta name="description" content="Which five-man lineups Kentucky men's basketball uses most, and how each one performs. Updated after every game from the official box scores.">
+<style>
+  :root {
+    color-scheme: light dark;
+    --font-anthropic-sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-anthropic-serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    --color-bg: #f7f7f5; --color-panel: #ffffff; --color-fg: #1d1d1b; --color-fg-muted: #66665f; --color-border-line: #e3e2dc;
+    --color-ok: #1f7a43; --color-warn: #a66300; --color-bad: #b42318; --accent: #0033a0;
+    --cds-font-size-caption: 0.8125rem; --cds-font-size-body: 0.9375rem; --cds-font-size-heading: 1.0625rem; --cds-font-size-title: 1.75rem;
+    --cds-font-weight-medium: 550;
+    --cds-gap-xs: 4px; --cds-gap-sm: 8px; --cds-gap-md: 14px; --cds-gap-lg: 24px; --cds-gap-xl: 36px;
+    --cds-pad-xs: 4px; --cds-pad-sm: 8px; --cds-pad-md: 12px; --cds-pad-lg: 18px;
+    --cds-radius: 8px; --cds-dur-slow: 240ms;
+    --cds-surface-popover: #ffffff; --cds-border: #d9d8d1; --cds-shadow-popover: 0 4px 16px rgba(0,0,0,.12); --cds-text-secondary: #66665f;
+    --cds-chart-grid: #ecebe6; --cds-chart-axis: #c9c8c0; --cds-chart-reference: #8f8e86; --cds-chart-muted: #a9a8a0; --cds-chart-status-critical: #d9480f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-bg: #161615; --color-panel: #1f1f1e; --color-fg: #ecebe6; --color-fg-muted: #a3a29b; --color-border-line: #33332f;
+      --color-ok: #5cc28a; --color-warn: #e0a24a; --color-bad: #f2766b; --accent: #6f9bff;
+      --cds-surface-popover: #2a2a28; --cds-border: #3d3d38; --cds-shadow-popover: 0 4px 16px rgba(0,0,0,.5); --cds-text-secondary: #a3a29b;
+      --cds-chart-grid: #2c2c29; --cds-chart-axis: #4a4a45; --cds-chart-reference: #7c7b74; --cds-chart-muted: #6b6a64; --cds-chart-status-critical: #ff8a4c;
+    }
+  }
+  html { background: var(--color-bg); }
+  body { margin: 0; background: var(--color-bg); color: var(--color-fg); font-family: var(--font-anthropic-sans); -webkit-text-size-adjust: 100%; }
+  .kl-page { max-width: 1180px; margin: 0 auto; padding: 28px 16px 48px; }
+  .kl-failed .kl-page::before { content: "Couldn't load the data. Try refreshing the page."; display: block; margin-bottom: 16px; color: var(--color-bad); }
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  .kl { font-family: var(--font-anthropic-sans); color: var(--color-fg); display: grid; gap: var(--cds-gap-lg); }
+  .kl-head h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0 0 var(--cds-gap-xs); }
+  .kl-take { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); line-height: 1.5; }
+  .kl .kl-take b { color: var(--color-fg); font-weight: 600; }
+  .kl-next { margin: var(--cds-gap-xs) 0 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .kl-status { margin: var(--cds-gap-sm) 0 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.45; }
+  .kl-sub { margin: 4px 0 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .kl-tag { font-size: 0.75em; color: var(--color-fg-muted); white-space: nowrap; }
+  .kl-events { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 0 var(--cds-gap-lg); }
+  .kl-events li { display: grid; grid-template-columns: 4.2rem 1fr; gap: var(--cds-gap-sm); padding: 8px 0; border-bottom: 1px solid var(--color-border-line); font-size: var(--cds-font-size-caption); line-height: 1.45; }
+  .kl-events .kl-ev-date { color: var(--color-fg-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .kl-events .kl-ev-kind { display: flex; align-items: center; gap: 5px; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--kc, var(--color-fg-muted)); margin-bottom: 1px; }
+  .kl-events .kl-ev-kind svg { width: 14px; height: 14px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .kl-events .kl-ev-kind .kl-ev-exh { font-weight: 400; color: var(--color-fg-muted); }
+  .kl-events li[data-kind="big-game"] { --kc: #a8690a; }
+  .kl-events li[data-kind="hot-shooting"] { --kc: #c2410c; }
+  .kl-events li[data-kind="streak"] { --kc: #15803d; }
+  .kl-events li[data-kind="debut"] { --kc: #7c3aed; }
+  .kl-events li[data-kind="starting-lineup"] { --kc: #1d4ed8; }
+  .kl-events li[data-kind="milestone"] { --kc: var(--color-fg-muted); }
+  .kl-events li[data-kind="season"] { --kc: #0e7490; }
+  @media (prefers-color-scheme: dark) {
+    .kl-events li[data-kind="big-game"] { --kc: #f0b429; }
+    .kl-events li[data-kind="hot-shooting"] { --kc: #fb923c; }
+    .kl-events li[data-kind="streak"] { --kc: #4ade80; }
+    .kl-events li[data-kind="debut"] { --kc: #c4b5fd; }
+    .kl-events li[data-kind="season"] { --kc: #67e8f9; }
+    .kl-events li[data-kind="starting-lineup"] { --kc: #93b4ff; }
+  }
+  .kl-events li.kl-ev-empty { display: block; grid-column: 1 / -1; color: var(--color-fg-muted); border-bottom: none; }
+  .kl-more { all: unset; cursor: pointer; display: inline-block; margin-top: var(--cds-gap-sm); font-size: var(--cds-font-size-caption); font-weight: 600; color: var(--accent, #3b6fd8); }
+  .kl-more[hidden] { display: none; }
+  .kl-more:hover, .kl-more:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+  .kl-upcoming { margin: var(--cds-gap-md) 0 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.6; }
+  .kl .kl-upcoming b { color: var(--color-fg); font-weight: 600; }
+  .kl-controls { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); align-items: end; }
+  .kl-controls label { display: grid; gap: 4px; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .kl-controls select { font: inherit; font-size: var(--cds-font-size-body); color: var(--color-fg); background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-xs) var(--cds-pad-sm); }
+  .kl-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr)); gap: var(--cds-gap-md); }
+  .kl-tile { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md) var(--cds-pad-lg); }
+  .kl-tile p { margin: 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .kl-tile .kl-big { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); color: var(--color-fg); margin: 4px 0 0; font-variant-numeric: tabular-nums; }
+  .kl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr)); gap: var(--cds-gap-md); }
+  .kl-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); min-width: 0; }
+  .kl-card h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; }
+  .kl-note { margin: 4px 0 var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.45; }
+  .kl-chart { position: relative; min-height: 320px; }
+  .kl-tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); max-width: 260px; line-height: 1.4; }
+  .kl-tip .kl-tip-h { color: var(--cds-text-secondary); }
+  .kl-scroll { max-height: 460px; overflow: auto; }
+  .kl table { width: 100%; border-collapse: collapse; font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+  .kl th { position: sticky; top: 0; background: var(--color-panel); text-align: right; font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); padding: 6px 8px; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+  .kl th button { all: unset; cursor: pointer; }
+  .kl th:first-child, .kl td:first-child { text-align: left; }
+  .kl td { text-align: right; padding: 6px 8px; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+  .kl td:first-child { white-space: normal; min-width: 14rem; }
+  .kl .kl-pos { color: var(--color-ok); }
+  .kl .kl-neg { color: var(--color-bad); }
+  .kl-small { color: var(--color-fg-muted); }
+  .kl .kl-diff { background: color-mix(in srgb, #f5c400 28%, transparent); font-weight: 600; border-radius: 3px; padding: 0 3px; }
+  .kl .kl-sep { color: var(--color-fg-muted); }
+  .kl .kl-name { white-space: nowrap; }
+  .kl-sub-h { font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); margin: var(--cds-gap-lg) 0 0; }
+  #player-stats .kl-scroll { max-height: none; }
+  #player-stats th, #player-stats td { padding-left: 5px; padding-right: 5px; }
+  /* Grouped columns: the shaded block is what the switch changes */
+  #player-stats tr.kl-grp th { position: static; background: transparent; color: var(--color-fg-muted); font-weight: 400; font-size: var(--cds-font-size-caption); text-align: left; vertical-align: bottom; padding: 0 0 6px; border: none; }
+  #player-stats tr.kl-grp th.kl-gh { background: color-mix(in srgb, var(--accent, #3b6fd8) 10%, var(--color-panel)); border-radius: 6px 6px 0 0; padding: 6px 8px; }
+  #player-stats tr.kl-grp th.kl-fixed { padding-left: 8px; }
+  #player-stats .kl-rate { font: inherit; font-size: var(--cds-font-size-caption); font-weight: 600; color: var(--color-fg); background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 2px 6px; }
+  #player-stats .kl-hint { margin-left: 8px; }
+  #player-stats tbody td.kl-g { background: color-mix(in srgb, var(--accent, #3b6fd8) 6%, transparent); }
+  #player-stats th.kl-g { background: color-mix(in srgb, var(--accent, #3b6fd8) 12%, var(--color-panel)); }
+  #player-stats .kl-gs { border-left: 2px solid var(--accent, #3b6fd8); }
+  #player-stats .kl-rs { border-left: 2px solid var(--color-border-line); }
+  .kl tr.kl-below .kl-diff { background: none; font-weight: inherit; padding: 0; }
+  /* Rows below the minimum-minutes setting: dimmed, uncolored, struck through, and grouped under a divider */
+  .kl tr.kl-below td { opacity: .4; }
+  .kl tr.kl-below td:first-child { text-decoration: line-through; text-decoration-color: var(--color-fg-muted); }
+  .kl tr.kl-below .kl-pos, .kl tr.kl-below .kl-neg { color: inherit; }
+  .kl table tbody tr.kl-divider td { text-align: left; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); font-weight: var(--cds-font-weight-medium); padding: 14px 8px 6px; border-bottom: 2px dashed var(--color-border-line); background: transparent; }
+  .kl-method { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.5; }
+  .kl-method h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); color: var(--color-fg); margin: 0 0 var(--cds-gap-xs); }
+  .kl-method p { margin: 0 0 var(--cds-gap-xs); }
+  .kl-method .kl-credit { margin-top: var(--cds-gap-sm); color: var(--cds-color-fg, inherit); }
+  .kl-method .kl-credit a { color: inherit; text-underline-offset: 3px; }
+  .kl th.kl-left, .kl td.kl-left { text-align: left; }
+  /* Postseason summary (completed seasons) */
+  #postseason h2 { margin: 0 0 var(--cds-gap-md); }
+  #postseason .kl-ps { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: var(--cds-gap-lg); }
+  #postseason h3 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: 1.35rem; margin: 0; color: var(--color-fg); }
+  #postseason .kl-ps-sub { margin: 2px 0 var(--cds-gap-sm); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  #postseason .kl-ps-sub b { color: var(--color-fg); font-weight: 600; }
+  #postseason ol { list-style: none; margin: 0; padding: 0; }
+  #postseason li { display: grid; grid-template-columns: 3.6rem 7.5rem 1fr auto; gap: var(--cds-gap-sm); padding: 7px 0; border-top: 1px solid var(--color-border-line); font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; align-items: baseline; }
+  #postseason li .kl-ps-date, #postseason li .kl-ps-round { color: var(--color-fg-muted); }
+  #postseason li .kl-ps-res { font-weight: 600; text-align: right; }
+  @media (max-width: 640px) { #postseason li { grid-template-columns: 3.2rem 1fr auto; } #postseason li .kl-ps-round { display: none; } }
+  /* Rotation heatmap */
+  #rotation .kl-headline { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); line-height: 1.2; margin: 0 0 var(--cds-gap-xs); }
+  #rotation .kl-dek { margin: 0 0 var(--cds-gap-md); font-size: var(--cds-font-size-body); color: var(--color-fg-muted); line-height: 1.5; max-width: 64rem; text-wrap: pretty; }
+  #rotation .kl-rot-chart { position: relative; }
+  #rotation .kl-note { margin: var(--cds-gap-sm) 0 0; }
+  /* On/off dumbbell chart */
+  #onoff .kl-headline { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); line-height: 1.2; margin: 0 0 var(--cds-gap-xs); }
+  #onoff .kl-dek { margin: 0 0 var(--cds-gap-md); font-size: var(--cds-font-size-body); color: var(--color-fg-muted); line-height: 1.5; max-width: 64rem; text-wrap: pretty; }
+  #onoff .kl-dek b { font-weight: 600; }
+  #onoff .kl-onoff-chart { position: relative; }
+  #onoff .kl-onoff-wait { margin: 0; padding: var(--cds-pad-lg); border: 1px dashed var(--color-border-line); border-radius: var(--cds-radius); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.5; }
+  @media (max-width: 640px) { .kl-hide-sm { display: none; } .kl td:first-child { min-width: 8.5rem; } .kl td, .kl th { padding: 6px 5px; } }
+  [data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
+
+  .kl-nav { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; align-items: baseline; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: 0 0 var(--cds-gap-sm); }
+  .kl-nav a { color: var(--accent); text-decoration: none; } .kl-nav a:hover { text-decoration: underline; }
+  .kl-nav b { color: var(--color-fg); } .kl-nav .kl-nav-soon { opacity: .55; }
+</style>
+<style id="uk-theme">
+  /* Kentucky blue and white */
+  :root { --uk-blue: #0033a0; --uk-blue-deep: #002579; --uk-blue-tint: #e8eef9; --accent: #0033a0; --series-1: #0033a0;
+    --color-bg: #f3f6fb; --color-border-line: #dde3ee; --cds-chart-grid: #e6ebf3; --cds-chart-axis: #c3cbd9; }
+  @media (prefers-color-scheme: dark) {
+    /* Neutral charcoal instead of navy, so the blue reads as an accent rather than fighting the background */
+    :root { --uk-blue: #0033a0; --uk-blue-deep: #00266f; --uk-blue-tint: #1d2129; --accent: #f2f4f8; --series-1: #7fa6ff;
+      --color-bg: #111317; --color-panel: #1a1d23; --color-fg: #f2f4f8; --color-fg-muted: #b4bac6; --color-border-line: #2d323c;
+      --cds-surface-popover: #22262e; --cds-border: #3a404c; --cds-text-secondary: #b4bac6;
+      --cds-chart-grid: #262a33; --cds-chart-axis: #454c59; --cds-chart-muted: #6f7787; --cds-chart-reference: #8a92a2; }
+  }
+  .kl-page { padding-top: 20px; }
+  .kl-head { background: linear-gradient(135deg, var(--uk-blue) 0%, var(--uk-blue-deep) 100%); color: #fff; border-radius: 14px; padding: 26px 24px 22px; }
+  .kl-head h1 { color: #fff; letter-spacing: -0.01em; }
+  .kl-head .kl-take { color: rgba(255,255,255,.82); }
+  .kl .kl-head .kl-take b { color: #fff; }
+  .kl-head .kl-next { color: rgba(255,255,255,.7); }
+  .kl-head .kl-next span { color: #fff; }
+  .kl-head .kl-status { color: rgba(255,255,255,.88); border-top: 1px solid rgba(255,255,255,.22); padding-top: 10px; margin-top: 12px; }
+  .kl .kl-head .kl-status b { color: #fff; }
+  .kl-controls select { border-color: var(--uk-blue); }
+  .kl-controls select:focus-visible { outline: 2px solid var(--uk-blue); outline-offset: 2px; }
+  .kl-tile { border-top: 4px solid var(--uk-blue); }
+  .kl-tile .kl-big { color: var(--accent); }
+  .kl-card { border-top: 4px solid var(--uk-blue); }
+  .kl-card h2, .kl-method h2 { color: var(--accent); }
+  .kl th { background: var(--uk-blue); color: #fff; border-bottom: none; }
+  .kl th:first-child { border-top-left-radius: 6px; } .kl th:last-child { border-top-right-radius: 6px; }
+  .kl th[aria-sort] button { text-decoration: underline; text-underline-offset: 3px; }
+  .kl tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--uk-blue-tint) 55%, transparent); }
+  .kl-method { border-top: 4px solid var(--uk-blue); padding-top: 14px; }
+  .kl-page #player-stats th.kl-g { background: #1d4fb8; color: #fff; }
+  .kl-page #player-stats tbody td.kl-g { background: color-mix(in srgb, var(--uk-blue) 7%, transparent); }
+  .kl-page #player-stats tr.kl-grp th.kl-gh { background: color-mix(in srgb, var(--uk-blue) 12%, var(--color-panel)); color: var(--color-fg); }
+  .kl-page #player-stats .kl-gs { border-left-color: var(--uk-blue); }
+  .kl-page #player-stats .kl-rate { border-color: var(--uk-blue); }
+  @media (prefers-color-scheme: dark) {
+    .kl-page #player-stats tbody td.kl-g { background: color-mix(in srgb, #2f5fd0 14%, transparent); }
+    .kl-page #player-stats tr.kl-grp th.kl-gh { background: color-mix(in srgb, #2f5fd0 28%, var(--color-panel)); }
+    .kl-page #player-stats .kl-gs { border-left-color: #2f5fd0; }
+    .kl-page #player-stats .kl-rate { border-color: var(--color-border-line); }
+  }
+  .kl-controls input[type=date] { font: inherit; font-size: var(--cds-font-size-body); color: var(--color-fg); background: var(--color-panel); border: 1px solid var(--uk-blue); border-radius: var(--cds-radius); padding: calc(var(--cds-pad-xs) - 1px) var(--cds-pad-sm); color-scheme: light dark; }
+  .kl-controls .kl-clear-dates { font: inherit; font-size: var(--cds-font-size-caption); color: var(--accent); background: none; border: none; padding: 6px 2px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; align-self: end; }
+  @media (prefers-color-scheme: dark) {
+    .kl-controls select, .kl-controls input[type=date] { border-color: var(--color-border-line); }
+    .kl-controls select:focus-visible { outline-color: #7fa6ff; }
+    .kl-tile, .kl-card, .kl-method { border-top-color: #2f5fd0; }
+    .kl-head .kl-take { color: rgba(255,255,255,.88); }
+    .kl-head .kl-next { color: rgba(255,255,255,.78); }
+  }
+</style>
+<script>window.KL_SEASON = {"positions": {"Butler": [1, 2], "Kriisa": [1, 2], "Perry": [1, 2], "Chandler": [2, 3, 1], "Oweh": [2, 3], "Robinson": [3, 2, 1], "Brea": [2, 3], "Noah": [3, 4, 2], "Almonor": [4, 3], "Carr": [4, 5], "Garrison": [5, 4], "A. Williams": [5, 4], "Horn": [2, 1], "Tow": [3, 4], "Darbyshire": [3, 4]}, "point_priority": ["Butler", "Kriisa", "Robinson", "Perry", "Chandler"], "watch": [], "rotation_headline": {"text": "Oweh and Brea played the most, while Kriisa and Robinson missed much of the season", "through": "2025-03-28-tennessee"}, "onoff_headline": {"text": "Kentucky was generally better with its starters on the floor than with its bench", "official_games": 36}, "postseason": [{"event": "SEC Tournament", "seed": "No. 6 seed", "finish": "Lost in the quarterfinals", "rounds": {"2025-03-13-oklahoma": "Second round", "2025-03-14-alabama": "Quarterfinal"}}, {"event": "NCAA Tournament", "seed": "No. 3 seed, Midwest", "finish": "Lost in the Sweet 16", "rounds": {"2025-03-21-troy": "First round", "2025-03-23-illinois": "Second round", "2025-03-28-tennessee": "Sweet 16"}}]};</script>
+<script src="../vendor/d3.min.js"></script>
+<script src="../shim.js"></script>
+</head>
+<body>
+<main class="kl-page">
+<nav class="kl-nav" aria-label="Seasons"><a href="../" class="kl-nav-home">← All seasons</a><span class="kl-nav-seasons"><b aria-current="page">2024-25</b> · <a href="../2025-26/">2025-26</a> · <a href="../2026-27/">2026-27</a></span></nav>
+<div class="kl">
+  <header class="kl-head" id="top">
+    <h1>Kentucky lineup tracker, 2024-25</h1>
+    <p class="kl-take">Most-used lineup: <b data-draw="top-lineup" data-source="lineup_stats" data-field="lineup">—</b> (<span data-draw="top-min" data-source="lineup_stats" data-field="min_per_game">—</span> min per game, <span data-draw="top-share" data-source="lineup_stats" data-field="share">—</span> of all minutes). Best adjusted net rating<span class="kl-minnote" hidden> among lineups with at least <span data-draw="min-label">—</span> minutes</span>: <b data-draw="best-lineup" data-source="lineup_stats" data-field="lineup">—</b> (<span data-draw="best-net" data-source="lineup_stats" data-field="adj_net40">—</span> per 40 adjusted, <span data-draw="best-min" data-source="lineup_stats" data-field="min_per_game">—</span> min per game).</p>
+    <p class="kl-next">Data through <span data-draw="through">—</span> · Next game: <span data-draw="next-game" data-source="schedule" data-field="opponent">—</span></p>
+    <p class="kl-status kl-status-early" hidden>Lineup data so far includes <b data-draw="exh-kept" data-source="exh_status" data-field="exhibitions_kept">—</b> exhibition <span data-draw="exh-noun">—</span>, which don't count toward the record. From the 4th official game on, each new official game replaces one exhibition, so after <span data-draw="exh-end" data-source="exh_status" data-field="final_game">—</span> the data is official games only.</p>
+    <p class="kl-status kl-status-late" hidden><b data-draw="exh-kept" data-source="exh_status" data-field="exhibitions_kept">—</b> exhibition <span data-draw="exh-noun">—</span> still included. Exhibitions don't count toward the record and drop out after <span data-draw="exh-end" data-source="exh_status" data-field="final_game">—</span>.</p>
+  </header>
+
+  <section class="kl-card" id="postseason" data-draw="postseason" hidden></section>
+
+  <div class="kl-controls">
+    <label>Games
+      <select data-draw="scope" aria-label="Games" data-source="scopes"></select>
+    </label>
+    <label>Minimum minutes for rankings
+      <select class="kl-minmin" aria-label="Minimum minutes">
+        <option value="0">Any</option>
+        <option value="3">3 min</option>
+        <option value="5">5 min</option>
+        <option value="10">10 min</option>
+        <option value="20">20 min</option>
+      </select>
+    </label>
+    <label>From
+      <input type="date" class="kl-from" aria-label="From date">
+    </label>
+    <label>To
+      <input type="date" class="kl-to" aria-label="To date">
+    </label>
+    <button type="button" class="kl-clear-dates" hidden>Clear dates</button>
+  </div>
+
+  <section class="kl-tiles" id="totals">
+    <div class="kl-tile"><p>Official games</p><p class="kl-big" data-draw="t-games" data-source="scope_totals" data-field="games">—</p><p class="kl-sub" hidden>+<span data-draw="t-exh" data-source="scope_totals" data-field="exhibitions">—</span> exhibition <span data-draw="t-exh-noun">—</span> in the data, not counted</p></div>
+    <div class="kl-tile"><p>Official record</p><p class="kl-big" data-draw="t-record" data-source="scope_totals" data-field="record">—</p></div>
+    <div class="kl-tile"><p>Lineups used</p><p class="kl-big" data-draw="t-lineups" data-source="scope_totals" data-field="lineups">—</p></div>
+    <div class="kl-tile"><p>Most-used lineup, share of minutes</p><p class="kl-big" data-draw="t-share" data-source="scope_totals" data-field="top_share">—</p></div>
+    <div class="kl-tile"><p>Team net points per 40</p><p class="kl-big" data-draw="t-net" data-source="scope_totals" data-field="net40">—</p></div>
+  </section>
+
+  <section class="kl-card" id="notable-dates">
+    <h2>Notable dates</h2>
+    <p class="kl-note">Milestones, debuts, big games and streaks, newest first; finished seasons also note anyone who scored 20+ or had a double-double in at least half the games. Starting-lineup changes are marked on the rotation chart. Covers the whole season, whatever the filters are set to. Streaks count official games only.</p>
+    <ul class="kl-events" data-draw="events" data-source="notables"></ul>
+    <button type="button" class="kl-more" hidden></button>
+    <p class="kl-upcoming"><span class="kl-up-next" hidden>Coming up: <b data-draw="up-next" data-source="notables_meta" data-field="next_milestone">—</b>.</span> <span class="kl-up-await" hidden>Awaiting season debut: <b data-draw="up-await" data-source="notables_meta" data-field="awaiting">—</b>.</span></p>
+  </section>
+
+  <section class="kl-card" id="rotation">
+    <h2 class="kl-headline" data-draw="rot-head" data-source="rotation">Who has played, game by game</h2>
+    <p class="kl-dek" data-draw="rot-dek"></p>
+    <div class="kl-rot-chart" data-draw="rot-chart" data-source="rotation"></div>
+    <p class="kl-note">Shading is scaled to a 40-minute game, so overtime games (marked OT) don't look heavier. An empty cell means the player didn't play; the box score doesn't say why. The minimum-minutes setting doesn't apply here.</p>
+  </section>
+
+  <section class="kl-card" id="onoff">
+    <h2 class="kl-headline" data-draw="onoff-head" data-source="player_stats">How Kentucky's scoring margin changes with each player</h2>
+    <p class="kl-dek" data-draw="onoff-dek"></p>
+    <p class="kl-onoff-wait" data-draw="onoff-wait" hidden></p>
+    <div class="kl-onoff-chart" data-draw="onoff-chart" data-source="player_stats"></div>
+  </section>
+
+  <section class="kl-grid">
+    <div class="kl-card" id="usage-vs-results">
+      <h2>Usage vs. results</h2>
+      <p class="kl-note">Each dot is a five-man lineup. Further right means more minutes; higher means a better adjusted scoring margin per 40 minutes. Short stints sit near the team average until they've played enough to say otherwise. Lineups below the minimum-minutes setting show as hollow circles.</p>
+      <div class="kl-chart" data-draw="scatter" data-source="lineup_stats"></div>
+    </div>
+    <div class="kl-card" id="players">
+      <h2>Player on/off</h2>
+      <p class="kl-note">Scoring margin per 40 minutes with each player on the floor versus off it. On/off is noisy over few games, and it credits players for who they share the floor with.</p>
+      <div class="kl-scroll">
+        <table data-source="player_stats" data-row-key="scope,player">
+          <thead><tr>
+            <th data-field="player"><button data-sort="player">Player</button></th>
+            <th data-field="minutes"><button data-sort="minutes">Min</button></th>
+            <th data-field="plus_minus"><button data-sort="plus_minus">+/-</button></th>
+            <th data-field="on_net40"><button data-sort="on_net40">On /40</button></th>
+            <th data-field="off_net40" class="kl-hide-sm"><button data-sort="off_net40">Off /40</button></th>
+            <th data-field="on_off"><button data-sort="on_off">On − off</button></th>
+          </tr></thead>
+          <tbody data-draw="players"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="kl-card" id="player-stats">
+    <h2>Player stats</h2>
+    <p class="kl-note">The switch in each table changes only the shaded columns: per game (each total divided by the games the player played), per 40 minutes (for comparing starters with the bench), or totals for the chosen games. Percentages and rates stay the same in every view. MPG is minutes per game.</p>
+    <h3 class="kl-sub-h" id="offense">Offense</h3>
+    <p class="kl-note">FGA, 3PA and FTA are shot attempts. eFG% counts a three as 1.5 makes; TS% also counts free throws. OREB% is the share of available offensive rebounds he grabbed while on the floor; USG% is the share of team possessions he ended with a shot, free throws or a turnover while on the floor. On OER is team points per 100 possessions with him on the floor.</p>
+    <div class="kl-scroll kl-rate-pg">
+      <table data-source="player_box" data-row-key="scope,player">
+        <thead>
+            <tr class="kl-grp"><th colspan="4"></th><th colspan="7" class="kl-gh kl-gs"><select class="kl-rate" aria-label="Show these columns per game, per 40 minutes or as totals"><option value="pg">Per game</option><option value="40">Per 40 min</option><option value="tot">Totals</option></select><span class="kl-hint">these columns change</span></th><th colspan="9" class="kl-rs kl-fixed">Percentages and rates · same in every view</th></tr>
+            <tr>
+              <th data-field="player"><button data-sort="player">Player</button></th>
+              <th data-field="gp"><button data-sort="gp">GP</button></th>
+              <th data-field="gs"><button data-sort="gs">GS</button></th>
+              <th data-field="mpg"><button data-sort="mpg">MPG</button></th>
+              <th data-field="pts_pg" class="kl-g kl-gs"><button data-sort="pts_pg">PTS</button></th>
+              <th data-field="fga_pg" class="kl-g"><button data-sort="fga_pg">FGA</button></th>
+              <th data-field="tpa_pg" class="kl-g"><button data-sort="tpa_pg">3PA</button></th>
+              <th data-field="fta_pg" class="kl-g"><button data-sort="fta_pg">FTA</button></th>
+              <th data-field="ast_pg" class="kl-g"><button data-sort="ast_pg">AST</button></th>
+              <th data-field="tov_pg" class="kl-g"><button data-sort="tov_pg">TOV</button></th>
+              <th data-field="oreb_pg" class="kl-g"><button data-sort="oreb_pg">OREB</button></th>
+              <th data-field="fg_pct" class="kl-rs"><button data-sort="fg_pct">FG%</button></th>
+              <th data-field="tp_pct"><button data-sort="tp_pct">3P%</button></th>
+              <th data-field="ft_pct"><button data-sort="ft_pct">FT%</button></th>
+              <th data-field="efg"><button data-sort="efg">eFG%</button></th>
+              <th data-field="ts"><button data-sort="ts">TS%</button></th>
+              <th data-field="ast_to"><button data-sort="ast_to">A/TO</button></th>
+              <th data-field="oreb_pct"><button data-sort="oreb_pct">OREB%</button></th>
+              <th data-field="usg"><button data-sort="usg">USG%</button></th>
+              <th data-field="on_oer"><button data-sort="on_oer">On OER</button></th>
+            </tr>
+        </thead>
+        <tbody data-draw="off-pg"></tbody>
+      </table>
+    </div>
+    <div class="kl-scroll kl-rate-40" hidden>
+      <table data-source="player_box" data-row-key="scope,player">
+        <thead>
+            <tr class="kl-grp"><th colspan="4"></th><th colspan="7" class="kl-gh kl-gs"><select class="kl-rate" aria-label="Show these columns per game, per 40 minutes or as totals"><option value="pg">Per game</option><option value="40">Per 40 min</option><option value="tot">Totals</option></select><span class="kl-hint">these columns change</span></th><th colspan="9" class="kl-rs kl-fixed">Percentages and rates · same in every view</th></tr>
+            <tr>
+              <th data-field="player"><button data-sort="player">Player</button></th>
+              <th data-field="gp"><button data-sort="gp">GP</button></th>
+              <th data-field="gs"><button data-sort="gs">GS</button></th>
+              <th data-field="mpg"><button data-sort="mpg">MPG</button></th>
+              <th data-field="pts_40" class="kl-g kl-gs"><button data-sort="pts_40">PTS</button></th>
+              <th data-field="fga_40" class="kl-g"><button data-sort="fga_40">FGA</button></th>
+              <th data-field="tpa_40" class="kl-g"><button data-sort="tpa_40">3PA</button></th>
+              <th data-field="fta_40" class="kl-g"><button data-sort="fta_40">FTA</button></th>
+              <th data-field="ast_40" class="kl-g"><button data-sort="ast_40">AST</button></th>
+              <th data-field="tov_40" class="kl-g"><button data-sort="tov_40">TOV</button></th>
+              <th data-field="oreb_40" class="kl-g"><button data-sort="oreb_40">OREB</button></th>
+              <th data-field="fg_pct" class="kl-rs"><button data-sort="fg_pct">FG%</button></th>
+              <th data-field="tp_pct"><button data-sort="tp_pct">3P%</button></th>
+              <th data-field="ft_pct"><button data-sort="ft_pct">FT%</button></th>
+              <th data-field="efg"><button data-sort="efg">eFG%</button></th>
+              <th data-field="ts"><button data-sort="ts">TS%</button></th>
+              <th data-field="ast_to"><button data-sort="ast_to">A/TO</button></th>
+              <th data-field="oreb_pct"><button data-sort="oreb_pct">OREB%</button></th>
+              <th data-field="usg"><button data-sort="usg">USG%</button></th>
+              <th data-field="on_oer"><button data-sort="on_oer">On OER</button></th>
+            </tr>
+        </thead>
+        <tbody data-draw="off-40"></tbody>
+      </table>
+    </div>
+    <div class="kl-scroll kl-rate-tot" hidden>
+      <table data-source="player_box" data-row-key="scope,player">
+        <thead>
+            <tr class="kl-grp"><th colspan="4"></th><th colspan="7" class="kl-gh kl-gs"><select class="kl-rate" aria-label="Show these columns per game, per 40 minutes or as totals"><option value="pg">Per game</option><option value="40">Per 40 min</option><option value="tot">Totals</option></select><span class="kl-hint">these columns change</span></th><th colspan="9" class="kl-rs kl-fixed">Percentages and rates · same in every view</th></tr>
+            <tr>
+              <th data-field="player"><button data-sort="player">Player</button></th>
+              <th data-field="gp"><button data-sort="gp">GP</button></th>
+              <th data-field="gs"><button data-sort="gs">GS</button></th>
+              <th data-field="mpg"><button data-sort="mpg">MPG</button></th>
+              <th data-field="pts_tot" class="kl-g kl-gs"><button data-sort="pts_tot">PTS</button></th>
+              <th data-field="fga_tot" class="kl-g"><button data-sort="fga_tot">FGA</button></th>
+              <th data-field="tpa_tot" class="kl-g"><button data-sort="tpa_tot">3PA</button></th>
+              <th data-field="fta_tot" class="kl-g"><button data-sort="fta_tot">FTA</button></th>
+              <th data-field="ast_tot" class="kl-g"><button data-sort="ast_tot">AST</button></th>
+              <th data-field="tov_tot" class="kl-g"><button data-sort="tov_tot">TOV</button></th>
+              <th data-field="oreb_tot" class="kl-g"><button data-sort="oreb_tot">OREB</button></th>
+              <th data-field="fg_pct" class="kl-rs"><button data-sort="fg_pct">FG%</button></th>
+              <th data-field="tp_pct"><button data-sort="tp_pct">3P%</button></th>
+              <th data-field="ft_pct"><button data-sort="ft_pct">FT%</button></th>
+              <th data-field="efg"><button data-sort="efg">eFG%</button></th>
+              <th data-field="ts"><button data-sort="ts">TS%</button></th>
+              <th data-field="ast_to"><button data-sort="ast_to">A/TO</button></th>
+              <th data-field="oreb_pct"><button data-sort="oreb_pct">OREB%</button></th>
+              <th data-field="usg"><button data-sort="usg">USG%</button></th>
+              <th data-field="on_oer"><button data-sort="on_oer">On OER</button></th>
+            </tr>
+        </thead>
+        <tbody data-draw="off-tot"></tbody>
+      </table>
+    </div>
+    <h3 class="kl-sub-h" id="defense">Defense</h3>
+    <p class="kl-note">Box scores barely measure individual defense, so read these together. DREB% is the share of available defensive rebounds he grabbed while on the floor. On DER is points allowed per 100 possessions with him on the floor, a team number credited to whoever was out there; On − off DER below zero means the defense allowed fewer points with him on the floor.</p>
+    <div class="kl-scroll kl-rate-pg">
+      <table data-source="player_box" data-row-key="scope,player">
+        <thead>
+            <tr class="kl-grp"><th colspan="3"></th><th colspan="4" class="kl-gh kl-gs"><select class="kl-rate" aria-label="Show these columns per game, per 40 minutes or as totals"><option value="pg">Per game</option><option value="40">Per 40 min</option><option value="tot">Totals</option></select><span class="kl-hint">these columns change</span></th><th colspan="5" class="kl-rs kl-fixed">Percentages and rates · same in every view</th></tr>
+            <tr>
+              <th data-field="player"><button data-sort="player">Player</button></th>
+              <th data-field="gp"><button data-sort="gp">GP</button></th>
+              <th data-field="mpg"><button data-sort="mpg">MPG</button></th>
+              <th data-field="dreb_pg" class="kl-g kl-gs"><button data-sort="dreb_pg">DREB</button></th>
+              <th data-field="stl_pg" class="kl-g"><button data-sort="stl_pg">STL</button></th>
+              <th data-field="blk_pg" class="kl-g"><button data-sort="blk_pg">BLK</button></th>
+              <th data-field="pf_pg" class="kl-g"><button data-sort="pf_pg">PF</button></th>
+              <th data-field="dreb_pct" class="kl-rs"><button data-sort="dreb_pct">DREB%</button></th>
+              <th data-field="stocks_40"><button data-sort="stocks_40">Stocks /40</button></th>
+              <th data-field="on_der"><button data-sort="on_der">On DER</button></th>
+              <th data-field="off_der"><button data-sort="off_der">Off DER</button></th>
+              <th data-field="on_off_der"><button data-sort="on_off_der">On − off DER</button></th>
+            </tr>
+        </thead>
+        <tbody data-draw="def-pg"></tbody>
+      </table>
+    </div>
+    <div class="kl-scroll kl-rate-40" hidden>
+      <table data-source="player_box" data-row-key="scope,player">
+        <thead>
+            <tr class="kl-grp"><th colspan="3"></th><th colspan="4" class="kl-gh kl-gs"><select class="kl-rate" aria-label="Show these columns per game, per 40 minutes or as totals"><option value="pg">Per game</option><option value="40">Per 40 min</option><option value="tot">Totals</option></select><span class="kl-hint">these columns change</span></th><th colspan="5" class="kl-rs kl-fixed">Percentages and rates · same in every view</th></tr>
+            <tr>
+              <th data-field="player"><button data-sort="player">Player</button></th>
+              <th data-field="gp"><button data-sort="gp">GP</button></th>
+              <th data-field="mpg"><button data-sort="mpg">MPG</button></th>
+              <th data-field="dreb_40" class="kl-g kl-gs"><button data-sort="dreb_40">DREB</button></th>
+              <th data-field="stl_40" class="kl-g"><button data-sort="stl_40">STL</button></th>
+              <th data-field="blk_40" class="kl-g"><button data-sort="blk_40">BLK</button></th>
+              <th data-field="pf_40" class="kl-g"><button data-sort="pf_40">PF</button></th>
+              <th data-field="dreb_pct" class="kl-rs"><button data-sort="dreb_pct">DREB%</button></th>
+              <th data-field="stocks_40"><button data-sort="stocks_40">Stocks /40</button></th>
+              <th data-field="on_der"><button data-sort="on_der">On DER</button></th>
+              <th data-field="off_der"><button data-sort="off_der">Off DER</button></th>
+              <th data-field="on_off_der"><button data-sort="on_off_der">On − off DER</button></th>
+            </tr>
+        </thead>
+        <tbody data-draw="def-40"></tbody>
+      </table>
+    </div>
+    <div class="kl-scroll kl-rate-tot" hidden>
+      <table data-source="player_box" data-row-key="scope,player">
+        <thead>
+            <tr class="kl-grp"><th colspan="3"></th><th colspan="4" class="kl-gh kl-gs"><select class="kl-rate" aria-label="Show these columns per game, per 40 minutes or as totals"><option value="pg">Per game</option><option value="40">Per 40 min</option><option value="tot">Totals</option></select><span class="kl-hint">these columns change</span></th><th colspan="5" class="kl-rs kl-fixed">Percentages and rates · same in every view</th></tr>
+            <tr>
+              <th data-field="player"><button data-sort="player">Player</button></th>
+              <th data-field="gp"><button data-sort="gp">GP</button></th>
+              <th data-field="mpg"><button data-sort="mpg">MPG</button></th>
+              <th data-field="dreb_tot" class="kl-g kl-gs"><button data-sort="dreb_tot">DREB</button></th>
+              <th data-field="stl_tot" class="kl-g"><button data-sort="stl_tot">STL</button></th>
+              <th data-field="blk_tot" class="kl-g"><button data-sort="blk_tot">BLK</button></th>
+              <th data-field="pf_tot" class="kl-g"><button data-sort="pf_tot">PF</button></th>
+              <th data-field="dreb_pct" class="kl-rs"><button data-sort="dreb_pct">DREB%</button></th>
+              <th data-field="stocks_40"><button data-sort="stocks_40">Stocks /40</button></th>
+              <th data-field="on_der"><button data-sort="on_der">On DER</button></th>
+              <th data-field="off_der"><button data-sort="off_der">Off DER</button></th>
+              <th data-field="on_off_der"><button data-sort="on_off_der">On − off DER</button></th>
+            </tr>
+        </thead>
+        <tbody data-draw="def-tot"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="kl-card" id="lineups">
+    <h2>All lineups</h2>
+    <p class="kl-note">Each lineup is listed 1 → 5, point guard to center; positions are approximate (see How the numbers work). Highlighted names are players who aren't in the most-used lineup. Sorted by minutes; click a column to re-sort. Net /40 is the scoring margin per 40 minutes; Adj. /40 pulls it toward the team average until a lineup has played enough to trust (see below). OER and DER are points scored and allowed per 100 possessions (lower DER is better).</p>
+    <div class="kl-scroll">
+      <table data-source="lineup_stats" data-row-key="scope,lineup">
+        <thead><tr>
+          <th data-field="lineup"><button data-sort="lineup">Lineup</button></th>
+          <th data-field="minutes"><button data-sort="minutes">Min</button></th>
+          <th data-field="share" class="kl-hide-sm"><button data-sort="share">Share</button></th>
+          <th data-field="games" class="kl-hide-sm"><button data-sort="games">Games</button></th>
+          <th data-field="score"><button data-sort="uk_pts">Score</button></th>
+          <th data-field="plus_minus"><button data-sort="plus_minus">+/-</button></th>
+          <th data-field="net40"><button data-sort="net40">Net /40</button></th>
+          <th data-field="adj_net40"><button data-sort="adj_net40">Adj. /40</button></th>
+          <th data-field="oer"><button data-sort="oer">OER</button></th>
+          <th data-field="der"><button data-sort="der">DER</button></th>
+          <th data-field="tov_pct" class="kl-hide-sm"><button data-sort="tov_pct">TO %</button></th>
+        </tr></thead>
+        <tbody data-draw="lineups"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="kl-card" id="combos">
+    <h2>Player combinations</h2>
+    <p class="kl-note">Every pair or trio of players, counted across all the time they shared the floor, whoever the other players were. Combinations build up minutes much faster than full lineups, so they're more reliable early in the season.</p>
+    <div class="kl-controls">
+      <label>Show
+        <select class="kl-combo-size" aria-label="Combination size">
+          <option value="2">Pairs</option>
+          <option value="3">Trios</option>
+        </select>
+      </label>
+    </div>
+    <div class="kl-scroll">
+      <table data-source="combos" data-row-key="scope,size,combo">
+        <thead><tr>
+          <th data-field="combo"><button data-sort="combo">Players</button></th>
+          <th data-field="minutes"><button data-sort="minutes">Min</button></th>
+          <th data-field="games" class="kl-hide-sm"><button data-sort="games">Games</button></th>
+          <th data-field="score"><button data-sort="uk_pts">Score</button></th>
+          <th data-field="plus_minus"><button data-sort="plus_minus">+/-</button></th>
+          <th data-field="net40"><button data-sort="net40">Net /40</button></th>
+          <th data-field="adj_net40"><button data-sort="adj_net40">Adj. /40</button></th>
+          <th data-field="oer" class="kl-hide-sm"><button data-sort="oer">OER</button></th>
+          <th data-field="der" class="kl-hide-sm"><button data-sort="der">DER</button></th>
+        </tr></thead>
+        <tbody data-draw="combos"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="kl-card" id="games">
+    <h2>Game log</h2>
+    <p class="kl-note">Every game on the schedule. Lineup data is added the morning after each game, once the official box score is posted. "In main view" shows which games count toward the main view's numbers.</p>
+    <div class="kl-scroll">
+      <table data-source="game_summary" data-row-key="game_id">
+        <thead><tr>
+          <th data-field="date">Date</th>
+          <th data-field="opponent_label" class="kl-left">Opponent</th>
+          <th data-field="site" class="kl-hide-sm">Site</th>
+          <th data-field="result">Result</th>
+          <th data-field="lineups_used">Lineups</th>
+          <th data-field="top_lineup" class="kl-hide-sm kl-left">Most-used lineup</th>
+          <th data-field="top_minutes" class="kl-hide-sm">Its min</th>
+          <th data-field="main_view">In main view</th>
+        </tr></thead>
+        <tbody data-draw="games"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="kl-method" id="method">
+    <h2>How the numbers work</h2>
+    <p>Source: the "Line Up Analysis" page of Kentucky's official box score book for each game, posted on UK Athletics. Each row there is a five-man unit's time on the floor, points for and against, and Kentucky's points per possession.</p>
+    <p>Possessions are worked out as points ÷ points per possession, from the box score. For units that didn't score, possessions are estimated from their minutes at that game's pace. OER and DER are points scored and allowed per 100 possessions, using Kentucky's possessions for both ends (over a stretch of play the two teams' possession counts differ by at most one). They're close approximations, not official figures.</p>
+    <p>How the measures relate: OER − DER is the scoring margin per 100 possessions. Net /40 is the same margin per 40 minutes, so it also reflects pace: at Kentucky’s exhibition pace of about 69 possessions per 40 minutes, a +10 margin per 100 possessions is about +7 per 40. Adj. /40 is Net /40 pulled toward the team average for small samples; OER and DER are shown unadjusted, so treat them with the same caution on short stints.</p>
+    <p>Exhibitions phase out: the main view includes the exhibition games until there are three official games. From then on, each new official game replaces the oldest exhibition, so a few games later the main view is official games only. The exhibitions stay viewable under the "Exhibitions" choice in the Games filter.</p>
+    <p>Adjusted net (Adj. /40): a lineup that played 2 minutes can show +60 per 40 on one run, so raw margins over short stints are mostly noise. The adjusted figure blends each lineup's actual margin with the team's average margin, as if the lineup had also played 50 extra minutes at the team's average. A lineup that has played a few minutes stays close to the team average; one that has played 100+ minutes is judged mostly on its own results. The 50-minute weight is a judgment call, not a fitted value. Rankings and the chart use the adjusted figure. The idea follows Evan Miya's point that observed lineup results should count for more as a lineup logs more possessions.</p>
+    <p>Player stats: rebound percentages and usage use team and opponent totals from the box score of each game the player played, and assume his minutes were spread evenly across the game. Usage is (FGA + 0.44 × FTA + TOV) as a share of the team's while he was on the floor. On OER and On DER come from the lineup data, using Kentucky's possessions for both ends.</p>
+    <p data-draw="method-positions">Positions are approximate. Lineups are listed from point guard (1) to center (5) using each player's usual positions.</p>
+    <p>Notable dates: a big game is a triple-double, 30+ points, 6+ made threes, or 80%+ shooting on at least 10 shots. Streaks are 3+ straight official games with 20+ points or a double-double, and 5+ straight official wins. A starting-lineup change compares each game's starters with the game before.</p>
+    <p>Rotation chart: minutes come from each game's box score. Rows are sorted by total minutes in the games shown, so a player who joins late doesn't jump to the top. A starting-lineup change is marked where a game's five starters differ from the game before. On a phone the chart shows the last 10 games of the selection; choose fewer games in the Games filter or a date range to see others.</p>
+    <p>On/off chart: it appears once the chosen games include 8 official games, since over fewer games a player's on/off swings by 15+ points per 40 from chance alone. A player is charted if he has played at least a quarter of the team's minutes and sat at least 40 minutes, because the bench side of his line comes from those minutes. The headline names a player only when his gap is more than 15 points per 40 and he has sat at least 80 minutes. The minimum-minutes setting doesn't apply to this chart.</p>
+    <p>Combinations: pair and trio numbers pool every stint those players shared, so they gather minutes faster than full lineups. They also credit or blame the players for whoever else was on the floor.</p>
+    <p>Unofficial fan project, not affiliated with the University of Kentucky. Lineup data comes from the official box scores posted at ukathletics.com and is added the morning after each game.</p>
+    <p class="kl-credit">Created by <a href="https://www.linkedin.com/in/ericringer/" target="_blank" rel="noopener noreferrer">Eric T. Ringer</a>.</p>
+  </section>
+</div>
+
+</main>
+<script>
+  const STINTS = 'stints', SCHED = 'schedule', PLAYERS = 'players', TEAM = 'team';
+
+  dash.calc('scopes', {
+    title: 'Game filter choices',
+    description: 'The main view (exhibitions phase out as official games are played), official games only, exhibitions, the last five games and each game with lineup data.',
+    inputs: [STINTS],
+    fn: (stints) => {
+      const games = [...new Map(stints.map((r) => [r.game_id, r])).values()].sort((a, b) => a.date < b.date ? 1 : -1);
+      const official = games.filter((g) => g.game_type !== 'Exhibition'), exhibitions = games.filter((g) => g.game_type === 'Exhibition');
+      const keptExh = Math.max(0, exhibitions.length - Math.max(0, official.length - 3));
+      const mainLabel = !official.length ? 'All games' : !keptExh ? 'Main view: official games' : `Main view: ${official.length} official + ${keptExh} exhibition`;
+      const out = [{scope: 'all', label: mainLabel}];
+      if (official.length && exhibitions.length) out.push({scope: 'official', label: 'Official games only'});
+      if (games.some((g) => g.game_type === 'Postseason')) out.push({scope: 'Regular season', label: 'Regular season'}, {scope: 'Postseason', label: 'Postseason'});
+      if (exhibitions.length) out.push({scope: 'Exhibition', label: 'Exhibitions'});
+      if (games.length > 5) out.push({scope: 'last5', label: 'Last 5 games'});
+      games.forEach((g) => out.push({scope: g.game_id, label: g.date.slice(5).replace('-', '/') + ' vs. ' + g.opponent}));
+      return out;
+    },
+  });
+
+  dash.calc('notables', {
+    title: 'Notable dates',
+    description: 'Season milestones, first minutes, single-game feats (triple-double, 30 points, 6+ threes, 80% shooting on 10+ shots) and streaks (3+ straight games of 20 points or a double-double; 5+ straight wins), from the schedule and player box scores.',
+    inputs: [SCHED, PLAYERS],
+    fn: (schedule, players) => {
+      const SEC = ['Alabama', 'Arkansas', 'Auburn', 'Florida', 'Georgia', 'LSU', 'Mississippi State', 'Missouri', 'Oklahoma', 'Ole Miss', 'South Carolina', 'Tennessee', 'Texas', 'Texas A&M', 'Vanderbilt'];
+      const md = (d) => ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][Number(d.slice(5, 7)) - 1] + ' ' + Number(d.slice(8, 10));
+      const vs = (g) => (g.site === 'Away' ? 'at ' : 'vs. ') + g.opponent;
+      const played = [...new Set(players.map((p) => p.game_id))].map((id) => schedule.find((g) => g.game_id === id) || players.find((p) => p.game_id === id))
+        .sort((a, b) => a.date < b.date ? -1 : 1);
+      const lastDate = played.length ? played[played.length - 1].date : '';
+      const ev = [];
+      const add = (g, kind, text, order) => ev.push({date: g.date, game_id: g.game_id, kind, text, exhibition: g.game_type === 'Exhibition', order});
+      // Season milestones
+      const sorted = schedule.slice().sort((a, b) => a.date < b.date ? -1 : 1);
+      const milestones = [
+        ['Regular season opens', sorted.find((g) => g.game_type === 'Regular season')],
+        ['SEC play begins', sorted.find((g) => g.game_type === 'Regular season' && SEC.includes(g.opponent))],
+        ['Postseason begins', sorted.find((g) => g.game_type === 'Postseason')],
+      ].filter(([, g]) => g);
+      milestones.forEach(([label, g]) => { if (g.date <= lastDate) add(g, 'Milestone', `${label}: ${vs(g)}${g.result ? ', ' + g.result : ''}`, 0); });
+      // Per-game player lines
+      const byGame = played.map((g) => ({g, lines: players.filter((p) => p.game_id === g.game_id)}));
+      const seen = new Set();
+      byGame.forEach(({g, lines}, gi) => {
+        lines.filter((p) => p.seconds > 0).forEach((p) => {
+          if (!seen.has(p.player) && gi > 0) add(g, 'Debut', `${p.full_name} plays his first minutes of the season (${Math.round(p.seconds / 60)} min, ${p.pts} pts)`, 1);
+          seen.add(p.player);
+          // One line per player per game, combining every feat he hit that night.
+          const tens = ['pts', 'reb', 'ast', 'stl', 'blk'].filter((k) => p[k] >= 10).length;
+          const td = tens >= 3, thirty = p.pts >= 30, threes = p.tpm >= 6, hot = p.fga >= 10 && p.fgm / p.fga >= 0.8;
+          if (td || thirty || threes || hot) {
+            const parts = [];
+            if (td) parts.push(`triple-double (${p.pts} pts, ${p.reb} reb, ${p.ast} ast)`);
+            else parts.push(`${p.pts} points`);
+            if (threes) parts.push(`${p.tpm}-of-${p.tpa} from three`);
+            // Skip the overall shooting line when every shot was a three (it would repeat the line above).
+            if (hot && !(threes && p.fga === p.tpa)) parts.push(`${p.fgm}-of-${p.fga} shooting`);
+            if (!thirty && !td) parts.push(parts.shift());
+            add(g, td || thirty ? 'Big game' : 'Hot shooting', `${p.full_name}: ${parts.join(', ')} ${vs(g)}`, td || thirty ? 2 : 3);
+          }
+        });
+      });
+      // Streaks over official games only
+      const off = byGame.filter(({g}) => g.game_type !== 'Exhibition');
+      const streaks = (test, label) => {
+        const names = [...new Set(players.map((p) => p.player))];
+        names.forEach((n) => {
+          let run = [];
+          const flush = () => {
+            if (run.length >= 3) {
+              const last = run[run.length - 1], full = last.p.full_name;
+              add(last.g, 'Streak', `${full}: ${run.length} straight games with ${label} (${md(run[0].g.date)}–${md(last.g.date)})`, 5);
+            }
+            run = [];
+          };
+          off.forEach(({g, lines}) => { const p = lines.find((x) => x.player === n); if (p && test(p)) run.push({g, p}); else flush(); });
+          flush();
+        });
+      };
+      const dd = (p) => ['pts', 'reb', 'ast', 'stl', 'blk'].filter((k) => p[k] >= 10).length >= 2;
+      streaks((p) => p.pts >= 20, '20+ points');
+      streaks(dd, 'a double-double');
+      // Finished seasons: credit players who reached a mark in at least half of the team's official games.
+      const seasonDone = schedule.length > 0 && schedule.every((g) => g.result);
+      if (seasonDone && off.length) {
+        const lastG = off[off.length - 1].g;
+        [[(p) => p.pts >= 20, '20+ points'], [dd, 'a double-double']].forEach(([test, label]) => {
+          [...new Set(players.map((p) => p.player))].forEach((n) => {
+            const hits = off.filter(({lines}) => { const p = lines.find((x) => x.player === n); return p && test(p); }).length;
+            if (hits >= off.length / 2) {
+              const full = (players.find((p) => p.player === n) || {}).full_name || n;
+              add(lastG, 'Season', `${full}: ${label} in ${hits} of ${off.length} games`, 0);
+            }
+          });
+        });
+      }
+      // Team win streaks (official games with results)
+      let wins = [];
+      const flushW = () => { if (wins.length >= 5) { const l = wins[wins.length - 1]; add(l, 'Streak', `Team: ${wins.length} straight wins (${md(wins[0].date)}–${md(l.date)})`, 5); } wins = []; };
+      sorted.filter((g) => g.game_type !== 'Exhibition' && g.result).forEach((g) => { if (g.result[0] === 'W') wins.push(g); else flushW(); });
+      flushW();
+      return ev.sort((a, b) => a.date === b.date ? a.order - b.order : a.date < b.date ? 1 : -1)
+        .map((e, i) => ({id: String(i + 1).padStart(3, '0'), date: e.date, game_id: e.game_id, kind: e.kind, text: e.text, exhibition: e.exhibition}));
+    },
+  });
+
+  dash.calc('notables_meta', {
+    title: 'Next milestone and awaited debuts',
+    description: 'The next season milestone on the schedule, and injured players who have not yet played this season.',
+    inputs: [SCHED, PLAYERS],
+    fn: (schedule, players) => {
+      const SEC = ['Alabama', 'Arkansas', 'Auburn', 'Florida', 'Georgia', 'LSU', 'Mississippi State', 'Missouri', 'Oklahoma', 'Ole Miss', 'South Carolina', 'Tennessee', 'Texas', 'Texas A&M', 'Vanderbilt'];
+      // Players out injured at the start of the season (update this list as news changes).
+      const WATCH = (window.KL_SEASON || {}).watch || [['K. Williams', 'Kam Williams'], ['Morton', 'Jerone Morton'], ['Noah', 'Trent Noah']];
+      const md = (d) => ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][Number(d.slice(5, 7)) - 1] + ' ' + Number(d.slice(8, 10));
+      const lastDate = players.reduce((m, p) => p.date > m ? p.date : m, '');
+      const sorted = schedule.slice().sort((a, b) => a.date < b.date ? -1 : 1);
+      const ms = [
+        ['Regular season opens', sorted.find((g) => g.game_type === 'Regular season')],
+        ['SEC play begins', sorted.find((g) => g.game_type === 'Regular season' && SEC.includes(g.opponent))],
+        ['Postseason begins', sorted.find((g) => g.game_type === 'Postseason')],
+      ].filter(([, g]) => g && g.date > lastDate);
+      const next = ms[0];
+      const debuted = new Set(players.filter((p) => p.seconds > 0).map((p) => p.player));
+      const awaiting = WATCH.filter(([n]) => !debuted.has(n)).map(([, full]) => full);
+      return [{key: 'season', next_milestone: next ? `${next[0]} ${md(next[1].date)} ${next[1].site === 'Away' ? 'at' : 'vs.'} ${next[1].opponent}` : '',
+        awaiting_short: WATCH.filter(([n]) => !debuted.has(n)).map(([n]) => n).join(';'),
+        awaiting: awaiting.length > 1 ? awaiting.slice(0, -1).join(', ') + (awaiting.length > 2 ? ',' : '') + ' and ' + awaiting[awaiting.length - 1] : awaiting.join('')}];
+    },
+  });
+
+  dash.calc('exh_status', {
+    title: 'Exhibitions still counted',
+    description: 'How many exhibition games are still in the main view, and the official game after which none are.',
+    inputs: [STINTS, SCHED],
+    fn: (stints, schedule) => {
+      const played = [...new Map(stints.map((r) => [r.game_id, r])).values()];
+      const official = played.filter((g) => g.game_type !== 'Exhibition').length;
+      const exhibitions = played.filter((g) => g.game_type === 'Exhibition').length;
+      const kept = Math.max(0, exhibitions - Math.max(0, official - 3));
+      const last = schedule.filter((g) => g.game_type !== 'Exhibition').sort((a, b) => a.date < b.date ? -1 : 1)[exhibitions + 2];
+      const md = (d) => ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][Number(d.slice(5, 7)) - 1] + ' ' + Number(d.slice(8, 10));
+      return [{official_played: official, exhibitions, exhibitions_kept: kept, final_game: last ? `the ${last.opponent} game (${md(last.date)})` : 'the 6th official game'}];
+    },
+  });
+
+  dash.calc('lineup_stats', {
+    title: 'Lineup totals',
+    description: 'Each five-man lineup summed over the chosen games: minutes, points for and against, margin per 40 minutes, minutes per game across the chosen games, the margin adjusted toward the team average by minutes played, points scored and allowed per 100 possessions (OER and DER) and turnover rate.',
+    inputs: [STINTS],
+    fn: (stints) => {
+      // Which games belong to each filter choice, and possessions per stint (estimated at the game's pace where a unit didn't score).
+        const games = [...new Map(stints.map((r) => [r.game_id, r])).values()].sort((a, b) => a.date < b.date ? -1 : 1);
+        const last5 = new Set(games.slice(-5).map((g) => g.game_id));
+        const pace = {};
+        games.forEach((g) => {
+          const known = stints.filter((r) => r.game_id === g.game_id && Number(r.ppp) > 0);
+          const poss = known.reduce((s, r) => s + Number(r.uk_pts) / Number(r.ppp), 0);
+          const secs = known.reduce((s, r) => s + Number(r.seconds), 0);
+          pace[g.game_id] = secs ? poss / secs : 0;
+        });
+        const rows = stints.map((r) => ({...r, seconds: Number(r.seconds), uk_pts: Number(r.uk_pts), opp_pts: Number(r.opp_pts), tov: Number(r.tov),
+          poss: Number(r.ppp) > 0 ? Number(r.uk_pts) / Number(r.ppp) : Number(r.seconds) * pace[r.game_id]}));
+        // Exhibitions count until official games replace them: each official game after the 3rd drops the oldest exhibition from the main view.
+        const official = games.filter((g) => g.game_type !== 'Exhibition'), exhibitions = games.filter((g) => g.game_type === 'Exhibition');
+        const phasedOut = new Set(exhibitions.slice(0, Math.max(0, official.length - 3)).map((g) => g.game_id));
+        const scopesOf = (r) => (phasedOut.has(r.game_id) ? [] : ['all']).concat([r.game_type, r.game_id], r.game_type !== 'Exhibition' ? ['official'] : [], last5.has(r.game_id) && games.length > 5 ? ['last5'] : []);
+  
+      // Adjusted net blends a lineup's own margin with the team's, as if it had also played 50 minutes at the team's average.
+      const PRIOR_SECONDS = 50 * 60;
+      const acc = new Map(), scopeSecs = {}, scopePm = {}, scopeGames = {};
+      rows.forEach((r) => scopesOf(r).forEach((s) => {
+        scopeSecs[s] = (scopeSecs[s] || 0) + r.seconds;
+        scopePm[s] = (scopePm[s] || 0) + r.uk_pts - r.opp_pts;
+        (scopeGames[s] = scopeGames[s] || new Set()).add(r.game_id);
+        const k = s + '|' + r.lineup;
+        const a = acc.get(k) || {scope: s, lineup: r.lineup, players: r.players, seconds: 0, uk_pts: 0, opp_pts: 0, poss: 0, tov: 0, g: new Set()};
+        a.seconds += r.seconds; a.uk_pts += r.uk_pts; a.opp_pts += r.opp_pts; a.poss += r.poss; a.tov += r.tov; a.g.add(r.game_id);
+        acc.set(k, a);
+      }));
+      return [...acc.values()].filter((a) => a.seconds > 0).map((a) => ({
+        scope: a.scope, lineup: a.lineup, players: a.players, games: a.g.size,
+        minutes: Math.round(a.seconds / 6) / 10, share: a.seconds / scopeSecs[a.scope],
+        // Minutes per game across every game in the chosen set, including games the lineup didn't play.
+        min_per_game: Math.round(a.seconds / 60 / scopeGames[a.scope].size * 10) / 10,
+        uk_pts: a.uk_pts, opp_pts: a.opp_pts, score: a.uk_pts + '–' + a.opp_pts, plus_minus: a.uk_pts - a.opp_pts,
+        net40: Math.round((a.uk_pts - a.opp_pts) / a.seconds * 2400 * 10) / 10,
+        adj_net40: Math.round(((a.uk_pts - a.opp_pts) + PRIOR_SECONDS * scopePm[a.scope] / scopeSecs[a.scope]) / (a.seconds + PRIOR_SECONDS) * 2400 * 10) / 10,
+        // Points scored (OER) and allowed (DER) per 100 possessions; defensive possessions are taken as equal to offensive ones.
+        oer: a.poss ? Math.round(a.uk_pts / a.poss * 1000) / 10 : null,
+        der: a.poss ? Math.round(a.opp_pts / a.poss * 1000) / 10 : null,
+        poss: Math.round(a.poss),
+        tov_pct: a.poss ? Math.round(a.tov / a.poss * 1000) / 10 : null,
+      }));
+    },
+  });
+
+  dash.calc('combos', {
+    title: 'Two- and three-player combinations',
+    description: 'Every pair and trio of players, summed over all the time they shared the floor in the chosen games: minutes, points for and against, margin per 40, the margin adjusted toward the team average, and points scored and allowed per 100 possessions.',
+    inputs: [STINTS],
+    fn: (stints) => {
+      // Which games belong to each filter choice, and possessions per stint (estimated at the game's pace where a unit didn't score).
+        const games = [...new Map(stints.map((r) => [r.game_id, r])).values()].sort((a, b) => a.date < b.date ? -1 : 1);
+        const last5 = new Set(games.slice(-5).map((g) => g.game_id));
+        const pace = {};
+        games.forEach((g) => {
+          const known = stints.filter((r) => r.game_id === g.game_id && Number(r.ppp) > 0);
+          const poss = known.reduce((s, r) => s + Number(r.uk_pts) / Number(r.ppp), 0);
+          const secs = known.reduce((s, r) => s + Number(r.seconds), 0);
+          pace[g.game_id] = secs ? poss / secs : 0;
+        });
+        const rows = stints.map((r) => ({...r, seconds: Number(r.seconds), uk_pts: Number(r.uk_pts), opp_pts: Number(r.opp_pts), tov: Number(r.tov),
+          poss: Number(r.ppp) > 0 ? Number(r.uk_pts) / Number(r.ppp) : Number(r.seconds) * pace[r.game_id]}));
+        // Exhibitions count until official games replace them: each official game after the 3rd drops the oldest exhibition from the main view.
+        const official = games.filter((g) => g.game_type !== 'Exhibition'), exhibitions = games.filter((g) => g.game_type === 'Exhibition');
+        const phasedOut = new Set(exhibitions.slice(0, Math.max(0, official.length - 3)).map((g) => g.game_id));
+        const scopesOf = (r) => (phasedOut.has(r.game_id) ? [] : ['all']).concat([r.game_type, r.game_id], r.game_type !== 'Exhibition' ? ['official'] : [], last5.has(r.game_id) && games.length > 5 ? ['last5'] : []);
+  
+      const PRIOR_SECONDS = 50 * 60;
+      const acc = new Map(), scopeSecs = {}, scopePm = {};
+      const subsets = (list, k) => k === 0 ? [[]] : list.flatMap((p, i) => subsets(list.slice(i + 1), k - 1).map((rest) => [p, ...rest]));
+      rows.forEach((r) => {
+        const players = r.players.split(';').sort();
+        scopesOf(r).forEach((s) => {
+          scopeSecs[s] = (scopeSecs[s] || 0) + r.seconds; scopePm[s] = (scopePm[s] || 0) + r.uk_pts - r.opp_pts;
+          [2, 3].forEach((k) => subsets(players, k).forEach((c) => {
+            const combo = c.join(' · '), key = s + '|' + k + '|' + combo;
+            const a = acc.get(key) || {scope: s, size: k, combo, seconds: 0, uk_pts: 0, opp_pts: 0, poss: 0, g: new Set()};
+            a.seconds += r.seconds; a.uk_pts += r.uk_pts; a.opp_pts += r.opp_pts; a.poss += r.poss; a.g.add(r.game_id); acc.set(key, a);
+          }));
+        });
+      });
+      return [...acc.values()].filter((a) => a.seconds > 0).map((a) => ({scope: a.scope, size: a.size, combo: a.combo, games: a.g.size,
+        minutes: Math.round(a.seconds / 6) / 10, uk_pts: a.uk_pts, opp_pts: a.opp_pts, score: a.uk_pts + '–' + a.opp_pts, plus_minus: a.uk_pts - a.opp_pts,
+        net40: Math.round((a.uk_pts - a.opp_pts) / a.seconds * 2400 * 10) / 10,
+        adj_net40: Math.round(((a.uk_pts - a.opp_pts) + PRIOR_SECONDS * scopePm[a.scope] / scopeSecs[a.scope]) / (a.seconds + PRIOR_SECONDS) * 2400 * 10) / 10,
+        oer: a.poss ? Math.round(a.uk_pts / a.poss * 1000) / 10 : null, der: a.poss ? Math.round(a.opp_pts / a.poss * 1000) / 10 : null}));
+    },
+  });
+
+  dash.calc('player_stats', {
+    title: 'Player on/off',
+    description: 'For each player and set of games: minutes on the floor, margin per 40 with them on and off and the difference, and points scored and allowed per 100 possessions with them on and off.',
+    inputs: [STINTS],
+    fn: (stints) => {
+      // Which games belong to each filter choice, and possessions per stint (estimated at the game's pace where a unit didn't score).
+        const games = [...new Map(stints.map((r) => [r.game_id, r])).values()].sort((a, b) => a.date < b.date ? -1 : 1);
+        const last5 = new Set(games.slice(-5).map((g) => g.game_id));
+        const pace = {};
+        games.forEach((g) => {
+          const known = stints.filter((r) => r.game_id === g.game_id && Number(r.ppp) > 0);
+          const poss = known.reduce((s, r) => s + Number(r.uk_pts) / Number(r.ppp), 0);
+          const secs = known.reduce((s, r) => s + Number(r.seconds), 0);
+          pace[g.game_id] = secs ? poss / secs : 0;
+        });
+        const rows = stints.map((r) => ({...r, seconds: Number(r.seconds), uk_pts: Number(r.uk_pts), opp_pts: Number(r.opp_pts), tov: Number(r.tov),
+          poss: Number(r.ppp) > 0 ? Number(r.uk_pts) / Number(r.ppp) : Number(r.seconds) * pace[r.game_id]}));
+        // Exhibitions count until official games replace them: each official game after the 3rd drops the oldest exhibition from the main view.
+        const official = games.filter((g) => g.game_type !== 'Exhibition'), exhibitions = games.filter((g) => g.game_type === 'Exhibition');
+        const phasedOut = new Set(exhibitions.slice(0, Math.max(0, official.length - 3)).map((g) => g.game_id));
+        const scopesOf = (r) => (phasedOut.has(r.game_id) ? [] : ['all']).concat([r.game_type, r.game_id], r.game_type !== 'Exhibition' ? ['official'] : [], last5.has(r.game_id) && games.length > 5 ? ['last5'] : []);
+  
+      const tot = {}, on = new Map();
+      rows.forEach((r) => scopesOf(r).forEach((s) => {
+        const t = tot[s] || (tot[s] = {sec: 0, pm: 0, uk: 0, opp: 0, poss: 0}); t.sec += r.seconds; t.pm += r.uk_pts - r.opp_pts; t.uk += r.uk_pts; t.opp += r.opp_pts; t.poss += r.poss;
+        r.players.split(';').forEach((p) => {
+          const k = s + '|' + p; const a = on.get(k) || {scope: s, player: p, sec: 0, pm: 0, uk: 0, opp: 0, poss: 0};
+          a.sec += r.seconds; a.pm += r.uk_pts - r.opp_pts; a.uk += r.uk_pts; a.opp += r.opp_pts; a.poss += r.poss; on.set(k, a);
+        });
+      }));
+      const r1 = (v) => v === null ? null : Math.round(v * 10) / 10;
+      return [...on.values()].map((a) => {
+        const t = tot[a.scope], offSec = t.sec - a.sec, onN = a.pm / a.sec * 2400, offN = offSec > 0 ? (t.pm - a.pm) / offSec * 2400 : null;
+        const offPoss = t.poss - a.poss;
+        const onDer = a.poss ? a.opp / a.poss * 100 : null, offDer = offPoss > 0.5 ? (t.opp - a.opp) / offPoss * 100 : null;
+        return {scope: a.scope, player: a.player, minutes: Math.round(a.sec / 6) / 10, off_minutes: Math.round(offSec / 6) / 10, plus_minus: a.pm,
+          on_net40: r1(onN), off_net40: r1(offN), on_off: offN === null ? null : r1(onN - offN),
+          // Points scored and allowed per 100 possessions with the player on (and off) the floor.
+          on_oer: a.poss ? r1(a.uk / a.poss * 100) : null, on_der: r1(onDer), off_der: r1(offDer),
+          on_off_der: onDer === null || offDer === null ? null : r1(onDer - offDer)};
+      });
+    },
+  });
+
+  dash.calc('rotation', {
+    title: 'Minutes by player and game',
+    description: 'Each player’s minutes and whether he started, in every game of each set of games, with the game’s opponent, site, phase of the season (exhibition, non-conference, SEC, postseason) and overtime periods.',
+    inputs: [PLAYERS, SCHED, TEAM],
+    fn: (players, schedule, team) => {
+      const SEC = ['Alabama', 'Arkansas', 'Auburn', 'Florida', 'Georgia', 'LSU', 'Mississippi State', 'Missouri', 'Oklahoma', 'Ole Miss', 'South Carolina', 'Tennessee', 'Texas', 'Texas A&M', 'Vanderbilt'];
+      // Same game sets as the other tables (main view with exhibitions phasing out, each season phase, last 5, each game).
+      const games = [...new Map(players.map((r) => [r.game_id, r])).values()].sort((a, b) => a.date < b.date ? -1 : 1);
+      const last5 = new Set(games.slice(-5).map((g) => g.game_id));
+      const official = games.filter((g) => g.game_type !== 'Exhibition'), exhibitions = games.filter((g) => g.game_type === 'Exhibition');
+      const phasedOut = new Set(exhibitions.slice(0, Math.max(0, official.length - 3)).map((g) => g.game_id));
+      const scopesOf = (r) => (phasedOut.has(r.game_id) ? [] : ['all']).concat([r.game_type, r.game_id], r.game_type !== 'Exhibition' ? ['official'] : [], last5.has(r.game_id) && games.length > 5 ? ['last5'] : []);
+      const sch = new Map(schedule.map((g) => [g.game_id, g])), tm = new Map(team.map((t) => [t.game_id, t]));
+      const phase = (r) => r.game_type === 'Exhibition' ? 'Exhibition' : r.game_type === 'Postseason' ? 'Postseason' : SEC.includes(r.opponent) ? 'SEC' : 'Non-conference';
+      const out = [];
+      players.filter((p) => Number(p.seconds) > 0).forEach((p) => scopesOf(p).forEach((s) => {
+        const g = sch.get(p.game_id) || {}, t = tm.get(p.game_id) || {};
+        out.push({scope: s, game_id: p.game_id, date: p.date, opponent: p.opponent, site: g.site || '', phase: phase(p), ot: Number(t.overtimes || 0),
+          player: p.player, minutes: Math.round(Number(p.seconds) / 6) / 10, started: !!p.started});
+      }));
+      return out;
+    },
+  });
+
+  dash.calc('player_box', {
+    title: 'Player box score stats',
+    description: 'Each player over the chosen games: games, starts, minutes, scoring and shooting (with eFG% and TS%), assists, turnovers, rebounds, steals, blocks and fouls per game, per 40 minutes and in total, rebound percentages and usage from team and opponent totals in the games he played, and on-court efficiency from the lineup data.',
+    inputs: [PLAYERS, TEAM, 'player_stats'],
+    fn: (players, team, player_stats) => {
+      // Same game sets as the other tables (main view with exhibitions phasing out, each season phase, last 5, each game).
+      const games = [...new Map(players.map((r) => [r.game_id, r])).values()].sort((a, b) => a.date < b.date ? -1 : 1);
+      const last5 = new Set(games.slice(-5).map((g) => g.game_id));
+      const official = games.filter((g) => g.game_type !== 'Exhibition'), exhibitions = games.filter((g) => g.game_type === 'Exhibition');
+      const phasedOut = new Set(exhibitions.slice(0, Math.max(0, official.length - 3)).map((g) => g.game_id));
+      const scopesOf = (r) => (phasedOut.has(r.game_id) ? [] : ['all']).concat([r.game_type, r.game_id], r.game_type !== 'Exhibition' ? ['official'] : [], last5.has(r.game_id) && games.length > 5 ? ['last5'] : []);
+      const tm = new Map(team.map((t) => [t.game_id, t]));
+      const N = ['fgm', 'fga', 'tpm', 'tpa', 'ftm', 'fta', 'oreb', 'dreb', 'reb', 'pf', 'pts', 'ast', 'tov', 'stl', 'blk'];
+      const acc = new Map();
+      players.filter((p) => Number(p.seconds) > 0).forEach((p) => scopesOf(p).forEach((s) => {
+        const k = s + '|' + p.player;
+        const a = acc.get(k) || {scope: s, player: p.player, full_name: p.full_name, gp: 0, gs: 0, sec: 0, ...Object.fromEntries(N.map((n) => [n, 0])),
+          t_min: 0, t_oreb: 0, t_dreb: 0, o_oreb: 0, o_dreb: 0, t_use: 0};
+        a.gp += 1; a.gs += p.started ? 1 : 0; a.sec += Number(p.seconds);
+        N.forEach((n) => { a[n] += Number(p[n]); });
+        // Team and opponent totals from the games he played, for rebound percentages and usage.
+        const t = tm.get(p.game_id);
+        if (t) {
+          a.t_min += 200 + 25 * Number(t.overtimes || 0);
+          a.t_oreb += Number(t.uk_oreb); a.t_dreb += Number(t.uk_dreb); a.o_oreb += Number(t.opp_oreb); a.o_dreb += Number(t.opp_dreb);
+          a.t_use += Number(t.uk_fga) + 0.44 * Number(t.uk_fta) + Number(t.uk_tov);
+        }
+        acc.set(k, a);
+      }));
+      const onoff = new Map(player_stats.map((r) => [r.scope + '|' + r.player, r]));
+      const r1 = (v) => Math.round(v * 10) / 10, r3 = (v) => Math.round(v * 1000) / 1000;
+      const pct = (m, a) => a ? r3(m / a) : null;
+      return [...acc.values()].map((a) => {
+        const min = a.sec / 60, pg = (v) => r1(v / a.gp), p40 = (v) => min ? r1(v / min * 40) : null;
+        const share = min && a.t_min ? (a.t_min / 5) / min : null;
+        const o = onoff.get(a.scope + '|' + a.player) || {};
+        return {scope: a.scope, player: a.player, full_name: a.full_name, gp: a.gp, gs: a.gs, minutes: r1(min), mpg: pg(min),
+          pts_pg: pg(a.pts), pts_40: p40(a.pts),
+          fga_pg: pg(a.fga), fga_40: p40(a.fga), fg_pct: pct(a.fgm, a.fga),
+          tpa_pg: pg(a.tpa), tpa_40: p40(a.tpa), tp_pct: pct(a.tpm, a.tpa),
+          fta_pg: pg(a.fta), fta_40: p40(a.fta), ft_pct: pct(a.ftm, a.fta),
+          // Season totals for the chosen games.
+          ...Object.fromEntries(['pts', 'fgm', 'fga', 'tpm', 'tpa', 'ftm', 'fta', 'ast', 'tov', 'oreb', 'dreb', 'stl', 'blk', 'pf'].map((n) => [n + '_tot', a[n]])),
+          efg: a.fga ? r3((a.fgm + 0.5 * a.tpm) / a.fga) : null,
+          ts: a.fga + a.fta ? r3(a.pts / (2 * (a.fga + 0.44 * a.fta))) : null,
+          ast_pg: pg(a.ast), ast_40: p40(a.ast), tov_pg: pg(a.tov), tov_40: p40(a.tov), ast_to: a.tov ? r1(a.ast / a.tov) : null,
+          oreb_pg: pg(a.oreb), oreb_40: p40(a.oreb), dreb_pg: pg(a.dreb), dreb_40: p40(a.dreb),
+          // Share of available rebounds he grabbed while on the floor, and share of team possessions he used.
+          oreb_pct: share && (a.t_oreb + a.o_dreb) ? r3(a.oreb * share / (a.t_oreb + a.o_dreb)) : null,
+          dreb_pct: share && (a.t_dreb + a.o_oreb) ? r3(a.dreb * share / (a.t_dreb + a.o_oreb)) : null,
+          usg: share && a.t_use ? r3((a.fga + 0.44 * a.fta + a.tov) * share / a.t_use) : null,
+          stl_pg: pg(a.stl), stl_40: p40(a.stl), blk_pg: pg(a.blk), blk_40: p40(a.blk), stocks_40: p40(a.stl + a.blk),
+          pf_pg: pg(a.pf), pf_40: p40(a.pf),
+          on_oer: o.on_oer ?? null, on_der: o.on_der ?? null, off_der: o.off_der ?? null, on_off_der: o.on_off_der ?? null};
+      });
+    },
+  });
+
+  dash.calc('scope_totals', {
+    title: 'Totals for the chosen games',
+    description: 'Official games and record (exhibitions excluded), exhibitions included, lineups used, the most-used lineup’s share of minutes and the team margin per 40, for each set of games.',
+    inputs: ['lineup_stats', STINTS],
+    fn: (lineup_stats, stints) => {
+      // Which games belong to each filter choice, and possessions per stint (estimated at the game's pace where a unit didn't score).
+        const games = [...new Map(stints.map((r) => [r.game_id, r])).values()].sort((a, b) => a.date < b.date ? -1 : 1);
+        const last5 = new Set(games.slice(-5).map((g) => g.game_id));
+        const pace = {};
+        games.forEach((g) => {
+          const known = stints.filter((r) => r.game_id === g.game_id && Number(r.ppp) > 0);
+          const poss = known.reduce((s, r) => s + Number(r.uk_pts) / Number(r.ppp), 0);
+          const secs = known.reduce((s, r) => s + Number(r.seconds), 0);
+          pace[g.game_id] = secs ? poss / secs : 0;
+        });
+        const rows = stints.map((r) => ({...r, seconds: Number(r.seconds), uk_pts: Number(r.uk_pts), opp_pts: Number(r.opp_pts), tov: Number(r.tov),
+          poss: Number(r.ppp) > 0 ? Number(r.uk_pts) / Number(r.ppp) : Number(r.seconds) * pace[r.game_id]}));
+        // Exhibitions count until official games replace them: each official game after the 3rd drops the oldest exhibition from the main view.
+        const official = games.filter((g) => g.game_type !== 'Exhibition'), exhibitions = games.filter((g) => g.game_type === 'Exhibition');
+        const phasedOut = new Set(exhibitions.slice(0, Math.max(0, official.length - 3)).map((g) => g.game_id));
+        const scopesOf = (r) => (phasedOut.has(r.game_id) ? [] : ['all']).concat([r.game_type, r.game_id], r.game_type !== 'Exhibition' ? ['official'] : [], last5.has(r.game_id) && games.length > 5 ? ['last5'] : []);
+  
+      const per = {};
+      rows.forEach((r) => scopesOf(r).forEach((s) => {
+        const p = per[s] || (per[s] = {games: {}, exh: new Set(), sec: 0, pm: 0});
+        // Games and record count official games only; exhibitions are tallied separately.
+        if (r.game_type === 'Exhibition') p.exh.add(r.game_id);
+        else p.games[r.game_id] = (p.games[r.game_id] || 0) + r.uk_pts - r.opp_pts;
+        p.sec += r.seconds; p.pm += r.uk_pts - r.opp_pts;
+      }));
+      return Object.entries(per).map(([s, p]) => {
+        const ls = lineup_stats.filter((l) => l.scope === s);
+        const margins = Object.values(p.games);
+        return {scope: s, games: margins.length, record: margins.filter((m) => m > 0).length + '–' + margins.filter((m) => m < 0).length, exhibitions: p.exh.size,
+          lineups: ls.length, top_share: Math.max(...ls.map((l) => l.share)), net40: Math.round(p.pm / p.sec * 2400 * 10) / 10};
+      });
+    },
+  });
+
+  dash.calc('game_summary', {
+    title: 'Game log',
+    description: 'Each scheduled game with its result and, once loaded, how many lineups Kentucky used, which played the most, and whether the game still counts in the main view.',
+    inputs: [SCHED, STINTS],
+    fn: (schedule, stints) => {
+      const played = [...new Map(stints.map((r) => [r.game_id, r])).values()].sort((a, b) => a.date < b.date ? -1 : 1);
+      const official = played.filter((g) => g.game_type !== 'Exhibition');
+      const phasedOut = new Set(played.filter((g) => g.game_type === 'Exhibition').slice(0, Math.max(0, official.length - 3)).map((g) => g.game_id));
+      return schedule.map((g) => {
+      const mine = stints.filter((r) => r.game_id === g.game_id);
+      const by = {};
+      mine.forEach((r) => { by[r.lineup] = (by[r.lineup] || 0) + Number(r.seconds); });
+      const top = Object.entries(by).sort((a, b) => b[1] - a[1])[0];
+      return {game_id: g.game_id, date: g.date, opponent: g.opponent, opponent_label: g.game_type === 'Exhibition' ? g.opponent + ' · Exhibition' : g.opponent, site: g.site, result: g.result || (g.tipoff_et ? g.tipoff_et + ' ET' : ''),
+        lineups_used: mine.length ? Object.keys(by).length : null, top_lineup: top ? top[0] : null, top_minutes: top ? Math.round(top[1] / 6) / 10 : null,
+        main_view: !mine.length ? null : phasedOut.has(g.game_id) ? 'Phased out' : 'Yes'};
+      });
+    },
+  });
+</script>
+<script>
+  const kl = {
+    sort: {lineups: {key: 'minutes', dir: -1}, players: {key: 'minutes', dir: -1}, combos: {key: 'minutes', dir: -1},
+      'off-pg': {key: 'mpg', dir: -1}, 'off-40': {key: 'mpg', dir: -1}, 'off-tot': {key: 'mpg', dir: -1},
+      'def-pg': {key: 'mpg', dir: -1}, 'def-40': {key: 'mpg', dir: -1}, 'def-tot': {key: 'mpg', dir: -1}},
+    rate: () => ['40', 'tot'].includes(dash.params().rate) ? dash.params().rate : 'pg',
+    comboSize: () => Number(dash.params().combo ?? 2),
+    scope: () => dash.params().scope || 'all',
+    minmin: () => Number(dash.params().minmin ?? 0),
+    rows: (id) => { const d = dash.data(id); return d.status === 'ok' ? d.data : null; },
+    enc: (v) => encodeURIComponent(String(v)),
+    signed: (v, d = 0) => v === null || v === undefined || Number.isNaN(v) ? '—' : (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v).toLocaleString('en', {minimumFractionDigits: d, maximumFractionDigits: Math.max(d, 1)}),
+    cls: (v) => v > 0 ? 'kl-pos' : v < 0 ? 'kl-neg' : '',
+    dash: (el) => { el.textContent = '—'; },
+  };
+  window.kl = kl;
+
+  // Approximate positions, for display order only (point guard to center). Each player's positions in order of preference;
+  // the 1 goes to the first of POINT_PRIORITY on the floor, then the rest fill the spots closest to their preferences.
+  const POSITIONS = (window.KL_SEASON || {}).positions || {
+    'Diallo': [1, 2], 'Wilkins': [2, 1, 3], 'M. Williams': [1, 2], 'Morton': [2, 1, 3],
+    'Z. Hawthorne': [2, 3], 'Noah': [2, 3, 4], 'B. Hawthorne': [3, 2, 4], 'K. Williams': [3, 2, 4],
+    'Momcilovic': [3, 4], "N'Diaye": [4, 5], 'McBride': [4, 5], 'Moreno': [5], 'Kepnang': [5], 'Potter': [5],
+  };
+  const POINT_PRIORITY = (window.KL_SEASON || {}).point_priority || ['Diallo', 'Wilkins', 'M. Williams', 'Morton'];
+  const orderCache = new Map();
+  const perms = (a) => a.length <= 1 ? [a] : a.flatMap((x, i) => perms([...a.slice(0, i), ...a.slice(i + 1)]).map((p) => [x, ...p]));
+  // A lineup's five players in 1-to-5 order; anything else (pairs, trios, unknown players) sorts by usual position.
+  kl.order = (names) => {
+    const key = names.slice().sort().join(';');
+    if (orderCache.has(key)) return orderCache.get(key);
+    const pref = (n) => POSITIONS[n] || [1, 2, 3, 4, 5];
+    let out = null;
+    if (names.length === 5) {
+      const lead = POINT_PRIORITY.find((p) => names.includes(p));
+      let best = Infinity;
+      perms(names).forEach((p) => {
+        if (lead && p[0] !== lead) return;
+        let cost = 0;
+        for (let i = 0; i < 5; i++) { const k = pref(p[i]).indexOf(i + 1); if (k < 0) { cost = Infinity; break; } cost += k; }
+        if (cost < best) { best = cost; out = p; }
+      });
+    }
+    if (!out) out = names.slice().sort((a, b) => (pref(a)[0] - pref(b)[0]) || ((POINT_PRIORITY.indexOf(a) + 9) % 9 - (POINT_PRIORITY.indexOf(b) + 9) % 9) || a.localeCompare(b));
+    orderCache.set(key, out);
+    return out;
+  };
+  kl.ordered = (label) => kl.order(label.split(' · ')).join(' · ');
+  // Writes a lineup into a cell in 1-to-5 order, marking players who aren't in the reference lineup.
+  kl.lineupCell = (cell, label, ref) => {
+    const names = kl.order(label.split(' · ')), refs = ref ? ref.split(' · ') : null;
+    cell.replaceChildren();
+    names.forEach((n, i) => {
+      if (i) { const d = document.createElement('span'); d.className = 'kl-sep'; d.textContent = ' · '; cell.append(d); }
+      const sp = document.createElement('span'); sp.textContent = n; sp.className = 'kl-name';
+      if (refs && !refs.includes(n)) sp.classList.add('kl-diff');
+      cell.append(sp);
+    });
+  };
+
+  const minSel = document.querySelectorAll('.kl-minmin');
+  minSel.forEach((s) => s.addEventListener('change', () => dash.setParams({minmin: Number(s.value)})));
+  dash.onData(() => minSel.forEach((s) => { s.value = String(kl.minmin()); }));
+  const rateSel = document.querySelectorAll('.kl-rate');
+  rateSel.forEach((s) => s.addEventListener('change', () => dash.setParams({rate: s.value})));
+  dash.onData(() => {
+    rateSel.forEach((s) => { s.value = kl.rate(); });
+    ['pg', '40', 'tot'].forEach((m) => document.querySelectorAll('.kl-rate-' + m).forEach((el) => { el.hidden = kl.rate() !== m; }));
+  });
+  const sizeSel = document.querySelectorAll('.kl-combo-size');
+  sizeSel.forEach((s) => s.addEventListener('change', () => dash.setParams({combo: Number(s.value)})));
+  dash.onData(() => sizeSel.forEach((s) => { s.value = String(kl.comboSize()); }));
+  dash.onData(() => {
+    const st = (kl.rows('exh_status') || [])[0];
+    const kept = st ? st.exhibitions_kept : 0, early = st && st.official_played <= 3;
+    document.querySelectorAll('.kl-status-early').forEach((el) => { el.hidden = !(st && kept > 0 && early); });
+    document.querySelectorAll('.kl-status-late').forEach((el) => { el.hidden = !(st && kept > 0 && !early); });
+    const t = (kl.rows('scope_totals') || []).find((r) => r.scope === kl.scope());
+    document.querySelectorAll('.kl-sub').forEach((el) => { el.hidden = !(t && t.exhibitions > 0); });
+    document.querySelectorAll('.kl-minnote').forEach((el) => { el.hidden = !(kl.minmin() > 0); });
+  });
+
+  document.querySelectorAll('th button[data-sort]').forEach((b) => b.addEventListener('click', () => {
+    const which = b.closest('table').querySelector('tbody').dataset.draw;
+    const st = kl.sort[which]; if (!st) return;
+    const key = b.dataset.sort;
+    st.dir = st.key === key ? -st.dir : (['lineup', 'player', 'combo', 'on_der', 'off_der', 'on_off_der', 'tov_pg', 'tov_40', 'tov_tot', 'pf_pg', 'pf_40', 'pf_tot'].includes(key) ? 1 : -1); st.key = key;
+    b.closest('thead').querySelectorAll('th').forEach((th) => th.removeAttribute('aria-sort'));
+    b.closest('th').setAttribute('aria-sort', st.dir > 0 ? 'ascending' : 'descending');
+    dash.draw(which);
+  }));
+
+  dash.draw('scope', (sel) => {
+    const rows = kl.rows('scopes') || [];
+    sel.replaceChildren(...rows.map((r) => new Option(r.label, r.scope)));
+    sel.value = kl.scope();
+    sel.onchange = () => dash.setParams({scope: sel.value});
+  });
+
+  const inScope = (id) => (kl.rows(id) || []).filter((r) => r.scope === kl.scope());
+  const topBy = () => inScope('lineup_stats').sort((a, b) => b.minutes - a.minutes)[0];
+  const bestBy = () => inScope('lineup_stats').filter((r) => r.minutes >= kl.minmin()).sort((a, b) => b.adj_net40 - a.adj_net40)[0];
+  const setMark = (el, r) => { if (r) el.setAttribute('data-where', 'scope=' + kl.enc(r.scope) + '&lineup=' + kl.enc(r.lineup)); };
+
+  dash.draw('top-lineup', (el) => { const r = topBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = kl.ordered(r.lineup); });
+  dash.draw('top-min', (el) => { const r = topBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = r.min_per_game.toFixed(1); });
+  dash.draw('top-share', (el) => { const r = topBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = d3.format('.0%')(r.share); });
+  dash.draw('min-label', (el) => { el.textContent = String(kl.minmin()); });
+  dash.draw('best-min', (el) => { const r = bestBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = r.min_per_game.toFixed(1); });
+  dash.draw('best-lineup', (el) => { const r = bestBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = kl.ordered(r.lineup); });
+  dash.draw('best-net', (el) => { const r = bestBy(); if (!r) return kl.dash(el); setMark(el, r); el.textContent = kl.signed(r.adj_net40, 1); });
+
+  dash.draw('next-game', (el) => {
+    const s = kl.rows('schedule'); if (!s) return kl.dash(el);
+    const today = new Date().toISOString().slice(0, 10);
+    const g = s.filter((x) => !x.result && x.date >= today).sort((a, b) => a.date < b.date ? -1 : 1)[0];
+    if (!g) { el.textContent = s.length && s.every((x) => x.result) ? 'season complete' : 'none scheduled'; return; }
+    el.setAttribute('data-where', 'game_id=' + kl.enc(g.game_id));
+    el.textContent = (g.site === 'Away' ? 'at ' : 'vs. ') + g.opponent;
+  });
+
+  const tile = (field, fmt) => (el) => {
+    const r = inScope('scope_totals')[0]; if (!r) return kl.dash(el);
+    el.setAttribute('data-where', 'scope=' + kl.enc(r.scope)); el.textContent = fmt(r[field]);
+  };
+  dash.draw('t-games', tile('games', (v) => String(v)));
+  dash.draw('t-exh', tile('exhibitions', (v) => String(v)));
+  dash.draw('t-exh-noun', (el) => { const r = inScope('scope_totals')[0]; el.textContent = r && r.exhibitions === 1 ? 'game' : 'games'; });
+  const exhRow = () => (kl.rows('exh_status') || [])[0];
+  dash.draw('exh-kept', (el) => { const r = exhRow(); if (!r) return kl.dash(el); el.textContent = String(r.exhibitions_kept); });
+  dash.draw('exh-noun', (el) => { const r = exhRow(); el.textContent = r && r.exhibitions_kept === 1 ? 'game' : 'games'; });
+  dash.draw('exh-end', (el) => { const r = exhRow(); if (!r) return kl.dash(el); el.textContent = r.final_game; });
+  dash.draw('t-record', tile('record', (v) => v));
+  dash.draw('t-lineups', tile('lineups', (v) => String(v)));
+  dash.draw('t-share', tile('top_share', (v) => d3.format('.0%')(v)));
+  dash.draw('t-net', tile('net40', (v) => kl.signed(v, 1)));
+
+  const sorted = (rows, st) => rows.sort((a, b) => {
+    const x = a[st.key], y = b[st.key];
+    if (x === null || x === undefined) return 1; if (y === null || y === undefined) return -1;
+    return (typeof x === 'string' ? x.localeCompare(y) : x - y) * st.dir;
+  });
+  const td = (tr, text, cls, extra) => { const c = tr.insertCell(); c.textContent = text; if (cls) c.className = cls; if (extra) c.classList.add(extra); return c; };
+  // Rows at or above the minimum-minutes setting first; the rest under a divider, dimmed.
+  const splitBelow = (tb, rows, noun, row) => {
+    const mm = kl.minmin(), above = rows.filter((r) => r.minutes >= mm), below = rows.filter((r) => r.minutes < mm);
+    above.forEach((r) => row(r));
+    if (!below.length) return;
+    const cols = tb.closest('table').querySelectorAll('thead th').length;
+    const d = tb.insertRow(); d.className = 'kl-divider';
+    const c = d.insertCell(); c.colSpan = cols;
+    c.textContent = `Below ${mm} minutes · ${below.length} ${noun}${below.length === 1 ? '' : 's'} shown for reference, not ranked`;
+    below.forEach((r) => row(r).classList.add('kl-below'));
+  };
+
+  dash.draw('lineups', (tb) => {
+    tb.replaceChildren();
+    const rows = sorted(inScope('lineup_stats'), kl.sort.lineups);
+    const ref = topBy();
+    splitBelow(tb, rows, 'lineup', (r) => {
+      const tr = tb.insertRow(); tr.dataset.key = kl.enc(r.scope) + ',' + kl.enc(r.lineup);
+      kl.lineupCell(td(tr, ''), r.lineup, ref && ref !== r ? ref.lineup : null); td(tr, r.minutes.toFixed(1)); td(tr, d3.format('.0%')(r.share), '', 'kl-hide-sm'); td(tr, String(r.games), '', 'kl-hide-sm');
+      td(tr, r.score); td(tr, kl.signed(r.plus_minus), kl.cls(r.plus_minus)); td(tr, kl.signed(r.net40, 1), kl.cls(r.net40)); td(tr, kl.signed(r.adj_net40, 1), kl.cls(r.adj_net40));
+      td(tr, r.oer === null ? '—' : r.oer.toFixed(1)); td(tr, r.der === null ? '—' : r.der.toFixed(1)); td(tr, r.tov_pct === null ? '—' : r.tov_pct.toFixed(0) + '%', '', 'kl-hide-sm');
+      return tr;
+    });
+  });
+
+  dash.draw('combos', (tb) => {
+    tb.replaceChildren();
+    const rows = sorted(inScope('combos').filter((r) => r.size === kl.comboSize()), kl.sort.combos);
+    splitBelow(tb, rows, 'combination', (r) => {
+      const tr = tb.insertRow(); tr.dataset.key = kl.enc(r.scope) + ',' + kl.enc(r.size) + ',' + kl.enc(r.combo);
+      td(tr, kl.ordered(r.combo)); td(tr, r.minutes.toFixed(1)); td(tr, String(r.games), '', 'kl-hide-sm'); td(tr, r.score);
+      td(tr, kl.signed(r.plus_minus), kl.cls(r.plus_minus)); td(tr, kl.signed(r.net40, 1), kl.cls(r.net40)); td(tr, kl.signed(r.adj_net40, 1), kl.cls(r.adj_net40));
+      td(tr, r.oer === null ? '—' : r.oer.toFixed(1), '', 'kl-hide-sm'); td(tr, r.der === null ? '—' : r.der.toFixed(1), '', 'kl-hide-sm');
+      return tr;
+    });
+  });
+
+  // Player stats tables: one drawing per table; the per-game and per-40 versions differ only in which columns they read.
+  const pctF = (v) => v === null || v === undefined ? '—' : (v * 100).toFixed(1) + '%';
+  const numF = (v) => v === null || v === undefined ? '—' : v.toFixed(1);
+  // Shaded columns read the field for the chosen view: _pg (per game), _40 (per 40 minutes) or _tot (whole-number totals).
+  const cnt = (r, k, m) => { const v = r[k + '_' + m]; return v === null || v === undefined ? '—' : m === 'tot' ? String(v) : v.toFixed(1); };
+  const offRow = (m) => (tb, r) => {
+    const tr = tb.insertRow(); tr.dataset.key = kl.enc(r.scope) + ',' + kl.enc(r.player);
+    td(tr, r.player); td(tr, String(r.gp)); td(tr, String(r.gs)); td(tr, numF(r.mpg));
+    ['pts', 'fga', 'tpa', 'fta', 'ast', 'tov', 'oreb'].forEach((k, i) => td(tr, cnt(r, k, m), 'kl-g', i === 0 ? 'kl-gs' : null));
+    td(tr, pctF(r.fg_pct), 'kl-rs'); td(tr, pctF(r.tp_pct)); td(tr, pctF(r.ft_pct)); td(tr, pctF(r.efg)); td(tr, pctF(r.ts));
+    td(tr, numF(r.ast_to)); td(tr, pctF(r.oreb_pct)); td(tr, pctF(r.usg)); td(tr, numF(r.on_oer));
+    return tr;
+  };
+  const defRow = (m) => (tb, r) => {
+    const tr = tb.insertRow(); tr.dataset.key = kl.enc(r.scope) + ',' + kl.enc(r.player);
+    td(tr, r.player); td(tr, String(r.gp)); td(tr, numF(r.mpg));
+    ['dreb', 'stl', 'blk', 'pf'].forEach((k, i) => td(tr, cnt(r, k, m), 'kl-g', i === 0 ? 'kl-gs' : null));
+    td(tr, pctF(r.dreb_pct), 'kl-rs'); td(tr, numF(r.stocks_40)); td(tr, numF(r.on_der)); td(tr, numF(r.off_der));
+    td(tr, r.on_off_der === null ? '—' : kl.signed(r.on_off_der, 1), r.on_off_der < 0 ? 'kl-pos' : r.on_off_der > 0 ? 'kl-neg' : '');
+    return tr;
+  };
+  [['off-pg', offRow('pg')], ['off-40', offRow('40')], ['off-tot', offRow('tot')], ['def-pg', defRow('pg')], ['def-40', defRow('40')], ['def-tot', defRow('tot')]].forEach(([name, row]) => {
+    dash.draw(name, (tb) => {
+      tb.replaceChildren();
+      splitBelow(tb, sorted(inScope('player_box'), kl.sort[name]), 'player', (r) => row(tb, r));
+    });
+  });
+
+  dash.draw('players', (tb) => {
+    tb.replaceChildren();
+    sorted(inScope('player_stats'), kl.sort.players).forEach((r) => {
+      const tr = tb.insertRow(); tr.dataset.key = kl.enc(r.scope) + ',' + kl.enc(r.player);
+      td(tr, r.player); td(tr, r.minutes.toFixed(1)); td(tr, kl.signed(r.plus_minus), kl.cls(r.plus_minus));
+      td(tr, kl.signed(r.on_net40, 1), kl.cls(r.on_net40)); td(tr, kl.signed(r.off_net40, 1), kl.cls(r.off_net40), 'kl-hide-sm'); td(tr, kl.signed(r.on_off, 1), kl.cls(r.on_off));
+    });
+  });
+
+
+  // Rotation heatmap: one row per player, one column per game, shaded by minutes.
+  // Hand-written headline for the main view, set after reviewing the chart; shows only in the main view with no date range,
+  // and only while the latest game in the data is the one it was written through (null = use the automatic headline).
+  const ROTATION_HEADLINE = {text: "Kentucky has leaned on eight players, led by Momcilovic and Moreno", through: "2026-10-28-ucf"};
+  const rotGames = () => {
+    const rows = inScope('rotation');
+    const games = [...new Map(rows.map((r) => [r.game_id, r])).values()].sort((a, b) => a.date < b.date ? -1 : 1);
+    return {rows, games};
+  };
+  dash.draw('rot-head', (el) => {
+    const {games} = rotGames(), p = dash.params(), last = games[games.length - 1];
+    const H = (window.KL_SEASON || {}).rotation_headline || ROTATION_HEADLINE;
+    el.textContent = H.text && kl.scope() === 'all' && !p.from && !p.to && last && last.game_id === H.through ? H.text : 'Who has played, game by game';
+  });
+  const rotNarrow = (el) => (el.clientWidth || 700) < 520;
+  dash.draw('rot-dek', (el) => {
+    const {games} = rotGames(), chart = el.parentElement.querySelector('.kl-rot-chart');
+    const cut = chart && rotNarrow(chart) && games.length > 10;
+    el.textContent = `Minutes played by each player in ${cut ? 'the last 10 games' : games.length === 1 ? 'this game' : 'each game'}. The stronger the blue, the more minutes; a dot marks a start. ${cut || games.length > 12 ? (matchMedia('(hover: hover)').matches ? 'Hover over' : 'Tap') + ' a cell for the exact minutes.' : ''}`;
+  });
+  dash.draw('rot-chart', (el) => {
+    el.replaceChildren();
+    const all = rotGames(); if (!all.games.length) return;
+    const narrow = rotNarrow(el), games = narrow ? all.games.slice(-10) : all.games, n = games.length;
+    const ids = new Set(games.map((g) => g.game_id));
+    const byPlayer = new Map();
+    all.rows.filter((r) => ids.has(r.game_id)).forEach((r) => { (byPlayer.get(r.player) || byPlayer.set(r.player, new Map()).get(r.player)).set(r.game_id, r); });
+    const total = (m) => [...m.values()].reduce((s, r) => s + r.minutes, 0);
+    const players = [...byPlayer.entries()].sort((a, b) => total(b[1]) - total(a[1]));
+    const meta = (kl.rows('notables_meta') || [])[0] || {};
+    const waiting = (meta.awaiting_short || '').split(';').filter((x) => x && !byPlayer.has(x));
+    // Starting-lineup changes between consecutive games shown.
+    const starters = games.map((g) => new Set(all.rows.filter((r) => r.game_id === g.game_id && r.started).map((r) => r.player)));
+    const changes = [];
+    for (let j = 1; j < n; j++) {
+      const inn = [...starters[j]].filter((x) => !starters[j - 1].has(x)), out = [...starters[j - 1]].filter((x) => !starters[j].has(x));
+      if (inn.length && starters[j].size === 5 && starters[j - 1].size === 5) changes.push({j, text: inn.length === 1 ? `${inn[0]} in for ${out[0]}` : 'New starting five'});
+    }
+    const W = el.clientWidth || 700, cellH = narrow ? 24 : 28;
+    const fs = getComputedStyle(el);
+    const probe = d3.select(el).append('svg').attr('width', 0).attr('height', 0).append('text').style('font-size', 'var(--cds-font-size-body)').style('font-weight', 600);
+    let nameW = 0; players.forEach(([p]) => { probe.text(p); nameW = Math.max(nameW, probe.node().getComputedTextLength()); });
+    probe.style('font-size', 'var(--cds-font-size-caption)');
+    let oppW = 0; games.forEach((g) => { probe.text((g.site === 'Away' ? 'at ' : '') + g.opponent); oppW = Math.max(oppW, probe.node().getComputedTextLength()); });
+    probe.node().ownerSVGElement.remove();
+    const left = nameW + 14, right = narrow ? 40 : 64, cellW = Math.min(96, (W - left - right) / n), gridW = cellW * n;
+    const showNums = cellW >= 30, rot = oppW > cellW - 8, colX = left + gridW + right - 2;
+    const phases = []; games.forEach((g, j) => { const last = phases[phases.length - 1]; if (last && last.phase === g.phase) last.b = j + 1; else phases.push({phase: g.phase, a: j, b: j + 1}); });
+    const labelH = rot ? Math.min(130, oppW * 0.87 + 14) : 38, T0 = 26 + labelH;
+    const notesH = changes.length ? Math.min(changes.length, 4) * 16 + 10 : 0;
+    const otRow = games.some((g) => g.ot) ? 16 : 0;
+    const H = T0 + players.length * cellH + otRow + notesH + (waiting.length ? waiting.length * cellH + 8 : 0) + 4;
+    const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Minutes played by each player in each game');
+    const panel = (() => { const d = document.createElement('div'); d.style.background = 'var(--color-panel)'; el.append(d); const c = getComputedStyle(d).backgroundColor; d.remove(); return c; })();
+    const hi = dash.colors[0], lo = d3.interpolateRgb(panel, hi)(0.08);
+    const shade = (m, ot) => d3.interpolateRgb(lo, hi)(Math.max(0, Math.min(1, m * 40 / (40 + 5 * ot) / 40)));
+    const ink = (c) => d3.lab(c).l > 62 ? '#121212' : '#ffffff';
+    const gx = (j) => left + j * cellW, gridBottom = T0 + players.length * cellH;
+    const fmt = d3.utcFormat('%b %-d');
+    // Phase bands (skip when the view is a single phase of one game).
+    phases.forEach((ph) => {
+      const short = (ph.b - ph.a) * cellW < 110;
+      const label = ph.phase === 'Non-conference' && short ? 'NON-CONF.' : ph.phase === 'Exhibition' && short ? 'EXH.' : ph.phase.toUpperCase();
+      svg.append('line').attr('x1', gx(ph.a) + 2).attr('x2', gx(ph.b) - 2).attr('y1', 16).attr('y2', 16).attr('stroke', 'var(--color-fg)');
+      if ((ph.b - ph.a) * cellW > 34) svg.append('text').attr('x', gx(ph.a) + 2).attr('y', 10).attr('fill', 'var(--color-fg)').style('font-size', 'var(--cds-font-size-caption)').style('font-weight', 700).style('letter-spacing', '.04em').text(label);
+      if (ph.a > 0) svg.append('line').attr('x1', gx(ph.a)).attr('x2', gx(ph.a)).attr('y1', T0 - 2).attr('y2', gridBottom).attr('stroke', 'var(--color-fg)').attr('stroke-width', 1.2);
+    });
+    games.forEach((g, j) => {
+      const cx = gx(j) + cellW / 2, name = (g.site === 'Away' ? 'at ' : '') + g.opponent;
+      if (rot) svg.append('text').attr('transform', `translate(${cx + 4},${T0 - 8}) rotate(-60)`).attr('fill', 'var(--color-fg)').style('font-size', 'var(--cds-font-size-caption)').text(name);
+      else {
+        svg.append('text').attr('x', cx).attr('y', T0 - 22).attr('text-anchor', 'middle').attr('fill', 'var(--color-fg)').style('font-size', 'var(--cds-font-size-caption)').style('font-weight', 600).text(name);
+        svg.append('text').attr('x', cx).attr('y', T0 - 8).attr('text-anchor', 'middle').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)').text(fmt(new Date(g.date + 'T12:00:00Z')));
+      }
+      if (g.ot) svg.append('text').attr('x', cx).attr('y', gridBottom + 12).attr('text-anchor', 'middle').attr('fill', 'var(--color-fg-muted)').style('font-size', '10px').style('font-weight', 700).text(g.ot > 1 ? g.ot + 'OT' : 'OT');
+    });
+    svg.append('text').attr('x', colX).attr('y', T0 - 8).attr('text-anchor', 'end').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)').text(narrow ? 'Min' : 'Min/gm');
+    const tip = d3.select(el).append('div').attr('class', 'kl-tip').style('display', 'none');
+    players.forEach(([p, m], i) => {
+      const y = T0 + i * cellH;
+      svg.append('text').attr('x', left - 10).attr('y', y + cellH / 2).attr('dy', '0.35em').attr('text-anchor', 'end').attr('fill', 'var(--color-fg)')
+        .style('font-size', 'var(--cds-font-size-body)').style('font-weight', 600).text(p);
+      games.forEach((g, j) => {
+        const v = m.get(g.game_id), x = gx(j), c = v ? shade(v.minutes, g.ot) : null;
+        const rect = svg.append('rect').attr('x', x + 0.75).attr('y', y + 0.75).attr('width', cellW - 1.5).attr('height', cellH - 1.5).attr('rx', 1.5)
+          .attr('fill', v ? c : 'transparent').attr('stroke', v ? 'none' : 'var(--color-border-line)');
+        if (v && showNums) svg.append('text').attr('x', x + cellW / 2).attr('y', y + cellH / 2).attr('dy', '0.35em').attr('text-anchor', 'middle').attr('fill', ink(c))
+          .style('font-size', 'var(--cds-font-size-caption)').style('font-variant-numeric', 'tabular-nums').style('pointer-events', 'none').text(Math.round(v.minutes));
+        if (v && v.started) svg.append('circle').attr('cx', showNums ? x + 7 : x + cellW / 2).attr('cy', showNums ? y + 7 : y + cellH / 2).attr('r', 2.4).attr('fill', ink(c)).style('pointer-events', 'none');
+        rect.on('mousemove', (ev) => {
+          const [px, py] = d3.pointer(ev, el);
+          tip.style('display', null).html('');
+          tip.append('div').attr('class', 'kl-tip-h').text(`${p} · ${g.site === 'Away' ? 'at' : 'vs.'} ${g.opponent}, ${fmt(new Date(g.date + 'T12:00:00Z'))}`);
+          tip.append('div').text(v ? `${Math.round(v.minutes)} min${v.started ? ', started' : ''}${g.ot ? ' (overtime game)' : ''}` : 'Did not play');
+          const tw = tip.node().offsetWidth;
+          tip.style('left', Math.min(Math.max(0, px + 12), el.clientWidth - tw) + 'px').style('top', Math.max(0, py - 52) + 'px');
+        }).on('mouseleave', () => tip.style('display', 'none'));
+      });
+      svg.append('text').attr('x', colX).attr('y', y + cellH / 2).attr('dy', '0.35em').attr('text-anchor', 'end').attr('fill', 'var(--color-fg)')
+        .style('font-size', 'var(--cds-font-size-body)').style('font-weight', 600).style('font-variant-numeric', 'tabular-nums').text((total(m) / m.size).toFixed(1));
+    });
+    // Starting-lineup changes: a dashed line through the top rows, captions for the four most recent.
+    const ny = gridBottom + otRow + 14;
+    changes.forEach((c, k) => {
+      svg.append('line').attr('x1', gx(c.j)).attr('x2', gx(c.j)).attr('y1', T0 - 2).attr('y2', T0 + 5 * cellH).attr('stroke', 'var(--color-fg)').attr('stroke-dasharray', '2 2');
+    });
+    changes.slice(-4).forEach((c, k) => {
+      const x = gx(c.j), end = x > left + gridW * 0.6;
+      svg.append('text').attr('x', x).attr('y', ny + k * 16).attr('text-anchor', end ? 'end' : 'start').attr('fill', 'var(--color-fg)').style('font-size', 'var(--cds-font-size-caption)')
+        .text(end ? `${c.text} ┆` : `┆ ${c.text}`);
+    });
+    waiting.forEach((p, k) => {
+      const y = gridBottom + otRow + notesH + 8 + k * cellH;
+      svg.append('text').attr('x', left - 10).attr('y', y + cellH / 2).attr('dy', '0.35em').attr('text-anchor', 'end').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-body)').text(p);
+      svg.append('text').attr('x', left + 2).attr('y', y + cellH / 2).attr('dy', '0.35em').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)').style('font-style', 'italic').text('Injured, awaiting season debut');
+    });
+  });
+
+  // On/off dumbbell chart: shown once the chosen games include 8 official games.
+  const ONOFF = {games: 8, onShare: 0.25, offMin: 40, headGap: 15, headOff: 80};
+  // Hand-written headline for the main view, set after reviewing the chart. It shows only in the main view with no date range, and only while
+  // the data still has the official-game count it was written for (null = use the automatic headline).
+  const ONOFF_HEADLINE = {text: null, official_games: null};
+  const onoffState = () => {
+    const t = inScope('scope_totals')[0], rows = inScope('player_stats');
+    const games = t ? t.games : 0;
+    const charted = rows.filter((r) => r.on_off !== null && r.minutes >= ONOFF.onShare * (r.minutes + r.off_minutes) && r.off_minutes >= ONOFF.offMin)
+      .sort((a, b) => b.on_off - a.on_off);
+    return {games, ready: games >= ONOFF.games, charted, team: t ? t.net40 : null};
+  };
+  const listNames = (n) => n.length === 1 ? n[0] : n.slice(0, -1).join(', ') + (n.length > 2 ? ',' : '') + ' and ' + n[n.length - 1];
+  dash.draw('onoff-head', (el) => {
+    const st = onoffState(), p = dash.params();
+    const H = (window.KL_SEASON || {}).onoff_headline || ONOFF_HEADLINE;
+    if (H.text && kl.scope() === 'all' && !p.from && !p.to && st.games === H.official_games) { el.textContent = H.text; return; }
+    // Name only the players at the top of the chart, in order, while each clears the headline bar; if the top row doesn't, the headline stays neutral.
+    const lead = [];
+    if (st.ready) for (const r of st.charted.slice(0, 2)) { if (r.on_off > ONOFF.headGap && r.off_minutes >= ONOFF.headOff) lead.push(r.player); else break; }
+    el.textContent = lead.length ? `Kentucky has been far better with ${listNames(lead)} on the floor` : "How Kentucky's scoring margin changes with each player";
+  });
+  dash.draw('onoff-dek', (el) => {
+    el.replaceChildren();
+    const st = onoffState(); el.hidden = !(st.ready && st.charted.length); if (el.hidden) return;
+    const on = document.createElement('b'); on.style.color = dash.colors[0]; on.textContent = 'with a player on the floor';
+    const off = document.createElement('b'); off.style.color = 'var(--color-fg-muted)'; off.textContent = 'with him on the bench';
+    const worse = document.createElement('b'); worse.style.color = 'var(--cds-chart-status-critical)'; worse.textContent = 'Red';
+    const sch = kl.rows('schedule') || [], done = sch.length > 0 && sch.every((x) => x.result);
+    el.append("Each line connects Kentucky's scoring margin per 40 minutes ", on, ' and ', off, done ? '. Long blue lines mark the players the team leaned on. ' : '. Long blue lines mark the players the team has leaned on. ', worse, done ? ' lines mean the team did better with him sitting.' : ' lines mean the team has done better with him sitting.');
+  });
+  dash.draw('onoff-wait', (el) => {
+    const st = onoffState();
+    el.hidden = st.ready && st.charted.length > 0;
+    if (el.hidden) return;
+    el.textContent = !st.ready
+      ? `This chart appears once the chosen games include ${ONOFF.games} official games (${st.games} so far). Over fewer games, on/off swings too much from chance to read much into it. The table below has the numbers so far.`
+      : 'No player in the chosen games has both a quarter of the minutes and 40 minutes on the bench yet.';
+  });
+  dash.draw('onoff-chart', (el) => {
+    el.replaceChildren();
+    const st = onoffState();
+    if (!st.ready || !st.charted.length) return;
+    const rows = st.charted, W = el.clientWidth || 700, narrow = W < 520;
+    const rowH = narrow ? 30 : 34, T0 = 50, H = T0 + rows.length * rowH + 44;
+    const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img')
+      .attr('aria-label', 'Scoring margin per 40 minutes with each player on the floor and on the bench');
+    // Name column width from the longest name.
+    const probe = svg.append('text').style('font-size', 'var(--cds-font-size-body)').style('font-weight', 600);
+    let nameW = 0; rows.forEach((r) => { probe.text(r.player); nameW = Math.max(nameW, probe.node().getComputedTextLength()); }); probe.remove();
+    const left = nameW + 16, right = narrow ? 52 : 70;
+    const vals = rows.flatMap((r) => [r.on_net40, r.off_net40]).concat([0, st.team ?? 0]);
+    const x = d3.scaleLinear([d3.min(vals) - 2, d3.max(vals) + 2], [left, W - right]).nice();
+    const ticks = x.ticks(narrow ? 3 : 6), y0 = T0 - 8, y1 = T0 + rows.length * rowH;
+    const g0 = svg.append('g');
+    g0.selectAll('line').data(ticks).join('line').attr('x1', (v) => x(v)).attr('x2', (v) => x(v)).attr('y1', y0).attr('y2', y1)
+      .attr('stroke', (v) => v === 0 ? 'var(--cds-chart-reference)' : 'var(--cds-chart-grid)');
+    g0.selectAll('text').data(ticks).join('text').attr('x', (v) => x(v)).attr('y', y1 + 16).attr('text-anchor', 'middle')
+      .attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)').text((v) => kl.signed(v));
+    svg.append('text').attr('x', (left + W - right) / 2).attr('y', y1 + 36).attr('text-anchor', 'middle').attr('fill', 'var(--color-fg-muted)')
+      .style('font-size', 'var(--cds-font-size-caption)').text('Kentucky scoring margin per 40 minutes');
+    if (st.team !== null) {
+      svg.append('line').attr('x1', x(st.team)).attr('x2', x(st.team)).attr('y1', T0 - 30).attr('y2', y1).attr('stroke', 'var(--color-fg)').attr('stroke-dasharray', '2 3');
+      svg.append('text').attr('x', x(st.team)).attr('y', T0 - 36).attr('text-anchor', 'middle').attr('fill', 'var(--color-fg)').style('font-size', 'var(--cds-font-size-caption)')
+        .style('font-weight', 600).text('Team average ' + kl.signed(st.team, 1));
+    }
+    svg.append('text').attr('x', W - 2).attr('y', T0 - 14).attr('text-anchor', 'end').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)').text(narrow ? 'Diff.' : 'Difference');
+    const ON = dash.colors[0], BAD = 'var(--cds-chart-status-critical)', col = (r) => r.on_off >= 0 ? ON : BAD;
+    const g = svg.append('g').selectAll('g').data(rows).join('g').attr('transform', (r, i) => `translate(0,${T0 + i * rowH + rowH / 2})`).style('cursor', 'default');
+    g.append('rect').attr('x', 0).attr('y', -rowH / 2).attr('width', W).attr('height', rowH).attr('fill', 'transparent');
+    g.append('text').attr('x', left - 12).attr('dy', '0.35em').attr('text-anchor', 'end').attr('fill', 'var(--color-fg)')
+      .style('font-size', 'var(--cds-font-size-body)').style('font-weight', 600).text((r) => r.player);
+    g.append('line').attr('x1', (r) => x(r.off_net40)).attr('x2', (r) => x(r.on_net40)).attr('stroke', col).attr('stroke-width', 3).attr('stroke-linecap', 'round').attr('opacity', 0.9);
+    g.append('circle').attr('cx', (r) => x(r.off_net40)).attr('r', 5.5).attr('fill', 'var(--color-panel)').attr('stroke', 'var(--cds-chart-muted)').attr('stroke-width', 2);
+    g.append('circle').attr('cx', (r) => x(r.on_net40)).attr('r', 6).attr('fill', col);
+    g.append('text').attr('x', W - 2).attr('dy', '0.35em').attr('text-anchor', 'end').attr('fill', col).style('font-size', 'var(--cds-font-size-body)').style('font-weight', 600)
+      .style('font-variant-numeric', 'tabular-nums').text((r) => kl.signed(r.on_off, 1));
+    // Direct labels on the top row instead of a legend.
+    const r0 = rows[0], cy = T0 + rowH / 2 - 14, apart = Math.abs(x(r0.on_net40) - x(r0.off_net40)) > 70;
+    if (apart) {
+      svg.append('text').attr('x', x(r0.on_net40)).attr('y', cy).attr('text-anchor', 'middle').attr('fill', ON).style('font-size', 'var(--cds-font-size-caption)').style('font-weight', 600).text('On floor');
+      svg.append('text').attr('x', x(r0.off_net40)).attr('y', cy).attr('text-anchor', 'middle').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)').style('font-weight', 600).text('On bench');
+    }
+    const tip = d3.select(el).append('div').attr('class', 'kl-tip').style('display', 'none');
+    g.on('mousemove', (ev, r) => {
+      const [px, py] = d3.pointer(ev, el);
+      tip.style('display', null).html('');
+      tip.append('div').attr('class', 'kl-tip-h').text(r.player);
+      tip.append('div').text(`On the floor: ${kl.signed(r.on_net40, 1)} per 40 in ${r.minutes.toFixed(0)} min`);
+      tip.append('div').text(`On the bench: ${kl.signed(r.off_net40, 1)} per 40 in ${r.off_minutes.toFixed(0)} min`);
+      tip.append('div').text(`Difference: ${kl.signed(r.on_off, 1)}`);
+      const tw = tip.node().offsetWidth;
+      tip.style('left', Math.min(Math.max(0, px + 12), el.clientWidth - tw) + 'px').style('top', Math.max(0, py - 70) + 'px');
+      g.attr('opacity', (o) => o === r ? 1 : 0.35);
+    }).on('mouseleave', () => { tip.style('display', 'none'); g.attr('opacity', 1); });
+  });
+
+  dash.onData(() => {
+    const m = (kl.rows('notables_meta') || [])[0];
+    document.querySelectorAll('.kl-up-next').forEach((el) => { el.hidden = !(m && m.next_milestone); });
+    document.querySelectorAll('.kl-up-await').forEach((el) => { el.hidden = !(m && m.awaiting); });
+  });
+  dash.draw('up-next', (el) => { const m = (kl.rows('notables_meta') || [])[0]; if (!m) return kl.dash(el); el.setAttribute('data-where', 'key=season'); el.textContent = m.next_milestone; });
+  dash.draw('up-await', (el) => { const m = (kl.rows('notables_meta') || [])[0]; if (!m) return kl.dash(el); el.setAttribute('data-where', 'key=season'); el.textContent = m.awaiting; });
+  // Postseason summary: only for seasons whose settings list their tournaments (completed seasons on the public site).
+  dash.draw('postseason', (el) => {
+    const ps = (window.KL_SEASON || {}).postseason, sch = kl.rows('schedule') || [];
+    el.hidden = !(ps && ps.length && sch.length); if (el.hidden) return;
+    el.replaceChildren();
+    const h = document.createElement('h2'); h.textContent = 'Postseason'; el.append(h);
+    const wrap = document.createElement('div'); wrap.className = 'kl-ps'; el.append(wrap);
+    const byId = new Map(sch.map((g) => [g.game_id, g])), fmt = d3.utcFormat('%b %-d');
+    ps.forEach((t) => {
+      const col = document.createElement('div');
+      const h3 = document.createElement('h3'); h3.textContent = t.event;
+      const games = Object.keys(t.rounds).map((id) => byId.get(id)).filter(Boolean).sort((a, b) => a.date < b.date ? -1 : 1);
+      const w = games.filter((g) => /^W/.test(g.result || '')).length, l = games.length - w;
+      const sub = document.createElement('p'); sub.className = 'kl-ps-sub';
+      const fin = document.createElement('b'); fin.textContent = t.finish;
+      sub.append(t.seed + ' · ' + w + '–' + l + ' · ', fin);
+      const ol = document.createElement('ol');
+      games.forEach((g) => {
+        const li = document.createElement('li');
+        const cell = (cls, txt) => { const sp = document.createElement('span'); sp.className = cls; sp.textContent = txt; li.append(sp); return sp; };
+        cell('kl-ps-date', fmt(new Date(g.date + 'T12:00:00Z'))); cell('kl-ps-round', t.rounds[g.game_id]); cell('kl-ps-opp', 'vs. ' + g.opponent);
+        cell('kl-ps-res ' + (/^W/.test(g.result) ? 'kl-pos' : 'kl-neg'), g.result);
+        ol.append(li);
+      });
+      col.append(h3, sub, ol); wrap.append(col);
+    });
+  });
+
+  dash.draw('method-positions', (el) => {
+    const groups = new Map();
+    Object.entries(POSITIONS).forEach(([n, ps]) => { const k = ps.join('/'); (groups.get(k) || groups.set(k, []).get(k)).push(n); });
+    const list = [...groups.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([k, ns]) => (ns.length > 1 ? ns.slice(0, -1).join(', ') + ' and ' + ns[ns.length - 1] : ns[0]) + ' ' + k).join('; ');
+    const pp = POINT_PRIORITY.length > 1 ? POINT_PRIORITY.slice(0, -1).join(', ') + ' or ' + POINT_PRIORITY[POINT_PRIORITY.length - 1] : POINT_PRIORITY[0];
+    el.textContent = `Positions are approximate. Lineups are listed from point guard (1) to center (5) using each player's usual positions, in order of preference: ${list}. The 1 goes to the first of ${pp} on the floor. In practice ball-handling is shared, so the order is a reading aid, not a record of who played where.`;
+  });
+
+  // Small line icons for each kind of notable date (trusted constants, not data).
+  const EV_ICONS = {
+    'milestone': '<path d="M5 21V4"/><path d="M5 4h11l-2 4 2 4H5"/>',
+    'debut': '<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 16l.7 1.8 1.8.7-1.8.7L19 21l-.7-1.8-1.8-.7 1.8-.7z"/>',
+    'big-game': '<path d="M8 21h8"/><path d="M12 16v5"/><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 6h3v1a3 3 0 0 1-3 3"/><path d="M7 6H4v1a3 3 0 0 0 3 3"/>',
+    'hot-shooting': '<path d="M12 22a7 7 0 0 0 7-7c0-3.5-2.5-5.5-4-8-1 2-2 3-3.5 3.5C11.5 8 11 5 9 3c0 4-5 6.5-5 12a7 7 0 0 0 8 7z"/>',
+    'streak': '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+    'season': '<circle cx="12" cy="9" r="5"/><path d="M8.5 13.5L7 21l5-2.5 5 2.5-1.5-7.5"/>',
+  };
+
+  dash.draw('events', (ul) => {
+    ul.replaceChildren();
+    const all = kl.rows('notables') || [], rows = kl.eventsAll ? all : all.slice(0, 8);
+    if (!all.length) { const li = document.createElement('li'); li.className = 'kl-ev-empty'; li.textContent = 'Nothing yet. Debuts, big games, hot shooting nights and streaks will show up here as the season goes.'; ul.append(li); }
+    const more = ul.parentElement.querySelector('.kl-more');
+    if (more) {
+      more.hidden = all.length <= 8;
+      more.textContent = kl.eventsAll ? 'Show fewer' : `Show all ${all.length}`;
+      more.onclick = () => { kl.eventsAll = !kl.eventsAll; dash.draw('events'); };
+    }
+    const fmt = d3.utcFormat('%b %-d');
+    rows.forEach((r) => {
+      const li = document.createElement('li');
+      const d = document.createElement('span'); d.className = 'kl-ev-date'; d.textContent = fmt(new Date(r.date + 'T12:00:00Z'));
+      const body = document.createElement('span');
+      const slug = r.kind.toLowerCase().replace(/[^a-z]+/g, '-'); li.dataset.kind = slug;
+      const k = document.createElement('span'); k.className = 'kl-ev-kind';
+      k.innerHTML = (EV_ICONS[slug] ? '<svg viewBox="0 0 24 24" aria-hidden="true">' + EV_ICONS[slug] + '</svg>' : '');
+      k.append(r.kind);
+      if (r.exhibition) { const x = document.createElement('span'); x.className = 'kl-ev-exh'; x.textContent = '· Exhibition'; k.append(x); }
+      body.append(k, document.createTextNode(r.text));
+      li.append(d, body); ul.append(li);
+    });
+  });
+
+  dash.draw('games', (tb) => {
+    tb.replaceChildren();
+    const rows = kl.rows('game_summary') || [];
+    const fmt = d3.utcFormat('%b %-d');
+    rows.slice().sort((a, b) => a.date < b.date ? -1 : 1).forEach((r) => {
+      const tr = tb.insertRow(); tr.dataset.key = kl.enc(r.game_id);
+      td(tr, fmt(new Date(r.date + 'T12:00:00Z'))); (() => { const c = td(tr, r.opponent, 'kl-left'); if (r.opponent_label !== r.opponent) { const t = document.createElement('span'); t.className = 'kl-tag'; t.textContent = r.opponent_label.slice(r.opponent.length); c.append(t); } })(); td(tr, r.site, '', 'kl-hide-sm');
+      td(tr, r.result || '—', r.result && r.result[0] === 'W' ? 'kl-pos' : r.result && r.result[0] === 'L' ? 'kl-neg' : '');
+      td(tr, r.lineups_used === null ? '—' : String(r.lineups_used));
+      const c = td(tr, r.top_lineup ? kl.ordered(r.top_lineup) : '—', 'kl-left', 'kl-hide-sm'); c.style.whiteSpace = 'normal';
+      td(tr, r.top_minutes === null ? '—' : r.top_minutes.toFixed(1), '', 'kl-hide-sm');
+      td(tr, r.main_view || '—', r.main_view === 'Phased out' ? 'kl-small' : '');
+    });
+  });
+
+  dash.draw('scatter', (el) => {
+    el.replaceChildren();
+    const rows = inScope('lineup_stats');
+    if (!rows.length) return;
+    const W = el.clientWidth || 600, H = 320, mm = kl.minmin();
+    const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Lineup minutes versus net points per 40');
+    const ext = d3.extent(rows, (r) => r.adj_net40);
+    const y = d3.scaleLinear([Math.min(0, ext[0]) - 4, Math.max(10, ext[1]) + 6], [H - 30, 14]).nice();
+    const yAxis = svg.append('g').call(d3.axisLeft(y).ticks(6).tickFormat((v) => kl.signed(v))).attr('font-size', null).attr('font-family', null);
+    let wMax = 0; yAxis.selectAll('text').each(function () { wMax = Math.max(wMax, this.getComputedTextLength()); });
+    const left = wMax + 12;
+    yAxis.attr('transform', `translate(${left},0)`);
+    const x = d3.scaleLinear([0, d3.max(rows, (r) => r.minutes) * 1.05], [left, W - 12]).nice();
+    svg.insert('g', ':first-child').selectAll('line').data(y.ticks(6)).join('line')
+      .attr('x1', left).attr('x2', W - 12).attr('y1', (v) => y(v)).attr('y2', (v) => y(v))
+      .attr('stroke', (v) => v === 0 ? 'var(--cds-chart-reference)' : 'var(--cds-chart-grid)');
+    const xAxis = svg.append('g').attr('transform', `translate(0,${H - 30})`).call(d3.axisBottom(x).ticks(Math.max(2, Math.floor(W / 90))).tickFormat((v) => v + ' min')).attr('font-size', null).attr('font-family', null);
+    [xAxis, yAxis].forEach((a) => { a.selectAll('text').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)'); a.selectAll('line,path').attr('stroke', 'var(--cds-chart-axis)'); });
+    const top = topBy(), best = bestBy();
+    const tip = d3.select(el).append('div').attr('class', 'kl-tip').style('display', 'none');
+    svg.append('g').selectAll('circle').data(rows.sort((a, b) => a.minutes - b.minutes)).join('circle')
+      .attr('cx', (r) => x(r.minutes)).attr('cy', (r) => y(r.adj_net40)).attr('r', (r) => 4 + Math.sqrt(r.minutes))
+      .attr('fill', (r) => r.minutes < mm ? 'none' : r === best ? 'var(--cds-chart-status-critical)' : r === top ? dash.colors[0] : 'var(--cds-chart-muted)')
+      .attr('fill-opacity', 0.85)
+      .attr('stroke', (r) => r.minutes < mm ? 'var(--cds-chart-muted)' : 'var(--color-panel)')
+      .attr('stroke-dasharray', (r) => r.minutes < mm ? '2 2' : null).attr('stroke-opacity', (r) => r.minutes < mm ? 0.7 : 1)
+      .style('pointer-events', 'all')
+      .on('mousemove', (ev, r) => {
+        const [px, py] = d3.pointer(ev, el);
+        tip.style('display', null).html('');
+        tip.append('div').attr('class', 'kl-tip-h').text(kl.ordered(r.lineup));
+        tip.append('div').text(`${r.minutes.toFixed(1)} min · ${r.score} · ${kl.signed(r.adj_net40, 1)} per 40 adjusted (${kl.signed(r.net40, 1)} actual)`);
+        const tw = tip.node().offsetWidth;
+        tip.style('left', Math.min(Math.max(0, px + 12), el.clientWidth - tw) + 'px').style('top', Math.max(0, py - 48) + 'px');
+      })
+      .on('mouseleave', () => tip.style('display', 'none'));
+    const team = (inScope('scope_totals')[0] || {}).net40;
+    if (team !== undefined) {
+      svg.append('line').attr('x1', left).attr('x2', W - 12).attr('y1', y(team)).attr('y2', y(team)).attr('stroke', 'var(--cds-chart-reference)').attr('stroke-dasharray', '4 4');
+      svg.append('text').attr('x', (left + W - 12) / 2).attr('y', y(team) + 15).attr('text-anchor', 'middle').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)').text('Team average ' + kl.signed(team, 1));
+    }
+    const lab = svg.append('g').style('font-size', 'var(--cds-font-size-caption)');
+    [[top, 'Most used', dash.colors[0]], [best, 'Best adjusted', 'var(--cds-chart-status-critical)']].forEach(([r, t, c], i) => {
+      if (!r || (i === 1 && r === top)) return;
+      const tx = x(r.minutes), anchor = tx > W * 0.7 ? 'end' : 'start';
+      lab.append('text').attr('x', tx + (anchor === 'end' ? -10 : 10)).attr('y', y(r.adj_net40) < 30 ? y(r.adj_net40) + 18 : y(r.adj_net40) - 10).attr('text-anchor', anchor).attr('fill', c).text(t);
+    });
+  });
+  dash.draw('through', (el) => {
+    const s = kl.rows('schedule'); if (!s) return kl.dash(el);
+    const g = s.filter((x) => x.lineups_loaded).sort((a, b) => a.date < b.date ? 1 : -1)[0];
+    el.textContent = g ? g.opponent + ' (' + d3.utcFormat('%b %-d')(new Date(g.date + 'T12:00:00Z')) + ')' : 'no games yet';
+  });
+
+  // Date range (public page only): narrows the lineup data within the Games choice.
+  (() => {
+    const from = document.querySelectorAll('.kl-from'), to = document.querySelectorAll('.kl-to'), clear = document.querySelectorAll('.kl-clear-dates');
+    const ok = (el) => el.value && el.validity.valid && /^\d{4}-\d\d-\d\d$/.test(el.value);
+    // First and last game date of whatever the Games choice covers (one game, exhibitions, last 5, the main view...).
+    const span = () => {
+      const scope = dash.params().scope || 'all', sched = kl.rows('schedule') || [], log = kl.rows('game_summary') || [];
+      const played = log.filter((g) => g.lineups_used !== null).map((g) => ({...g, type: (sched.find((x) => x.game_id === g.game_id) || {}).game_type})).sort((a, b) => a.date < b.date ? -1 : 1);
+      const pick = scope === 'all' ? played.filter((g) => g.main_view === 'Yes')
+        : scope === 'official' ? played.filter((g) => g.type !== 'Exhibition')
+        : scope === 'last5' ? played.slice(-5)
+        : played.filter((g) => g.game_id === scope || g.type === scope);
+      const d = (pick.length ? pick : played).map((g) => g.date);
+      return [d[0] || '', d[d.length - 1] || ''];
+    };
+    from.forEach((el) => el.addEventListener('change', () => { if (ok(el)) dash.setParams({from: el.value === span()[0] ? null : el.value}); else if (!el.value) dash.setParams({from: null}); }));
+    to.forEach((el) => el.addEventListener('change', () => { if (ok(el)) dash.setParams({to: el.value === span()[1] ? null : el.value}); else if (!el.value) dash.setParams({to: null}); }));
+    clear.forEach((b) => b.addEventListener('click', () => dash.setParams({from: null, to: null})));
+    const sync = () => {
+      const p = dash.params(), s = kl.rows('schedule') || [], st = kl.rows('stints') || [];
+      // With no dates chosen, show the dates the current Games choice covers (one game shows its own date in both).
+      const dates = st.map((r) => r.date).sort(), lo = dates[0] || '', hi = s.map((g) => g.date).sort().slice(-1)[0] || '';
+      const [first, last] = span();
+      from.forEach((el) => { el.min = lo; el.max = hi; if (el !== document.activeElement) el.value = p.from || first; });
+      to.forEach((el) => { el.min = lo; el.max = hi; if (el !== document.activeElement) el.value = p.to || last; });
+      clear.forEach((b) => { b.hidden = !(p.from || p.to); });
+    };
+    [...from, ...to].forEach((el) => el.addEventListener('blur', sync));
+    dash.onData(sync);
+  })();
+</script>
+</body>
+</html>
