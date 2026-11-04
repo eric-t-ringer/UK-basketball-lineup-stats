@@ -6,7 +6,7 @@ Live page: https://eric-t-ringer.github.io/UK-basketball-lineup-stats/
 
 ## How it updates
 
-The morning after each game, a scheduled task reads the "Line Up Analysis" and box score pages of Kentucky's official box score (posted at ukathletics.com), checks that the lineup totals match the final score and game length, and commits the refreshed files in `2026-27/data/`:
+Each night during the season (9 PM Pacific), a scheduled task reads the "Line Up Analysis" and box score pages of any new game's official box score (posted at ukathletics.com) and checks that the lineup totals match the final score and game length. A second scheduled task, 45 minutes later, commits the refreshed files in `2026-27/data/`:
 
 - `2026-27/data/kentucky_lineup_stints.json` — one row per five-man unit per game
 - `2026-27/data/kentucky_schedule.json` — the schedule, with results
