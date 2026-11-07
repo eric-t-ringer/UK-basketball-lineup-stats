@@ -1263,7 +1263,7 @@
   // Rotation heatmap: one row per player, one column per game, shaded by minutes.
   // Hand-written headline for the main view, set after reviewing the chart; shows only in the main view with no date range,
   // and only while the latest game in the data is the one it was written through (null = use the automatic headline).
-  const ROTATION_HEADLINE = {text: "Kentucky has leaned on eight players, led by Momcilovic and Moreno", through: "2026-11-03-manhattan"};
+  const ROTATION_HEADLINE = {text: "Kentucky has leaned on eight players, led by Momcilovic and Moreno", through: "2026-11-06-james-madison"};
   const rotGames = () => {
     const rows = inScope('rotation');
     const games = [...new Map(rows.map((r) => [r.game_id, r])).values()].sort((a, b) => a.date < b.date ? -1 : 1);
