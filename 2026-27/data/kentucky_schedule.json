@@ -91,8 +91,9 @@
   "venue": "Rupp Arena",
   "tipoff_et": "7:00 pm",
   "game_type": "Regular season",
-  "result": null,
-  "lineups_loaded": false
+  "result": "W 88-59",
+  "lineups_loaded": true,
+  "box_score_url": "https://storage.googleapis.com/ukathletics-com/2026/11/9faca169-uk_gsu_book_111626.pdf"
  },
  {
   "game_id": "2026-11-20-indiana",
